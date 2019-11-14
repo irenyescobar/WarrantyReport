@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.ireny.randon.frasle.warrantyreport.ui.home.HomeFragment"
+        android:name="com.ireny.warrantyreport.ui.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
 
