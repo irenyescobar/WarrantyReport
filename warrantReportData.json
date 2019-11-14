@@ -1,0 +1,68 @@
+{
+  "reportTypes": [
+    {
+      "id": 1,
+      "description": "Garantia",
+      "enabled": true
+    },
+    {
+      "id": 2,
+      "description": "Divergência",
+      "enabled": true
+    }
+  ],
+  "companys": [
+    {
+      "id": 1,
+      "description": "Fras-le",
+      "enabled": true
+    },
+    {
+      "id": 2,
+      "description": "Fremax",
+      "enabled": true
+    },
+    {
+      "id": 3,
+      "description": "Controil",
+      "enabled": true
+    },
+    {
+      "id": 4,
+      "description": "Jost",
+      "enabled": true
+    },
+    {
+      "id": 5,
+      "description": "Suspensys",
+      "enabled": true
+    },
+    {
+      "id": 6,
+      "description": "Master",
+      "enabled": true
+    }
+  ],
+  "technicalAdvices": [
+    {
+      "id": 1,
+      "description": "Improcedente",
+      "enabled": true
+    },
+    {
+      "id": 2,
+      "description": "Procedente",
+      "enabled": true
+    },
+    {
+      "id": 3,
+      "description": "Análise",
+      "enabled": true
+    },
+    {
+      "id": 4,
+      "description": "Cortesia",
+      "enabled": true
+    }
+  ]
+}
