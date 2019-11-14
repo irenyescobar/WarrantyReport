@@ -3,7 +3,7 @@ package com.ireny.randon.frasle.warrantyreport.repositorys
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.ireny.randon.frasle.warrantyreport.data.room.dao.ReportTypeDao
-import com.ireny.randon.frasle.warrantyreport.entites.ReportType
+import com.ireny.randon.frasle.warrantyreport.entities.ReportType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

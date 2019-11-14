@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.ireny.randon.frasle.warrantyreport.R
-import com.ireny.randon.frasle.warrantyreport.entites.Report
+import com.ireny.randon.frasle.warrantyreport.entities.Report
 import com.ireny.randon.frasle.warrantyreport.ui.report.base.FragmentBase
 import com.ireny.randon.frasle.warrantyreport.utils.reportActivity
 

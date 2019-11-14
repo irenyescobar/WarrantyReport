@@ -8,9 +8,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProviders
 import com.ireny.randon.frasle.warrantyreport.R
-import com.ireny.randon.frasle.warrantyreport.entites.Company
-import com.ireny.randon.frasle.warrantyreport.entites.Report
-import com.ireny.randon.frasle.warrantyreport.entites.ReportTechnicalAdvice
+import com.ireny.randon.frasle.warrantyreport.entities.Company
+import com.ireny.randon.frasle.warrantyreport.entities.Report
+import com.ireny.randon.frasle.warrantyreport.entities.ReportTechnicalAdvice
 import com.ireny.randon.frasle.warrantyreport.repositorys.CompanyRepository
 import com.ireny.randon.frasle.warrantyreport.repositorys.ReportRepository
 import com.ireny.randon.frasle.warrantyreport.repositorys.TechnicalAdviceRepository

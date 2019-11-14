@@ -5,9 +5,9 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.ireny.randon.frasle.warrantyreport.entites.AssignedTechnicalAdvice
-import com.ireny.randon.frasle.warrantyreport.entites.Report
-import com.ireny.randon.frasle.warrantyreport.entites.ReportTechnicalAdvice
+import com.ireny.randon.frasle.warrantyreport.entities.AssignedTechnicalAdvice
+import com.ireny.randon.frasle.warrantyreport.entities.Report
+import com.ireny.randon.frasle.warrantyreport.entities.ReportTechnicalAdvice
 import com.ireny.randon.frasle.warrantyreport.repositorys.ReportRepository
 import com.ireny.randon.frasle.warrantyreport.repositorys.listeners.GetErrorListener
 import com.ireny.randon.frasle.warrantyreport.repositorys.listeners.GetSuccessListener

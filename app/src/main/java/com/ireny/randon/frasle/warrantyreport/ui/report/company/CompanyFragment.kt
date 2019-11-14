@@ -10,8 +10,8 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ireny.randon.frasle.warrantyreport.R
-import com.ireny.randon.frasle.warrantyreport.entites.Company
-import com.ireny.randon.frasle.warrantyreport.entites.Report
+import com.ireny.randon.frasle.warrantyreport.entities.Company
+import com.ireny.randon.frasle.warrantyreport.entities.Report
 import com.ireny.randon.frasle.warrantyreport.repositorys.CompanyRepository
 import com.ireny.randon.frasle.warrantyreport.ui.listeners.SelectedListener
 import com.ireny.randon.frasle.warrantyreport.ui.report.base.FragmentBase

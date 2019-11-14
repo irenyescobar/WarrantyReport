@@ -1,4 +1,4 @@
-package com.ireny.randon.frasle.warrantyreport.entites
+package com.ireny.randon.frasle.warrantyreport.entities
 
 import androidx.room.*
 import java.util.*

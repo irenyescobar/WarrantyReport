@@ -1,10 +1,10 @@
 package com.ireny.randon.frasle.warrantyreport.services
 
 import com.ireny.randon.frasle.warrantyreport.data.room.WarrantyReportRoomDatabase
-import com.ireny.randon.frasle.warrantyreport.entites.Company
-import com.ireny.randon.frasle.warrantyreport.entites.ReportType
-import com.ireny.randon.frasle.warrantyreport.entites.TechnicalAdvice
-import com.ireny.randon.frasle.warrantyreport.entites.WarrantReportData
+import com.ireny.randon.frasle.warrantyreport.entities.Company
+import com.ireny.randon.frasle.warrantyreport.entities.ReportType
+import com.ireny.randon.frasle.warrantyreport.entities.TechnicalAdvice
+import com.ireny.randon.frasle.warrantyreport.entities.WarrantReportData
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 

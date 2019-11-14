@@ -5,7 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.ireny.randon.frasle.warrantyreport.entites.Company
+import com.ireny.randon.frasle.warrantyreport.entities.Company
 
 @Dao
 interface CompanyDao {

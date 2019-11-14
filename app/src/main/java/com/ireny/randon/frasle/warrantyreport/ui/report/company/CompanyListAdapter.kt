@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.ireny.randon.frasle.warrantyreport.R
-import com.ireny.randon.frasle.warrantyreport.entites.Company
+import com.ireny.randon.frasle.warrantyreport.entities.Company
 import com.ireny.randon.frasle.warrantyreport.ui.listeners.SelectedListener
 
 class CompanyListAdapter internal constructor(

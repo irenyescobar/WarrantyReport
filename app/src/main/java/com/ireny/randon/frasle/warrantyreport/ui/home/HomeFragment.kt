@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ireny.randon.frasle.warrantyreport.repositorys.listeners.GetErrorListener
 import com.ireny.randon.frasle.warrantyreport.R
 import com.ireny.randon.frasle.warrantyreport.ui.listeners.SelectedListener
-import com.ireny.randon.frasle.warrantyreport.entites.Report
+import com.ireny.randon.frasle.warrantyreport.entities.Report
 import com.ireny.randon.frasle.warrantyreport.utils.customApp
 import com.ireny.randon.frasle.warrantyreport.utils.mainActivity
 

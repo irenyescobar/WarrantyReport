@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.ireny.randon.frasle.warrantyreport.R
 import com.ireny.randon.frasle.warrantyreport.ui.listeners.SelectedListener
-import com.ireny.randon.frasle.warrantyreport.entites.Report
+import com.ireny.randon.frasle.warrantyreport.entities.Report
 import com.ireny.randon.frasle.warrantyreport.utils.toDateTimeTextFormatted
 
 class ReportListAdapter internal constructor( context: Context,

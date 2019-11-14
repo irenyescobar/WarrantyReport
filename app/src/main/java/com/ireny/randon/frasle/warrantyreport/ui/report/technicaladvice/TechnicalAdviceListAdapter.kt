@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import androidx.recyclerview.widget.RecyclerView
 import com.ireny.randon.frasle.warrantyreport.R
-import com.ireny.randon.frasle.warrantyreport.entites.ReportTechnicalAdvice
+import com.ireny.randon.frasle.warrantyreport.entities.ReportTechnicalAdvice
 import com.irenyescobar.mytasksapp.ui.listeners.CheckedChangeListener
 
 class TechnicalAdviceListAdapter internal constructor(

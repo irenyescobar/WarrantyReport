@@ -8,7 +8,7 @@ import com.ireny.randon.frasle.warrantyreport.data.room.dao.CompanyDao
 import com.ireny.randon.frasle.warrantyreport.data.room.dao.ReportDao
 import com.ireny.randon.frasle.warrantyreport.data.room.dao.ReportTypeDao
 import com.ireny.randon.frasle.warrantyreport.data.room.dao.TechnicalAdviceDao
-import com.ireny.randon.frasle.warrantyreport.entites.*
+import com.ireny.randon.frasle.warrantyreport.entities.*
 
 @Database(entities = [ ReportType::class, TechnicalAdvice::class, Company::class, Report::class, AssignedTechnicalAdvice::class],
           version = 1,

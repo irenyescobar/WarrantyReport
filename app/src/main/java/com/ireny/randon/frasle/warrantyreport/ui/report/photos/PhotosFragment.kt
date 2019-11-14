@@ -18,7 +18,7 @@ import com.ireny.randon.frasle.warrantyreport.R
 import com.ireny.randon.frasle.warrantyreport.di.components.DaggerPhotosComponent
 import com.ireny.randon.frasle.warrantyreport.di.components.PhotosComponent
 import com.ireny.randon.frasle.warrantyreport.di.modules.PhotosModule
-import com.ireny.randon.frasle.warrantyreport.entites.Report
+import com.ireny.randon.frasle.warrantyreport.entities.Report
 import com.ireny.randon.frasle.warrantyreport.ui.listeners.ItemClickListener
 import com.ireny.randon.frasle.warrantyreport.ui.listeners.ItemLongClickListener
 import com.ireny.randon.frasle.warrantyreport.ui.report.base.FragmentBase

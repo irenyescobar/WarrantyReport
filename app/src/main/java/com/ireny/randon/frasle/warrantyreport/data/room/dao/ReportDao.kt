@@ -2,7 +2,7 @@ package com.ireny.randon.frasle.warrantyreport.data.room.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.ireny.randon.frasle.warrantyreport.entites.*
+import com.ireny.randon.frasle.warrantyreport.entities.*
 
 @Dao
 abstract class ReportDao{
