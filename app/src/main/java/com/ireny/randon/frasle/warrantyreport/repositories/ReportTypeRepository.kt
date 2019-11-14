@@ -1,4 +1,4 @@
-package com.ireny.randon.frasle.warrantyreport.repositorys
+package com.ireny.randon.frasle.warrantyreport.repositories
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

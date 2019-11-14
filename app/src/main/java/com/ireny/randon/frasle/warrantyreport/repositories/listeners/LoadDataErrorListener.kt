@@ -1,4 +1,4 @@
-package com.ireny.randon.frasle.warrantyreport.repositorys.listeners
+package com.ireny.randon.frasle.warrantyreport.repositories.listeners
 
 interface LoadDataErrorListener {
     fun onLoadDataError(error: Exception)

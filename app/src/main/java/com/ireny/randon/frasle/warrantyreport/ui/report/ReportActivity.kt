@@ -11,10 +11,10 @@ import com.ireny.randon.frasle.warrantyreport.R
 import com.ireny.randon.frasle.warrantyreport.entities.Company
 import com.ireny.randon.frasle.warrantyreport.entities.Report
 import com.ireny.randon.frasle.warrantyreport.entities.ReportTechnicalAdvice
-import com.ireny.randon.frasle.warrantyreport.repositorys.CompanyRepository
-import com.ireny.randon.frasle.warrantyreport.repositorys.ReportRepository
-import com.ireny.randon.frasle.warrantyreport.repositorys.TechnicalAdviceRepository
-import com.ireny.randon.frasle.warrantyreport.repositorys.listeners.GetSuccessListener
+import com.ireny.randon.frasle.warrantyreport.repositories.CompanyRepository
+import com.ireny.randon.frasle.warrantyreport.repositories.ReportRepository
+import com.ireny.randon.frasle.warrantyreport.repositories.TechnicalAdviceRepository
+import com.ireny.randon.frasle.warrantyreport.repositories.listeners.GetSuccessListener
 import com.ireny.randon.frasle.warrantyreport.ui.listeners.CompletedOperationListener
 import com.ireny.randon.frasle.warrantyreport.ui.report.base.FragmentBase
 import com.ireny.randon.frasle.warrantyreport.ui.report.comments.CommentsFragment

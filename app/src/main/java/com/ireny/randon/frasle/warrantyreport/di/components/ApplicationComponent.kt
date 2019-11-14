@@ -2,10 +2,10 @@ package com.ireny.randon.frasle.warrantyreport.di.components
 
 import com.ireny.randon.frasle.warrantyreport.MyWarrantReportApp
 import com.ireny.randon.frasle.warrantyreport.di.modules.ApplicationModule
-import com.ireny.randon.frasle.warrantyreport.repositorys.CompanyRepository
-import com.ireny.randon.frasle.warrantyreport.repositorys.ReportRepository
-import com.ireny.randon.frasle.warrantyreport.repositorys.ReportTypeRepository
-import com.ireny.randon.frasle.warrantyreport.repositorys.TechnicalAdviceRepository
+import com.ireny.randon.frasle.warrantyreport.repositories.CompanyRepository
+import com.ireny.randon.frasle.warrantyreport.repositories.ReportRepository
+import com.ireny.randon.frasle.warrantyreport.repositories.ReportTypeRepository
+import com.ireny.randon.frasle.warrantyreport.repositories.TechnicalAdviceRepository
 import com.ireny.randon.frasle.warrantyreport.services.ImportDataService
 import dagger.Component
 import javax.inject.Singleton

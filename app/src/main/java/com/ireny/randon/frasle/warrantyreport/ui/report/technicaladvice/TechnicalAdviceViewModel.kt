@@ -8,8 +8,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.ireny.randon.frasle.warrantyreport.entities.AssignedTechnicalAdvice
 import com.ireny.randon.frasle.warrantyreport.entities.ReportTechnicalAdvice
 import com.ireny.randon.frasle.warrantyreport.entities.TechnicalAdvice
-import com.ireny.randon.frasle.warrantyreport.repositorys.ReportRepository
-import com.ireny.randon.frasle.warrantyreport.repositorys.TechnicalAdviceRepository
+import com.ireny.randon.frasle.warrantyreport.repositories.ReportRepository
+import com.ireny.randon.frasle.warrantyreport.repositories.TechnicalAdviceRepository
 
 class TechnicalAdviceViewModel(application: Application,
                                technicalAdviceRepository: TechnicalAdviceRepository,

@@ -1,13 +1,13 @@
-package com.ireny.randon.frasle.warrantyreport.repositorys
+package com.ireny.randon.frasle.warrantyreport.repositories
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.ireny.randon.frasle.warrantyreport.data.room.dao.ReportDao
 import com.ireny.randon.frasle.warrantyreport.entities.AssignedTechnicalAdvice
 import com.ireny.randon.frasle.warrantyreport.entities.Report
-import com.ireny.randon.frasle.warrantyreport.repositorys.listeners.GetErrorListener
-import com.ireny.randon.frasle.warrantyreport.repositorys.listeners.LoadDataErrorListener
-import com.ireny.randon.frasle.warrantyreport.repositorys.listeners.SaveErrorListener
+import com.ireny.randon.frasle.warrantyreport.repositories.listeners.GetErrorListener
+import com.ireny.randon.frasle.warrantyreport.repositories.listeners.LoadDataErrorListener
+import com.ireny.randon.frasle.warrantyreport.repositories.listeners.SaveErrorListener
 
 class ReportRepository(private val dao: ReportDao) {
 

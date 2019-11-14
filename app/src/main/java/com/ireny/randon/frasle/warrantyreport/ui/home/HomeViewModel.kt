@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.ireny.randon.frasle.warrantyreport.entities.Report
-import com.ireny.randon.frasle.warrantyreport.repositorys.ReportRepository
+import com.ireny.randon.frasle.warrantyreport.repositories.ReportRepository
 
 class HomeViewModel (application: Application, val repository: ReportRepository):
     AndroidViewModel(application) {

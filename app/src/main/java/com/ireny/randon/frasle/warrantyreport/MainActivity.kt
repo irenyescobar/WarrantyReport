@@ -13,7 +13,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.gson.Gson
 import com.ireny.randon.frasle.warrantyreport.entities.WarrantReportData
-import com.ireny.randon.frasle.warrantyreport.repositorys.ReportRepository
+import com.ireny.randon.frasle.warrantyreport.repositories.ReportRepository
 import com.ireny.randon.frasle.warrantyreport.services.ImportDataCompletedListener
 import com.ireny.randon.frasle.warrantyreport.services.ImportDataService
 import com.ireny.randon.frasle.warrantyreport.services.LogError

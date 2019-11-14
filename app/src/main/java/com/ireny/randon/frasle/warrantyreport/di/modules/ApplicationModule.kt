@@ -4,10 +4,10 @@ import android.content.Context
 import androidx.room.Room
 import com.ireny.randon.frasle.warrantyreport.MyWarrantReportApp
 import com.ireny.randon.frasle.warrantyreport.data.room.WarrantyReportRoomDatabase
-import com.ireny.randon.frasle.warrantyreport.repositorys.CompanyRepository
-import com.ireny.randon.frasle.warrantyreport.repositorys.ReportRepository
-import com.ireny.randon.frasle.warrantyreport.repositorys.ReportTypeRepository
-import com.ireny.randon.frasle.warrantyreport.repositorys.TechnicalAdviceRepository
+import com.ireny.randon.frasle.warrantyreport.repositories.CompanyRepository
+import com.ireny.randon.frasle.warrantyreport.repositories.ReportRepository
+import com.ireny.randon.frasle.warrantyreport.repositories.ReportTypeRepository
+import com.ireny.randon.frasle.warrantyreport.repositories.TechnicalAdviceRepository
 import com.ireny.randon.frasle.warrantyreport.services.ImportDataService
 import com.ireny.randon.frasle.warrantyreport.utils.Constants
 import dagger.Module

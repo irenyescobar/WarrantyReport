@@ -9,7 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.ireny.randon.frasle.warrantyreport.repositorys.listeners.GetErrorListener
+import com.ireny.randon.frasle.warrantyreport.repositories.listeners.GetErrorListener
 import com.ireny.randon.frasle.warrantyreport.R
 import com.ireny.randon.frasle.warrantyreport.ui.listeners.SelectedListener
 import com.ireny.randon.frasle.warrantyreport.entities.Report

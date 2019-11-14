@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.ireny.randon.frasle.warrantyreport.entities.Company
-import com.ireny.randon.frasle.warrantyreport.repositorys.CompanyRepository
+import com.ireny.randon.frasle.warrantyreport.repositories.CompanyRepository
 
 class CompanyViewModel(application: Application,
                        repository: CompanyRepository) : AndroidViewModel(application){
