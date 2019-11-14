@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">LAUDOS</string>
+    <string name="tab_text_1">GARANTIA</string>
+    <string name="tab_text_2">DIVERGENCIA</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="label_distributor">Distribuidor</string>
+    <string name="label_client">Cliente</string>
+    <string name="label_partReference">Referência da peça</string>
+    <string name="label_cityState">Cidade/UF</string>
+    <string name="label_sourceInvoice">Nota fiscal de origem</string>
+    <string name="label_invoiceDate">Data da nota</string>
+    <string name="label_applicationDate">Data da aplicação/montagem</string>
+    <string name="label_warrantyDate">Data de retorno/garantia</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="label_technicalConsultant">Consultor técnico</string>
+    <string name="label_analysisDate">Data da análise</string>
+    <string name="label_technicalConsultantContact">Contato do consultor</string>
+    <string name="snackbar_option_camera_text">CÂMERA</string>
+    <string name="snackbar_option_gallery_text">GALERIA</string>
+    <string name="permisson_camera_message1">Você precisa permitir o acesso à câmera para continuar.</string>
+    <string name="permissions_message">Você precisa habilitar as permissões solicitadas para continuar. Deseja ir para configurações do aplicativo para habilitar o uso da câmera?</string>
+    <string name="permission_memory_message">Você precisa permitir o acesso à mémoria para continuar.</string>
+</resources>
