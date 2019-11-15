@@ -7,10 +7,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.ireny.warrantyreport.R
 import com.ireny.warrantyreport.entities.Report
-import com.ireny.warrantyreport.ui.report.base.FragmentBase
+import com.ireny.warrantyreport.ui.report.base.FragmentUpdateBase
 import com.ireny.warrantyreport.utils.reportActivity
 
-class CommentsFragment: FragmentBase() {
+class CommentsFragment: FragmentUpdateBase() {
 
     private lateinit var textView: TextView
 

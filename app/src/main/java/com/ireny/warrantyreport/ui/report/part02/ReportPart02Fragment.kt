@@ -7,14 +7,14 @@ import android.view.ViewGroup
 import android.widget.EditText
 import com.ireny.warrantyreport.R
 import com.ireny.warrantyreport.entities.Report
-import com.ireny.warrantyreport.ui.report.base.FragmentBase
+import com.ireny.warrantyreport.ui.report.base.FragmentUpdateBase
 import com.ireny.warrantyreport.utils.reportActivity
 import com.ireny.warrantyreport.utils.setOnClickDatePicker
 import com.ireny.warrantyreport.utils.toDate
 import com.ireny.warrantyreport.utils.toDateTextFormatted
 import java.util.*
 
-class ReportPart02Fragment : FragmentBase() {
+class ReportPart02Fragment : FragmentUpdateBase() {
 
     private lateinit var textSourceinvoice: EditText
     private lateinit var textInvoicedate: EditText
