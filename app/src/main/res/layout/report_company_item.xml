@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/text_description"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:textAlignment="center"
-    android:textSize="20sp"
+    android:orientation="vertical"
     android:padding="8dp"
-    android:layout_margin="8dp"
-    android:text="Fras-le"/>
-
+    android:layout_marginBottom="1dp"
+    android:background="@drawable/item_back">
+    <TextView
+        android:id="@+id/text_description"
+        android:padding="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp" />
+</LinearLayout>
