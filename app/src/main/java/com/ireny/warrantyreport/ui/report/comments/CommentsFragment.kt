@@ -22,7 +22,7 @@ class CommentsFragment: FragmentUpdateBase() {
           reportActivity.supportActionBar?.apply {
              title = "Observações"
           }
-          val view = inflater.inflate(R.layout.report_comments_fragment, container, false)
+          val view = inflater.inflate(R.layout.edittext_multiline_fragment, container, false)
           textView = view.findViewById(R.id.text)
           return view
      }

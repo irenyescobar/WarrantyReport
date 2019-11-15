@@ -31,7 +31,7 @@ class TechnicalAdviceFragment(private val reportId:Long) : FragmentBase(), Check
         reportActivity.supportActionBar?.apply {
             title = "Parecer técnico"
         }
-        val view = inflater.inflate(R.layout.report_technical_advice_fragment, container, false)
+        val view = inflater.inflate(R.layout.recyclerview_fragment, container, false)
         recyclerView = view.findViewById(R.id.recyclerview)
         return view
     }

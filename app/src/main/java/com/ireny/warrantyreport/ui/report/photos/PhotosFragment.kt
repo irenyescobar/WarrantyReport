@@ -48,7 +48,7 @@ class PhotosFragment(val reportId:Long) : FragmentBase(),  ItemClickListener<Pho
         reportActivity.supportActionBar?.apply {
             title = "Fotos"
         }
-        val view = inflater.inflate(R.layout.report_photos_fragment, container, false)
+        val view = inflater.inflate(R.layout.recyclerview_fragment, container, false)
         recyclerView = view.findViewById(R.id.recyclerview)
         recyclerView.layoutManager =  GridLayoutManager(activity, 2)
         adapter = PhotoRecyclerViewAdapter(this,this)

@@ -23,7 +23,7 @@ class ReasonUnfoundedFragment : FragmentUpdateBase() {
             title = "Motivo da improcedência"
         }
 
-        val view = inflater.inflate(R.layout.report_reason_unfounded_fragment, container, false)
+        val view = inflater.inflate(R.layout.edittext_multiline_fragment, container, false)
         textView = view.findViewById(R.id.text)
 
         return view
