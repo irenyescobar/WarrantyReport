@@ -73,10 +73,6 @@ class CompanyFragment: FragmentBase(), CompanyRepository.ErrorListener, Selected
         adapter.refreshSelection(entity.companyId)
     }
 
-    override fun updateReport(entity: Report) {
-
-    }
-
     override fun onSelected(item: Company) {
         listener?.onChangedCompany(item)
     }

@@ -82,10 +82,6 @@ class TechnicalAdviceFragment(private val reportId:Long) : FragmentBase(), Check
         adapter.setData(viewModel.getData())
     }
 
-    override fun updateReport(entity: Report) {
-
-    }
-
     override fun onCheckedChange(item: ReportTechnicalAdvice) {
         listener?.onItemChangedSelection(item)
     }

@@ -97,8 +97,6 @@ class PhotosFragment(val reportId:Long) : FragmentBase(),  ItemClickListener<Pho
         adapter.refresh(data)
     }
 
-    override fun updateReport(entity: Report) {  }
-
     private fun proceedTakePhotoAfterPermission() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         startActivityForResult(intent, CAMERA)
