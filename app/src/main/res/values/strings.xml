@@ -25,4 +25,21 @@
     <string name="permisson_camera_message1">Você precisa permitir o acesso à câmera para continuar.</string>
     <string name="permissions_message">Você precisa habilitar as permissões solicitadas para continuar. Deseja ir para configurações do aplicativo para habilitar o uso da câmera?</string>
     <string name="permission_memory_message">Você precisa permitir o acesso à mémoria para continuar.</string>
+    <string name="document_title">LAUDO DE GARANTIA</string>
+    <string name="document_n">N°:</string>
+    <string name="document_company">EMPRESA:</string>
+    <string name="document_distributor">Distribuidor:</string>
+    <string name="document_cityState">Cidade/Estado:</string>
+    <string name="document_client">Cliente:</string>
+    <string name="document_partReference">Referência da peça:</string>
+    <string name="document_sourceInvoice">Nota fiscal de Origem:</string>
+    <string name="document_invoiceDate">Data da Nota:</string>
+    <string name="document_applicationDate">Data da aplicação:</string>
+    <string name="document_warrantDate">Data do retorno:</string>
+    <string name="document_technicalAdvices">Parecer Técnico:</string>
+    <string name="document_reasonUnfounded">Motivo da improcedência da Garantia:</string>
+    <string name="document_comments">Observações:</string>
+    <string name="document_technicalConsultant">Consultor Técnico:</string>
+    <string name="document_analisysDate">Data:</string>
+    <string name="document_technicalConsultantContact">Telefone:</string>
 </resources>
