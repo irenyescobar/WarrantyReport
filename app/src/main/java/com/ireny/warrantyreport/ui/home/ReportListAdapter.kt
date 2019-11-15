@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.ireny.warrantyreport.R
-import com.ireny.warrantyreport.ui.listeners.SelectedListener
 import com.ireny.warrantyreport.entities.Report
-import com.ireny.warrantyreport.utils.toDateTimeTextFormatted
+import com.ireny.warrantyreport.ui.listeners.SelectedListener
+import com.ireny.warrantyreport.utils.toDateTextFormatted
 
 class ReportListAdapter internal constructor( context: Context,
     private val listener: SelectedListener<Report>
@@ -37,15 +37,13 @@ class ReportListAdapter internal constructor( context: Context,
             listener.onSelected(current)
         }
 
-        holder.id.text = current.created_at.toDateTimeTextFormatted()
-        holder.type.text = "${current.distributor}/${current.client}"
+        holder.textView.text =  "LAUDO ${current.id.toString(3)} - ${current.created_at.toDateTextFormatted()}"
 
     }
 
     override fun getItemCount() = data.size
 
     inner class ReportViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val id: TextView = itemView.findViewById(R.id.text_id)
-        val type: TextView = itemView.findViewById(R.id.text_type)
+        val textView: TextView = itemView.findViewById(R.id.text)
     }
 }

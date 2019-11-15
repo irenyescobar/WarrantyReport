@@ -1,7 +1,7 @@
 package com.ireny.warrantyreport.di.modules
 
 import android.content.Context
-import com.ireny.warrantyreport.ui.report.photos.PhotosManager
+import com.ireny.warrantyreport.ui.report.services.PhotosManager
 import dagger.Module
 import dagger.Provides
 

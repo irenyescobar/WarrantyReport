@@ -8,14 +8,14 @@ import android.widget.EditText
 import android.widget.TextView
 import com.ireny.warrantyreport.R
 import com.ireny.warrantyreport.entities.Report
-import com.ireny.warrantyreport.ui.report.base.FragmentBase
+import com.ireny.warrantyreport.ui.report.base.FragmentUpdateBase
 import com.ireny.warrantyreport.utils.reportActivity
 import com.ireny.warrantyreport.utils.setOnClickDatePicker
 import com.ireny.warrantyreport.utils.toDate
 import com.ireny.warrantyreport.utils.toDateTextFormatted
 import java.util.*
 
-class TechnicalConsultantFragment : FragmentBase() {
+class TechnicalConsultantFragment : FragmentUpdateBase() {
 
     private lateinit var textTechnicalConsultant: TextView
     private lateinit var textTechnicalConsultantContact: TextView

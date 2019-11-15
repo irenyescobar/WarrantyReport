@@ -7,10 +7,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.ireny.warrantyreport.R
 import com.ireny.warrantyreport.entities.Report
-import com.ireny.warrantyreport.ui.report.base.FragmentBase
+import com.ireny.warrantyreport.ui.report.base.FragmentUpdateBase
 import com.ireny.warrantyreport.utils.reportActivity
 
-class CommentsFragment: FragmentBase() {
+class CommentsFragment: FragmentUpdateBase() {
 
     private lateinit var textView: TextView
 
@@ -22,7 +22,7 @@ class CommentsFragment: FragmentBase() {
           reportActivity.supportActionBar?.apply {
              title = "Observações"
           }
-          val view = inflater.inflate(R.layout.report_comments_fragment, container, false)
+          val view = inflater.inflate(R.layout.edittext_multiline_fragment, container, false)
           textView = view.findViewById(R.id.text)
           return view
      }

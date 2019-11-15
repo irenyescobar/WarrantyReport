@@ -32,7 +32,7 @@ class CompanyFragment: FragmentBase(), CompanyRepository.ErrorListener, Selected
         reportActivity.supportActionBar?.apply {
             title = "Empresa"
         }
-        val view = inflater.inflate(R.layout.report_company_fragment, container, false)
+        val view = inflater.inflate(R.layout.recyclerview_fragment, container, false)
         recyclerView = view.findViewById(R.id.recyclerview)
         return view
     }
@@ -71,10 +71,6 @@ class CompanyFragment: FragmentBase(), CompanyRepository.ErrorListener, Selected
 
     override fun refresh(entity: Report) {
         adapter.refreshSelection(entity.companyId)
-    }
-
-    override fun updateReport(entity: Report) {
-
     }
 
     override fun onSelected(item: Company) {

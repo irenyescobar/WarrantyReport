@@ -40,13 +40,11 @@ class CompanyListAdapter internal constructor(
         holder.itemView.setOnClickListener{
             listener.onSelected(current)
         }
-
         holder.description.text = current.description
-
-        holder.itemView.setBackgroundColor(context.getColor(android.R.color.transparent))
+        holder.itemView.background = context.getDrawable(R.drawable.item_back)
         selectioned?.let {
             if(current.id == it){
-                holder.itemView.setBackgroundColor(context.getColor(R.color.colorPrimary))
+                holder.itemView.background = context.getDrawable(R.drawable.item_back_selected)
             }
         }
     }

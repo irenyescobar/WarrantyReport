@@ -1,18 +1,18 @@
-package com.ireny.warrantyreport.ui.report.photos
+package com.ireny.warrantyreport.ui.report.services
 
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.media.MediaScannerConnection
 import android.os.Environment
+import com.ireny.warrantyreport.ui.report.photos.PhotosFragment
 import com.ireny.warrantyreport.utils.Constants
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
-class PhotosManager(private val context: Context):
-    IPhotosManager {
+class PhotosManager(private val context: Context): IPhotosManager {
 
     private val data: Array<PhotosFragment.Photo> = arrayOf(
         PhotosFragment.Photo(0),

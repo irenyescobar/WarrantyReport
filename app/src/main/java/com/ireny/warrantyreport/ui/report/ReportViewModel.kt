@@ -57,11 +57,15 @@ class ReportViewModel(application: Application,
 
     fun load(id: Long){
         viewModelScope.launch {
-            val el = repository.getById(id)
-            el?.let {
-                report = it
-                getSucessListener?.onGetSuccess(report)
-            }
+            get(id)
+        }
+    }
+
+    private suspend fun get(id: Long){
+        val el = repository.getById(id)
+        el?.let {
+            report = it
+            getSucessListener?.onGetSuccess(report)
         }
     }
 
@@ -82,9 +86,8 @@ class ReportViewModel(application: Application,
         viewModelScope.launch {
             repository.save(report)
             complete(report)
+            get(report.id)
         }
-
-        load(report.id)
     }
 
     private fun complete(entity: Report){

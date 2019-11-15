@@ -22,6 +22,7 @@ import com.ireny.warrantyreport.entities.Report
 import com.ireny.warrantyreport.ui.listeners.ItemClickListener
 import com.ireny.warrantyreport.ui.listeners.ItemLongClickListener
 import com.ireny.warrantyreport.ui.report.base.FragmentBase
+import com.ireny.warrantyreport.ui.report.services.IPhotosManager
 import com.ireny.warrantyreport.utils.reportActivity
 import java.io.IOException
 
@@ -47,7 +48,7 @@ class PhotosFragment(val reportId:Long) : FragmentBase(),  ItemClickListener<Pho
         reportActivity.supportActionBar?.apply {
             title = "Fotos"
         }
-        val view = inflater.inflate(R.layout.report_photos_fragment, container, false)
+        val view = inflater.inflate(R.layout.recyclerview_fragment, container, false)
         recyclerView = view.findViewById(R.id.recyclerview)
         recyclerView.layoutManager =  GridLayoutManager(activity, 2)
         adapter = PhotoRecyclerViewAdapter(this,this)
@@ -95,8 +96,6 @@ class PhotosFragment(val reportId:Long) : FragmentBase(),  ItemClickListener<Pho
         val data = photoManager.getData(reportId)
         adapter.refresh(data)
     }
-
-    override fun updateReport(entity: Report) {  }
 
     private fun proceedTakePhotoAfterPermission() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
