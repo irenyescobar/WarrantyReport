@@ -17,11 +17,13 @@ import com.ireny.warrantyreport.repositories.TechnicalAdviceRepository
 import com.ireny.warrantyreport.repositories.listeners.GetSuccessListener
 import com.ireny.warrantyreport.ui.listeners.CompletedOperationListener
 import com.ireny.warrantyreport.ui.report.base.FragmentBase
+import com.ireny.warrantyreport.ui.report.base.FragmentUpdateBase
 import com.ireny.warrantyreport.ui.report.comments.CommentsFragment
 import com.ireny.warrantyreport.ui.report.company.CompanyFragment
 import com.ireny.warrantyreport.ui.report.part01.ReportPart01Fragment
 import com.ireny.warrantyreport.ui.report.part02.ReportPart02Fragment
 import com.ireny.warrantyreport.ui.report.photos.PhotosFragment
+import com.ireny.warrantyreport.ui.report.previewdocument.PreviewDocumentFragment
 import com.ireny.warrantyreport.ui.report.reasonunfounded.ReasonUnfoundedFragment
 import com.ireny.warrantyreport.ui.report.technicaladvice.TechnicalAdviceFragment
 import com.ireny.warrantyreport.ui.report.technicalconsultant.TechnicalConsultantFragment
@@ -105,19 +107,9 @@ class ReportActivity : AppCompatActivity(),
             is PhotosFragment -> {
                 showAndRefreshFragment(TechnicalConsultantFragment.newInstance())
             }
-        }
-    }
-
-    override fun onGetSuccess(entity: Report) {
-        updateScreen(entity)
-    }
-
-    override fun onCompletedOperation(entity: Report, success: Boolean) {
-        if(success){
-            updateScreen(entity)
-            showSuccess("Salvo com sucesso")
-        }else{
-            showError("Operação completada com erros")
+            is PreviewDocumentFragment -> {
+                showAndRefreshFragment(PhotosFragment.newInstance(viewModel.report.id))
+            }
         }
     }
 
@@ -134,8 +126,17 @@ class ReportActivity : AppCompatActivity(),
     }
 
     private fun saveAndContinue() {
-        currentFragment.updateReport(viewModel.report)
-        viewModel.save()
+
+        if(currentFragment is PreviewDocumentFragment){
+            (currentFragment as PreviewDocumentFragment).createDocument(viewModel.report)
+            return
+        }
+
+        if(currentFragment is FragmentUpdateBase) {
+            (currentFragment as FragmentUpdateBase).updateReport(viewModel.report)
+             viewModel.save()
+        }
+
         next()
     }
 
@@ -163,7 +164,7 @@ class ReportActivity : AppCompatActivity(),
                 showAndRefreshFragment(PhotosFragment.newInstance(viewModel.report.id))
             }
             is PhotosFragment -> {
-                showError("Função ainda sem fazer!")
+                showAndRefreshFragment(PreviewDocumentFragment.newInstance())
             }
         }
     }
@@ -177,11 +178,23 @@ class ReportActivity : AppCompatActivity(),
         viewModel.save()
     }
 
+    override fun onGetSuccess(entity: Report) {
+        updateScreen(entity)
+    }
+
+    override fun onCompletedOperation(entity: Report, success: Boolean) {
+        if(success){
+            showSuccess("Salvo com sucesso")
+        }else{
+            showError("Operação completada com erros")
+        }
+    }
+
     fun showError(message:String?) {
         Toast.makeText(this,message,Toast.LENGTH_LONG).show()
     }
 
-    fun showSuccess(message:String?) {
+    private fun showSuccess(message:String?) {
         Toast.makeText(this,message,Toast.LENGTH_LONG).show()
     }
 
