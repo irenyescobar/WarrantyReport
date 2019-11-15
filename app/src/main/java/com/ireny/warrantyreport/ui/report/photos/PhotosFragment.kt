@@ -22,6 +22,7 @@ import com.ireny.warrantyreport.entities.Report
 import com.ireny.warrantyreport.ui.listeners.ItemClickListener
 import com.ireny.warrantyreport.ui.listeners.ItemLongClickListener
 import com.ireny.warrantyreport.ui.report.base.FragmentBase
+import com.ireny.warrantyreport.ui.report.services.IPhotosManager
 import com.ireny.warrantyreport.utils.reportActivity
 import java.io.IOException
 
