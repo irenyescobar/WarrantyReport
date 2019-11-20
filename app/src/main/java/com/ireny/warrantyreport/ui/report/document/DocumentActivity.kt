@@ -1,0 +1,103 @@
+package com.ireny.warrantyreport.ui.report.document
+
+import android.content.Context
+import android.content.Intent
+import android.os.Bundle
+import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import com.google.android.material.snackbar.Snackbar
+import com.ireny.warrantyreport.R
+import com.ireny.warrantyreport.repositories.ReportRepository
+import com.ireny.warrantyreport.ui.base.IProgressLoading
+import com.ireny.warrantyreport.ui.base.IShowMessage
+import com.ireny.warrantyreport.ui.report.ReportActivity.Companion.REPORT_ID
+import com.ireny.warrantyreport.utils.customApp
+import kotlinx.android.synthetic.main.activity_document.*
+
+class DocumentActivity : AppCompatActivity(),
+    IProgressLoading,
+    IShowMessage {
+
+    private val component by lazy { customApp.component }
+    private val reportRepository: ReportRepository by lazy { component.reportRepository() }
+
+    private lateinit var currentFragment: PreviewDocumentFragment
+    private lateinit var transaction: FragmentTransaction
+    private lateinit var viewModel: PreviewDocumentViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_document)
+
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+        }
+
+        val reportId = intent.getLongExtra(REPORT_ID,0)
+
+        viewModel = ViewModelProviders.of(this, PreviewDocumentViewModel.Companion.Factory(
+            customApp,
+            reportRepository,
+            reportId)
+        ).get(PreviewDocumentViewModel::class.java)
+
+        showFragment()
+
+        viewModel.model.observe(this, Observer { el ->
+            el?.let {
+                currentFragment.bindView(el)
+            }
+        })
+
+        viewModel.loadingVisibility.observe(this, Observer { el->
+            showProgress(el)
+        })
+
+        viewModel.message.observe(this, Observer { el ->
+            if(el.isNotBlank()){
+                Snackbar.make(container,el, Snackbar.LENGTH_LONG).show()
+            }
+        })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadModel()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
+
+    private fun showFragment(){
+        currentFragment = PreviewDocumentFragment.newInstance()
+        transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.container, currentFragment)
+        transaction.commit()
+    }
+
+    override fun showProgress(show: Boolean) {
+        if(show){
+            progressBar.visibility = View.VISIBLE
+        }else{
+            progressBar.visibility = View.GONE
+        }
+    }
+
+    override fun showMessage(message: String) {
+        Snackbar.make(container,message,Snackbar.LENGTH_LONG).show()
+    }
+
+    companion object {
+        @JvmStatic
+        fun newInstance(context: Context, reportId:Long): Intent {
+            val intent = Intent(context, DocumentActivity::class.java)
+            intent.putExtra(REPORT_ID,reportId)
+            return  intent
+        }
+    }
+}
