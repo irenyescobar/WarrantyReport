@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
@@ -78,6 +79,7 @@ class DocumentActivity : AppCompatActivity(),
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId) {
             R.id.action_save_report -> {
+                confirmSaveReport()
                 return true
             }
             else -> super.onOptionsItemSelected(item)
@@ -86,6 +88,25 @@ class DocumentActivity : AppCompatActivity(),
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
+    }
+
+    private fun confirmSaveReport(){
+        AlertDialog.Builder(this)
+            .setTitle(R.string.app_name)
+            .setMessage(getString(R.string.confirm_save_report_message))
+            .setPositiveButton(getString(R.string.dialog_button_confirm_text)){ dialog, _ ->
+                dialog.dismiss()
+                saveReport()
+            }.setNeutralButton(getString(R.string.dialog_button_cancel_text)){ dialog, _ ->
+                dialog.dismiss()
+            }
+            .create()
+            .show()
+
+    }
+
+    private fun saveReport(){
+
     }
 
     private fun showFragment(){

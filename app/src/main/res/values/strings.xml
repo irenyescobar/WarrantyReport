@@ -47,4 +47,7 @@
     <string name="comments">Observações</string>
     <string name="reason_unfounded">Motivo da improcedência</string>
     <string name="action_text_import_data">Importar dados</string>
+    <string name="confirm_save_report_message">Deseja salvar o laudo?</string>
+    <string name="dialog_button_confirm_text">Sim</string>
+    <string name="dialog_button_cancel_text">Cancelar</string>
 </resources>
