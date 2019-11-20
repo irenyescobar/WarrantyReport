@@ -37,7 +37,7 @@ class ReportListAdapter internal constructor( context: Context,
             listener.onSelected(current)
         }
 
-        holder.textView.text =  "LAUDO ${current.id.toString(3)} - ${current.created_at.toDateTextFormatted()}"
+        holder.textView.text =  "LAUDO ${current.id} - ${current.created_at.toDateTextFormatted()}"
 
     }
 
