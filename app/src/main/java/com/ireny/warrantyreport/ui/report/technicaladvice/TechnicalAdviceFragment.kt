@@ -8,40 +8,35 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.ireny.warrantyreport.R
 import com.ireny.warrantyreport.entities.Report
 import com.ireny.warrantyreport.entities.ReportTechnicalAdvice
+import com.ireny.warrantyreport.ui.listeners.CheckedChangedListener
 import com.ireny.warrantyreport.ui.report.base.FragmentBase
 import com.ireny.warrantyreport.utils.customApp
 import com.ireny.warrantyreport.utils.reportActivity
-import com.irenyescobar.mytasksapp.ui.listeners.CheckedChangeListener
+import kotlinx.android.synthetic.main.recyclerview_fragment.*
 
-class TechnicalAdviceFragment(private val reportId:Long) : FragmentBase(), CheckedChangeListener<ReportTechnicalAdvice> {
+class TechnicalAdviceFragment(private val reportId:Long) : FragmentBase(),
+    CheckedChangedListener<ReportTechnicalAdvice> {
 
     private lateinit var viewModel: TechnicalAdviceViewModel
     private lateinit var adapter: TechnicalAdviceListAdapter
-    private lateinit var recyclerView: RecyclerView
     private var listener: Listener? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        reportActivity.supportActionBar?.apply {
-            title = "Parecer técnico"
-        }
-        val view = inflater.inflate(R.layout.recyclerview_fragment, container, false)
-        recyclerView = view.findViewById(R.id.recyclerview)
-        return view
+        return inflater.inflate(R.layout.recyclerview_fragment, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
         adapter = TechnicalAdviceListAdapter(context!!,this)
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(context!!)
+        recyclerview.adapter = adapter
+        recyclerview.layoutManager = LinearLayoutManager(context!!)
 
         viewModel = ViewModelProviders.of(this,TechnicalAdviceViewModel.Companion.Factory(
             reportActivity.customApp,
@@ -51,12 +46,16 @@ class TechnicalAdviceFragment(private val reportId:Long) : FragmentBase(), Check
         ).get(TechnicalAdviceViewModel::class.java)
 
 
-        viewModel.technicalAdvices.observe(this, Observer { data ->
-            data?.let { refresh() }
+        viewModel.technicalAdvices.observe(this, Observer {
+            it?.let { viewModel.loadData() }
         })
 
-        viewModel.assignedTechnicalAdvices.observe(this, Observer { data ->
-            data?.let { refresh() }
+        viewModel.assignedTechnicalAdvices.observe(this, Observer {
+            it?.let { viewModel.loadData() }
+        })
+
+        viewModel.model.observe(this, Observer {
+            adapter.setData(it)
         })
     }
 
@@ -74,15 +73,11 @@ class TechnicalAdviceFragment(private val reportId:Long) : FragmentBase(), Check
         listener = null
     }
 
-    override fun refresh(entity: Report) {
-       refresh()
+    override fun bindView(model: Report) {
+
     }
 
-    private fun refresh(){
-        adapter.setData(viewModel.getData())
-    }
-
-    override fun onCheckedChange(item: ReportTechnicalAdvice) {
+    override fun onCheckedChanged(item: ReportTechnicalAdvice) {
         listener?.onItemChangedSelection(item)
     }
 
