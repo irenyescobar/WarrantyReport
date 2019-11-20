@@ -3,6 +3,8 @@ package com.ireny.warrantyreport.ui.report.document
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
@@ -68,6 +70,19 @@ class DocumentActivity : AppCompatActivity(),
         viewModel.loadModel()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.document_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId) {
+            R.id.action_save_report -> {
+                return true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
