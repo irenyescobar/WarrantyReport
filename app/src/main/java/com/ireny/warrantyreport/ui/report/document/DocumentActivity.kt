@@ -29,7 +29,7 @@ class DocumentActivity : AppCompatActivity(),
 
     private lateinit var currentFragment: PreviewDocumentFragment
     private lateinit var transaction: FragmentTransaction
-    private lateinit var viewModel: PreviewDocumentViewModel
+    private lateinit var viewModel: DocumentViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,11 +41,11 @@ class DocumentActivity : AppCompatActivity(),
 
         val reportId = intent.getLongExtra(REPORT_ID,0)
 
-        viewModel = ViewModelProviders.of(this, PreviewDocumentViewModel.Companion.Factory(
+        viewModel = ViewModelProviders.of(this, DocumentViewModel.Companion.Factory(
             customApp,
             reportRepository,
             reportId)
-        ).get(PreviewDocumentViewModel::class.java)
+        ).get(DocumentViewModel::class.java)
 
         showFragment()
 
