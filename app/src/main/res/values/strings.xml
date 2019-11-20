@@ -42,4 +42,8 @@
     <string name="document_technicalConsultant">Consultor Técnico:</string>
     <string name="document_analisysDate">Data:</string>
     <string name="document_technicalConsultantContact">Telefone:</string>
+    <string name="preview_title">Pré visualização</string>
+    <string name="warranty_title">Laudo</string>
+    <string name="comments">Observações</string>
+    <string name="reason_unfounded">Motivo da improcedência</string>
 </resources>

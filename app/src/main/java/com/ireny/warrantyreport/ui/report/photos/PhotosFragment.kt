@@ -10,29 +10,24 @@ import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.ireny.warrantyreport.R
 import com.ireny.warrantyreport.di.components.DaggerPhotosComponent
 import com.ireny.warrantyreport.di.components.PhotosComponent
 import com.ireny.warrantyreport.di.modules.PhotosModule
 import com.ireny.warrantyreport.entities.Report
-import com.ireny.warrantyreport.ui.listeners.ItemClickListener
-import com.ireny.warrantyreport.ui.listeners.ItemLongClickListener
 import com.ireny.warrantyreport.ui.report.base.FragmentBase
 import com.ireny.warrantyreport.ui.report.services.IPhotosManager
-import com.ireny.warrantyreport.utils.reportActivity
+import kotlinx.android.synthetic.main.report_photos_fragment.*
 import java.io.IOException
 
 
-class PhotosFragment(val reportId:Long) : FragmentBase(),  ItemClickListener<PhotosFragment.Photo> , ItemLongClickListener<PhotosFragment.Photo>{
+class PhotosFragment(val reportId:Long) : FragmentBase(){
 
     private lateinit var component: PhotosComponent
     private val photoManager: IPhotosManager by lazy { component.photoManager()}
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: PhotoRecyclerViewAdapter
     private var currentPhoto: Photo? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,29 +39,16 @@ class PhotosFragment(val reportId:Long) : FragmentBase(),  ItemClickListener<Pho
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        reportActivity.supportActionBar?.apply {
-            title = "Fotos"
-        }
-        val view = inflater.inflate(R.layout.recyclerview_fragment, container, false)
-        recyclerView = view.findViewById(R.id.recyclerview)
-        recyclerView.layoutManager =  GridLayoutManager(activity, 2)
-        adapter = PhotoRecyclerViewAdapter(this,this)
-        recyclerView.adapter = adapter
-        return view
+        return inflater.inflate(R.layout.report_photos_fragment, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        photo1.setup()
+        photo2.setup()
+        photo3.setup()
+        photo4.setup()
         checkPermissionFromStorage()
-    }
-
-    override fun onClicked(item: Photo) {
-        changePhoto(item)
-    }
-
-    override fun onLongClicked(item: Photo) {
-        removePhoto(item)
     }
 
     private fun initComponent() {
@@ -88,13 +70,17 @@ class PhotosFragment(val reportId:Long) : FragmentBase(),  ItemClickListener<Pho
         refresh(reportId)
     }
 
-    override fun refresh(entity: Report) {
-        refresh(entity.id)
+    override fun bindView(model: Report) {
+        refresh(model.id)
+        previewButtonFunction?.showPreviewButton(true)
     }
 
     private fun refresh(reportId: Long) {
         val data = photoManager.getData(reportId)
-        adapter.refresh(data)
+        photo1.setImage(data[0])
+        photo2.setImage(data[1])
+        photo3.setImage(data[2])
+        photo4.setImage(data[3])
     }
 
     private fun proceedTakePhotoAfterPermission() {
@@ -199,6 +185,32 @@ class PhotosFragment(val reportId:Long) : FragmentBase(),  ItemClickListener<Pho
                     }
                 }
             }
+        }
+    }
+
+    private fun ImageView.setImage(photo: Photo){
+        this.tag = photo
+        if(photo.image != null) {
+            this.setImageDrawable(photo.image)
+        }else{
+            this.setImageResource(R.drawable.ic_photo_size_select_actual_black_24dp)
+        }
+    }
+
+    private fun ImageView.setup(){
+        this.setOnClickListener{
+            val item = it.tag
+            if(item is Photo){
+                changePhoto(item)
+            }
+        }
+
+        this.setOnLongClickListener{
+            val item = it.tag
+            if(item is Photo){
+                removePhoto(item)
+            }
+            true
         }
     }
 

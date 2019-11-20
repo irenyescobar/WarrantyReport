@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -11,12 +12,15 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.ireny.warrantyreport.entities.WarrantReportData
 import com.ireny.warrantyreport.repositories.ReportRepository
 import com.ireny.warrantyreport.services.ImportDataCompletedListener
 import com.ireny.warrantyreport.services.ImportDataService
 import com.ireny.warrantyreport.services.LogError
+import com.ireny.warrantyreport.ui.base.IProgressLoading
+import com.ireny.warrantyreport.ui.base.IShowMessage
 import com.ireny.warrantyreport.ui.report.ReportActivity
 import com.ireny.warrantyreport.utils.customApp
 import kotlinx.android.synthetic.main.activity_main.*
@@ -24,7 +28,10 @@ import java.io.BufferedReader
 import java.io.InputStream
 
 
-class MainActivity: AppCompatActivity(), ImportDataCompletedListener {
+class MainActivity: AppCompatActivity(),
+    ImportDataCompletedListener ,
+    IProgressLoading,
+    IShowMessage{
 
     private val component by lazy { customApp.component }
     private val importDataService: ImportDataService by lazy { component.importDataService() }
@@ -33,6 +40,8 @@ class MainActivity: AppCompatActivity(), ImportDataCompletedListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        setSupportActionBar(toolbar)
+
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
         val navController = findNavController(R.id.nav_host_fragment)
@@ -45,7 +54,7 @@ class MainActivity: AppCompatActivity(), ImportDataCompletedListener {
         navView.setupWithNavController(navController)
 
         fab.setOnClickListener {
-            showNewReport(null)
+            openReportActivity(null)
         }
     }
 
@@ -80,7 +89,7 @@ class MainActivity: AppCompatActivity(), ImportDataCompletedListener {
         }
     }
 
-    fun showNewReport(reportId:Long?){
+    fun openReportActivity(reportId:Long?){
         startActivity(ReportActivity.newInstance(this,reportId))
     }
 
@@ -101,15 +110,19 @@ class MainActivity: AppCompatActivity(), ImportDataCompletedListener {
     }
 
     override fun onImportDataCompleted(errors: List<LogError>) {
-        Toast.makeText(this, "Importação finalizada com ${errors.count()} erros",Toast.LENGTH_LONG).show()
+        showMessage("Importação finalizada com ${errors.count()} erros")
     }
 
-    fun showError(message:String?) {
-        Toast.makeText(this,message,Toast.LENGTH_LONG).show()
+    override fun showProgress(show: Boolean) {
+        if(show){
+            progressBar.visibility = View.VISIBLE
+        }else{
+            progressBar.visibility = View.GONE
+        }
     }
 
-    fun showSuccess(message:String?) {
-        Toast.makeText(this,message,Toast.LENGTH_LONG).show()
+    override fun showMessage(message: String) {
+        Snackbar.make(container,message, Snackbar.LENGTH_LONG).show()
     }
 
     companion object {

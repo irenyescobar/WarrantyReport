@@ -7,12 +7,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.ireny.warrantyreport.repositories.listeners.GetErrorListener
 import com.ireny.warrantyreport.R
-import com.ireny.warrantyreport.ui.listeners.SelectedListener
 import com.ireny.warrantyreport.entities.Report
+import com.ireny.warrantyreport.repositories.listeners.GetErrorListener
+import com.ireny.warrantyreport.ui.listeners.SelectedListener
 import com.ireny.warrantyreport.utils.customApp
 import com.ireny.warrantyreport.utils.mainActivity
 
@@ -22,6 +23,8 @@ class HomeFragment : Fragment(),
     private lateinit var viewModel: HomeViewModel
     private lateinit var adapter: ReportListAdapter
     private lateinit var recyclerView: RecyclerView
+    private lateinit var linearLayoutManager: LinearLayoutManager
+    private lateinit var dividerItemDecoration: DividerItemDecoration
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,7 +37,7 @@ class HomeFragment : Fragment(),
         }
 
         val view = inflater.inflate(R.layout.fragment_home, container, false)
-        recyclerView = view.findViewById(R.id.homerecyclerview)
+        recyclerView = view.findViewById(R.id.recyclerview)
         return view
     }
 
@@ -43,7 +46,13 @@ class HomeFragment : Fragment(),
 
         adapter = ReportListAdapter(context!!,this)
         recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(context!!)
+        linearLayoutManager = LinearLayoutManager(context!!)
+        dividerItemDecoration = DividerItemDecoration(
+            recyclerView.context,
+            linearLayoutManager.orientation
+        )
+        recyclerView.layoutManager = linearLayoutManager
+        recyclerView.addItemDecoration(dividerItemDecoration)
 
         viewModel = ViewModelProviders.of(this, HomeViewModel.Companion.Factory(
             mainActivity.customApp,
@@ -56,10 +65,10 @@ class HomeFragment : Fragment(),
     }
 
     override fun onSelected(item: Report) {
-        mainActivity.showNewReport(item.id)
+        mainActivity.openReportActivity(item.id)
     }
 
     override fun onGetError(id: Long, error: Exception) {
-        mainActivity.showError(error.localizedMessage)
+        mainActivity.showMessage(error.localizedMessage)
     }
 }

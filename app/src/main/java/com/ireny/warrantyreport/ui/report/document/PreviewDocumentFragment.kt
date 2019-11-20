@@ -1,5 +1,7 @@
-package com.ireny.warrantyreport.ui.report.previewdocument
+package com.ireny.warrantyreport.ui.report.document
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.pdf.PdfDocument
@@ -13,15 +15,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.ireny.warrantyreport.di.components.DaggerPhotosComponent
 import com.ireny.warrantyreport.di.components.PhotosComponent
 import com.ireny.warrantyreport.di.modules.PhotosModule
 import com.ireny.warrantyreport.entities.Report
-import com.ireny.warrantyreport.ui.report.base.FragmentBase
+import com.ireny.warrantyreport.ui.report.interfaces.IBindView
 import com.ireny.warrantyreport.ui.report.interfaces.ICreateDocument
 import com.ireny.warrantyreport.ui.report.services.IPhotosManager
 import com.ireny.warrantyreport.utils.Constants
-import com.ireny.warrantyreport.utils.reportActivity
 import com.ireny.warrantyreport.utils.toDateTextFormatted
 import kotlinx.android.synthetic.main.report_preview_document_fragment.*
 import java.io.File
@@ -29,10 +32,11 @@ import java.io.FileOutputStream
 import java.io.IOException
 
 
-class PreviewDocumentFragment : FragmentBase(), ICreateDocument<Report> {
+class PreviewDocumentFragment : Fragment(), ICreateDocument<Report> ,IBindView<Report>{
 
     private lateinit var component: PhotosComponent
     private val photoManager: IPhotosManager by lazy { component.photoManager()}
+    private var report: Report? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,20 +47,32 @@ class PreviewDocumentFragment : FragmentBase(), ICreateDocument<Report> {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-        reportActivity.supportActionBar?.apply {
-            title = "Pré visualização"
-        }
         return inflater.inflate(com.ireny.warrantyreport.R.layout.report_preview_document_fragment, container, false)
     }
 
-    override fun refresh(entity: Report) {
-        showReportScreen(entity)
+    override fun bindView(model: Report) {
+        report = model
+
+        val read = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
+        val write = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+
+        if (read != PackageManager.PERMISSION_GRANTED || write != PackageManager.PERMISSION_GRANTED) {
+
+            requestPermissions(
+                arrayOf(
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                REQUEST_PERMISSION_STORAGE
+            )
+
+        }else{
+            showReportScreen(model)
+        }
     }
 
-    override fun createDocument(entity: Report) {
-        createPdf(entity.id)
-        showDocument(entity.id)
+    override fun createDocument(model: Report) {
+        createPdf(model.id)
+        showDocument(model.id)
     }
 
     private fun initComponent() {
@@ -195,5 +211,7 @@ class PreviewDocumentFragment : FragmentBase(), ICreateDocument<Report> {
         @JvmStatic
         fun newInstance() =
             PreviewDocumentFragment()
+
+        const val REQUEST_PERMISSION_STORAGE = 111
     }
 }

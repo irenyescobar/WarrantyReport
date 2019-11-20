@@ -1,10 +1,7 @@
 package com.ireny.warrantyreport.ui.report.technicaladvice
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
 import com.ireny.warrantyreport.entities.AssignedTechnicalAdvice
 import com.ireny.warrantyreport.entities.ReportTechnicalAdvice
 import com.ireny.warrantyreport.entities.TechnicalAdvice
@@ -16,22 +13,20 @@ class TechnicalAdviceViewModel(application: Application,
                                repository: ReportRepository,
                                val reportId: Long): AndroidViewModel(application){
 
-
     val technicalAdvices: LiveData<List<TechnicalAdvice>> = technicalAdviceRepository.getAll()
     val assignedTechnicalAdvices: LiveData<List<AssignedTechnicalAdvice>> = repository.getTechnicalAdvices(reportId)
+    val model = MutableLiveData<List<ReportTechnicalAdvice>>().apply { value = emptyList() }
 
-    fun getData():List<ReportTechnicalAdvice>{
-        val list :MutableList<ReportTechnicalAdvice> = mutableListOf()
-
+    fun loadData(){
+        val list :ArrayList<ReportTechnicalAdvice> = arrayListOf()
         technicalAdvices.value?.forEach {
-            val element = ReportTechnicalAdvice(it.id,it.description,isSelectioned(it.id))
+            val element = ReportTechnicalAdvice(it.id,it.description,isSelected(it.id))
             list.add(element)
         }
-
-        return list
+        model.postValue(list)
     }
 
-    private fun isSelectioned(technicalAdviceId:Int):Boolean{
+    private fun isSelected(technicalAdviceId:Int):Boolean{
         assignedTechnicalAdvices.value?.run {
             return  find{ it.technicalAdviceId == technicalAdviceId } != null
         }

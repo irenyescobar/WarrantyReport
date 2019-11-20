@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ireny.warrantyreport.R
@@ -21,17 +22,16 @@ import com.ireny.warrantyreport.utils.reportActivity
 class CompanyFragment: FragmentBase(), CompanyRepository.ErrorListener, SelectedListener<Company> {
 
     private var listener: Listener? = null
-    private lateinit var adapter: CompanyListAdapter
+    private  var adapter: CompanyListAdapter? = null
     private lateinit var recyclerView: RecyclerView
-    lateinit var viewModel: CompanyViewModel
+    private lateinit var viewModel: CompanyViewModel
+    private lateinit var linearLayoutManager: LinearLayoutManager
+    private lateinit var dividerItemDecoration: DividerItemDecoration
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        reportActivity.supportActionBar?.apply {
-            title = "Empresa"
-        }
         val view = inflater.inflate(R.layout.recyclerview_fragment, container, false)
         recyclerView = view.findViewById(R.id.recyclerview)
         return view
@@ -41,7 +41,13 @@ class CompanyFragment: FragmentBase(), CompanyRepository.ErrorListener, Selected
         super.onActivityCreated(savedInstanceState)
         adapter = CompanyListAdapter(context!!,this)
         recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(context!!)
+        linearLayoutManager = LinearLayoutManager(context!!)
+        dividerItemDecoration = DividerItemDecoration(
+            recyclerView.context,
+            linearLayoutManager.orientation
+        )
+        recyclerView.layoutManager = linearLayoutManager
+        recyclerView.addItemDecoration(dividerItemDecoration)
 
         reportActivity.companyRepository.setListener(this)
 
@@ -51,7 +57,7 @@ class CompanyFragment: FragmentBase(), CompanyRepository.ErrorListener, Selected
         ).get(CompanyViewModel::class.java)
 
         viewModel.all.observe(this, Observer { data ->
-            data?.let { adapter.setData(it) }
+            data?.let { adapter?.setData(it) }
         })
     }
 
@@ -69,8 +75,8 @@ class CompanyFragment: FragmentBase(), CompanyRepository.ErrorListener, Selected
         listener = null
     }
 
-    override fun refresh(entity: Report) {
-        adapter.refreshSelection(entity.companyId)
+    override fun bindView(model: Report) {
+        adapter?.refreshSelection(model.companyId)
     }
 
     override fun onSelected(item: Company) {
@@ -78,7 +84,7 @@ class CompanyFragment: FragmentBase(), CompanyRepository.ErrorListener, Selected
     }
 
     override fun onCompanyError(error: Exception) {
-        reportActivity.showError(error.localizedMessage)
+        //reportActivity.showError(error.localizedMessage)
     }
 
     interface Listener{

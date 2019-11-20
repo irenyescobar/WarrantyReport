@@ -8,11 +8,12 @@ import android.widget.CheckBox
 import androidx.recyclerview.widget.RecyclerView
 import com.ireny.warrantyreport.R
 import com.ireny.warrantyreport.entities.ReportTechnicalAdvice
-import com.irenyescobar.mytasksapp.ui.listeners.CheckedChangeListener
+import com.ireny.warrantyreport.ui.listeners.CheckedChangedListener
 
 class TechnicalAdviceListAdapter internal constructor(
     context: Context,
-    private val checkedChangeListener: CheckedChangeListener<ReportTechnicalAdvice>):
+    private val checkedChangeListener: CheckedChangedListener<ReportTechnicalAdvice>
+):
     RecyclerView.Adapter<TechnicalAdviceListAdapter.TechnicalAdviceViewHolder>() {
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
@@ -39,7 +40,7 @@ class TechnicalAdviceListAdapter internal constructor(
             checkBox.setOnClickListener{
                 val item = it.tag as ReportTechnicalAdvice
                 item.selectioned = !item.selectioned
-                checkedChangeListener.onCheckedChange(item)
+                checkedChangeListener.onCheckedChanged(item)
             }
 
         }

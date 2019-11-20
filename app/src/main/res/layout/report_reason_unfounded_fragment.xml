@@ -2,7 +2,7 @@
 <EditText
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/text"
+    android:id="@+id/textReasonUnfounded"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="8dp"
@@ -11,6 +11,5 @@
     android:gravity="start|top"
     android:inputType="textMultiLine"
     android:minLines="10"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
+    android:hint="@string/reason_unfounded"
+    android:background="@drawable/container_back" />
