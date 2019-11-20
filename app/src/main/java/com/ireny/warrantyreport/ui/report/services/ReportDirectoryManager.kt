@@ -12,7 +12,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
-class PhotosManager(private val context: Context): IPhotosManager {
+class PhotosManager(private val context: Context): IReportDirectoryManager {
 
     private val data: Array<PhotosFragment.Photo> = arrayOf(
         PhotosFragment.Photo(0),
@@ -73,7 +73,7 @@ class PhotosManager(private val context: Context): IPhotosManager {
 
 }
 
-interface IPhotosManager{
+interface IReportDirectoryManager{
     fun getData(reportId: Long):Array<PhotosFragment.Photo>
     fun saveImage(myBitmap: Bitmap, photoId:Int, reportId:Long)
     fun removeImage(photoId:Int, reportId:Long)

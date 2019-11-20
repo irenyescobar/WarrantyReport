@@ -19,7 +19,7 @@ import com.ireny.warrantyreport.di.components.PhotosComponent
 import com.ireny.warrantyreport.di.modules.PhotosModule
 import com.ireny.warrantyreport.entities.Report
 import com.ireny.warrantyreport.ui.report.base.FragmentBase
-import com.ireny.warrantyreport.ui.report.services.IPhotosManager
+import com.ireny.warrantyreport.ui.report.services.IReportDirectoryManager
 import kotlinx.android.synthetic.main.report_photos_fragment.*
 import java.io.IOException
 
@@ -27,7 +27,7 @@ import java.io.IOException
 class PhotosFragment(val reportId:Long) : FragmentBase(){
 
     private lateinit var component: PhotosComponent
-    private val photoManager: IPhotosManager by lazy { component.photoManager()}
+    private val photoManager: IReportDirectoryManager by lazy { component.photoManager()}
     private var currentPhoto: Photo? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -23,7 +23,7 @@ import com.ireny.warrantyreport.di.modules.PhotosModule
 import com.ireny.warrantyreport.entities.Report
 import com.ireny.warrantyreport.ui.report.interfaces.IBindView
 import com.ireny.warrantyreport.ui.report.interfaces.ICreateDocument
-import com.ireny.warrantyreport.ui.report.services.IPhotosManager
+import com.ireny.warrantyreport.ui.report.services.IReportDirectoryManager
 import com.ireny.warrantyreport.utils.Constants
 import com.ireny.warrantyreport.utils.toDateTextFormatted
 import kotlinx.android.synthetic.main.report_preview_document_fragment.*
@@ -35,7 +35,7 @@ import java.io.IOException
 class PreviewDocumentFragment : Fragment(), ICreateDocument<Report> ,IBindView<Report>{
 
     private lateinit var component: PhotosComponent
-    private val photoManager: IPhotosManager by lazy { component.photoManager()}
+    private val photoManager: IReportDirectoryManager by lazy { component.photoManager()}
     private var report: Report? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
