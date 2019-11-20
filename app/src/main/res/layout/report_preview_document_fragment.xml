@@ -87,7 +87,7 @@
                         android:layout_weight="1"
                         android:orientation="horizontal">
                         <TextView
-                            android:id="@+id/text_distributor"
+                            android:id="@+id/textDistributor"
                             style="@style/documentLabelLeft"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -108,7 +108,7 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/text_cityState"
+                            android:id="@+id/textCityState"
                             style="@style/documentLabelLeft"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -135,7 +135,7 @@
                         android:layout_weight="1"
                         android:orientation="horizontal">
                         <TextView
-                            android:id="@+id/text_client"
+                            android:id="@+id/textClient"
                             style="@style/documentLabelLeft"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -157,7 +157,7 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/text_partReference"
+                            android:id="@+id/textPartReference"
                             style="@style/documentLabelLeft"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -185,7 +185,7 @@
                         android:layout_weight="1"
                         android:orientation="horizontal">
                         <TextView
-                            android:id="@+id/text_sourceInvoice"
+                            android:id="@+id/textSourceInvoice"
                             style="@style/documentLabelLeft"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -207,7 +207,7 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/text_invoiceDate"
+                            android:id="@+id/textInvoiceDate"
                             style="@style/documentLabelRight"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -234,7 +234,7 @@
                         android:layout_weight="1"
                         android:orientation="horizontal">
                         <TextView
-                            android:id="@+id/text_applicationDate"
+                            android:id="@+id/textApplicationDate"
                             style="@style/documentLabelLeft"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -352,7 +352,7 @@
                 app:layout_constraintTop_toBottomOf="@id/text_comments" />
 
             <TextView
-                android:id="@+id/text_technicalConsultant"
+                android:id="@+id/textTechnicalConsultant"
                 style="@style/documentLabelLeft"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -368,17 +368,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text=""
-                app:layout_constraintStart_toEndOf="@id/text_technicalConsultant"
+                app:layout_constraintStart_toEndOf="@id/textTechnicalConsultant"
                 app:layout_constraintTop_toBottomOf="@id/text_comments_value" />
 
             <TextView
-                android:id="@+id/text_analysisDate"
+                android:id="@+id/textAnalysisDate"
                 style="@style/documentLabelLeft"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/document_analisysDate"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/text_technicalConsultant" />
+                app:layout_constraintTop_toBottomOf="@id/textTechnicalConsultant" />
 
             <TextView
                 android:id="@+id/text_analysisDate_value"
@@ -386,11 +386,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=""
-                app:layout_constraintStart_toEndOf="@+id/text_analysisDate"
+                app:layout_constraintStart_toEndOf="@+id/textAnalysisDate"
                 app:layout_constraintTop_toBottomOf="@+id/text_technicalConsultant_value" />
 
             <TextView
-                android:id="@+id/text_technicalConsultantContact"
+                android:id="@+id/textTechnicalConsultantContact"
                 style="@style/documentLabelRight"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -404,7 +404,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=""
-                app:layout_constraintStart_toEndOf="@+id/text_technicalConsultantContact"
+                app:layout_constraintStart_toEndOf="@+id/textTechnicalConsultantContact"
                 app:layout_constraintTop_toBottomOf="@+id/text_technicalConsultant_value" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -457,52 +457,52 @@
 
         </LinearLayout>
 
-        <LinearLayout
+      <LinearLayout
             android:id="@+id/content_logos"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:orientation="horizontal"
             android:layout_alignParentBottom="true">
 
-            <ImageView
-                style="@style/documentLogo"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                app:srcCompat="@drawable/suspensys" />
+        <!--     <ImageView
+               style="@style/documentLogo"
+               android:layout_width="0dp"
+               android:layout_height="wrap_content"
+               android:layout_weight="1"
+               app:srcCompat="@drawable/suspensys" />
 
-            <ImageView
-                style="@style/documentLogo"
-                app:srcCompat="@drawable/frasle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-            <ImageView
-                style="@style/documentLogo"
-                app:srcCompat="@drawable/controil"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"/>
-            <ImageView
-                style="@style/documentLogo"
-                app:srcCompat="@drawable/lonaflex"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"/>
-            <ImageView
-                style="@style/documentLogo"
-                app:srcCompat="@drawable/master"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"/>
-            <ImageView
-                style="@style/documentLogo"
-                app:srcCompat="@drawable/jost"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"/>
+           <ImageView
+               style="@style/documentLogo"
+               app:srcCompat="@drawable/frasle"
+               android:layout_width="0dp"
+               android:layout_height="wrap_content"
+               android:layout_weight="1" />
+           <ImageView
+               style="@style/documentLogo"
+               app:srcCompat="@drawable/controil"
+               android:layout_width="0dp"
+               android:layout_height="wrap_content"
+               android:layout_weight="1"/>
+           <ImageView
+               style="@style/documentLogo"
+               app:srcCompat="@drawable/lonaflex"
+               android:layout_width="0dp"
+               android:layout_height="wrap_content"
+               android:layout_weight="1"/>
+           <ImageView
+               style="@style/documentLogo"
+               app:srcCompat="@drawable/master"
+               android:layout_width="0dp"
+               android:layout_height="wrap_content"
+               android:layout_weight="1"/>
+           <ImageView
+               style="@style/documentLogo"
+               app:srcCompat="@drawable/jost"
+               android:layout_width="0dp"
+               android:layout_height="wrap_content"
+               android:layout_weight="1"/>-->
 
-        </LinearLayout>
+       </LinearLayout>
 
     </RelativeLayout>
 
