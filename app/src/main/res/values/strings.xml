@@ -46,4 +46,5 @@
     <string name="warranty_title">Laudo</string>
     <string name="comments">Observações</string>
     <string name="reason_unfounded">Motivo da improcedência</string>
+    <string name="action_text_import_data">Importar dados</string>
 </resources>

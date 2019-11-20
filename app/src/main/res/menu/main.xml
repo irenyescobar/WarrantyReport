@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity" >
     <item android:id="@+id/action_import_data"
-        android:title="Importar dados"
+        android:title="@string/action_text_import_data"
         android:orderInCategory="100"
         app:showAsAction="never" />
 </menu>
