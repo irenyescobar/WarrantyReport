@@ -6,6 +6,6 @@ class Constants {
     companion object {
         const val DATABASE_NAME: String = "db-warrant-report"
         val LOCALE_BRAZIL = Locale("pt", "BR")
-        const val REPORTS_DIRECTORY = "/reports"
+        const val REPORTS_DIRECTORY = "/Laudos"
     }
 }

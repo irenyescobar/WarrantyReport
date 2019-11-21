@@ -1,4 +1,4 @@
-package com.ireny.warrantyreport.ui.home
+package com.ireny.warrantyreport.ui.reportscompleted
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -8,10 +8,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.ireny.warrantyreport.entities.Report
 import com.ireny.warrantyreport.repositories.ReportRepository
 
-class HomeViewModel (application: Application, repository: ReportRepository): AndroidViewModel(application) {
+class ReportsCompletedViewModel(application: Application, repository: ReportRepository) : AndroidViewModel(application) {
 
-
-    var all: LiveData<List<Report>> = repository.getPendings()
+    var all: LiveData<List<Report>> = repository.getCompleteds()
 
     companion object{
 
@@ -21,7 +20,7 @@ class HomeViewModel (application: Application, repository: ReportRepository): An
             : ViewModelProvider.NewInstanceFactory(){
 
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                return HomeViewModel(application, repository) as T
+                return ReportsCompletedViewModel(application, repository) as T
             }
         }
     }

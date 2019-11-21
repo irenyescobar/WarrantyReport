@@ -1,4 +1,4 @@
-package com.ireny.warrantyreport.ui.home
+package com.ireny.warrantyreport.ui.reportscompleted
 
 import android.content.Context
 import android.os.Bundle
@@ -17,12 +17,11 @@ import com.ireny.warrantyreport.ui.adapters.ReportListAdapter
 import com.ireny.warrantyreport.ui.listeners.SelectedListener
 import com.ireny.warrantyreport.utils.customApp
 import com.ireny.warrantyreport.utils.mainActivity
-import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.fragment_reports_completed.*
 
-class HomeFragment : Fragment(),
-    GetErrorListener, SelectedListener<Report> {
+class ReportsCompletedFragment : Fragment() , GetErrorListener, SelectedListener<Report> {
 
-    private lateinit var viewModel: HomeViewModel
+    private lateinit var viewModel: ReportsCompletedViewModel
     private lateinit var adapter: ReportListAdapter
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var dividerItemDecoration: DividerItemDecoration
@@ -35,10 +34,9 @@ class HomeFragment : Fragment(),
     ): View? {
 
         mainActivity.supportActionBar?.apply {
-            title = "Laudos em andamento"
+            title = "Laudos finalizados"
         }
-
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        return inflater.inflate(R.layout.fragment_reports_completed, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -54,10 +52,10 @@ class HomeFragment : Fragment(),
         recyclerview.layoutManager = linearLayoutManager
         recyclerview.addItemDecoration(dividerItemDecoration)
 
-        viewModel = ViewModelProviders.of(this, HomeViewModel.Companion.Factory(
+        viewModel = ViewModelProviders.of(this, ReportsCompletedViewModel.Companion.Factory(
             mainActivity.customApp,
             mainActivity.reportRepository)
-        ).get(HomeViewModel::class.java)
+        ).get(ReportsCompletedViewModel::class.java)
 
         viewModel.all.observe(this, Observer { data ->
             data?.let { adapter.setData(it) }
@@ -69,7 +67,7 @@ class HomeFragment : Fragment(),
         if (context is Listener) {
             listener = context
         } else {
-            throw RuntimeException("$context must implement HomeFragment.Listener")
+            throw RuntimeException("$context must implement ReportsCompletedFragment.Listener")
         }
     }
 
@@ -79,7 +77,7 @@ class HomeFragment : Fragment(),
     }
 
     override fun onSelected(item: Report) {
-       listener?.openReport(item.id)
+        listener?.openCompletedReport(item.id)
     }
 
     override fun onGetError(id: Long, error: Exception) {
@@ -88,6 +86,6 @@ class HomeFragment : Fragment(),
 
     interface Listener{
         fun showError(error:String)
-        fun openReport(reportId:Long)
+        fun openCompletedReport(reportId:Long)
     }
 }

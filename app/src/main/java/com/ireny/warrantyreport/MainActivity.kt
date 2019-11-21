@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -21,17 +20,23 @@ import com.ireny.warrantyreport.services.ImportDataService
 import com.ireny.warrantyreport.services.LogError
 import com.ireny.warrantyreport.ui.base.IProgressLoading
 import com.ireny.warrantyreport.ui.base.IShowMessage
+import com.ireny.warrantyreport.ui.home.HomeFragment
 import com.ireny.warrantyreport.ui.report.ReportActivity
+import com.ireny.warrantyreport.ui.report.document.DocumentActivity
+import com.ireny.warrantyreport.ui.reportscompleted.ReportsCompletedFragment
 import com.ireny.warrantyreport.utils.customApp
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.BufferedReader
 import java.io.InputStream
 
 
+
 class MainActivity: AppCompatActivity(),
     ImportDataCompletedListener ,
     IProgressLoading,
-    IShowMessage{
+    IShowMessage,
+    HomeFragment.Listener,
+    ReportsCompletedFragment.Listener{
 
     private val component by lazy { customApp.component }
     private val importDataService: ImportDataService by lazy { component.importDataService() }
@@ -43,13 +48,8 @@ class MainActivity: AppCompatActivity(),
         setSupportActionBar(toolbar)
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
-
         val navController = findNavController(R.id.nav_host_fragment)
-        val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.navigation_home
-            )
-        )
+        val appBarConfiguration = AppBarConfiguration(setOf(R.id.navigation_home))
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
@@ -58,14 +58,17 @@ class MainActivity: AppCompatActivity(),
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+    override fun onStart() {
+        super.onStart()
+        checkIsFirstRun()
+    }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
         return when(item.itemId) {
             R.id.action_import_data -> {
                 performFileSearch()
@@ -83,13 +86,18 @@ class MainActivity: AppCompatActivity(),
                 if(inputStream != null){
                     importData(inputStream)
                 }else {
-                    Toast.makeText(this,"Sem dados para importar.",Toast.LENGTH_LONG).show()
+                   showMessage(getString(R.string.no_data_to_import))
                 }
             }
         }
     }
 
-    fun openReportActivity(reportId:Long?){
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
+
+    private fun openReportActivity(reportId:Long?){
         startActivity(ReportActivity.newInstance(this,reportId))
     }
 
@@ -99,8 +107,31 @@ class MainActivity: AppCompatActivity(),
             type = "*/*"
         }
 
-        startActivityForResult(Intent.createChooser(intent,"Selecione o arquivo"), READ_REQUEST_CODE)
+        startActivityForResult(Intent.createChooser(intent,getString(R.string.select_file_message)), READ_REQUEST_CODE)
     }
+
+    private fun checkIsFirstRun(){
+        showProgress(true)
+        var mboolean = false
+        var settings = getSharedPreferences(SETTINGS_INSTALLATION, 0)
+        mboolean = settings.getBoolean(FIRST_RUN, false)
+
+        if (!mboolean) {
+            importRawData()
+
+            settings = getSharedPreferences(SETTINGS_INSTALLATION, 0)
+            val editor = settings.edit()
+            editor.putBoolean(FIRST_RUN, true)
+            editor.commit()
+        }
+        showProgress(false)
+    }
+
+    private fun importRawData(){
+        val databaseInputStream = resources.openRawResource(R.raw.data)
+        importData(databaseInputStream)
+    }
+
 
     private fun importData(inputStream: InputStream){
         val bufferedReader: BufferedReader = inputStream.bufferedReader()
@@ -110,7 +141,9 @@ class MainActivity: AppCompatActivity(),
     }
 
     override fun onImportDataCompleted(errors: List<LogError>) {
-        showMessage("Importação finalizada com ${errors.count()} erros")
+        if(errors.count() > 0) {
+            showMessage(getString(R.string.import_data_error_message))
+        }
     }
 
     override fun showProgress(show: Boolean) {
@@ -125,7 +158,21 @@ class MainActivity: AppCompatActivity(),
         Snackbar.make(container,message, Snackbar.LENGTH_LONG).show()
     }
 
+    override fun showError(error: String) {
+        showMessage(error)
+    }
+
+    override fun openReport(reportId: Long) {
+        openReportActivity(reportId)
+    }
+
+    override fun openCompletedReport(reportId: Long) {
+        startActivity(DocumentActivity.newInstance(this,reportId))
+    }
+
     companion object {
+        const val SETTINGS_INSTALLATION ="SETTINGS_INSTALLATION"
+        const val FIRST_RUN ="FIRST_RUN"
         const val READ_REQUEST_CODE: Int = 42
     }
 }

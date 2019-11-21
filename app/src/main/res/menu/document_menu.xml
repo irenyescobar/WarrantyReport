@@ -3,8 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity" >
-    <item android:id="@+id/action_import_data"
-        android:title="@string/action_text_import_data"
+    <item android:id="@+id/action_save_report"
+        android:title="Salvar laudo"
         android:orderInCategory="100"
-        app:showAsAction="never" />
+        android:icon="@android:drawable/ic_menu_save"
+        app:showAsAction="always" />
 </menu>

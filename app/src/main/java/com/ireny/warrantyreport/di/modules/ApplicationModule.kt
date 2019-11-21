@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.ireny.warrantyreport.MyWarrantReportApp
 import com.ireny.warrantyreport.data.room.WarrantyReportRoomDatabase
+import com.ireny.warrantyreport.data.room.migrations.MIGRATION_1_2
 import com.ireny.warrantyreport.repositories.CompanyRepository
 import com.ireny.warrantyreport.repositories.ReportRepository
 import com.ireny.warrantyreport.repositories.ReportTypeRepository
@@ -28,7 +29,7 @@ class ApplicationModule(val application: MyWarrantReportApp) {
             context,
             WarrantyReportRoomDatabase::class.java,
             Constants.DATABASE_NAME
-        ).build()
+        ).addMigrations(MIGRATION_1_2).build()
         return build
     }
 

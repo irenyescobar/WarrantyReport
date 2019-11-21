@@ -71,9 +71,18 @@ class ReportRepository(private val dao: ReportDao) {
         }
     }
 
-    fun getAll():LiveData<List<Report>>{
+    fun getPendings():LiveData<List<Report>>{
         return try {
-            dao.getReports()
+            dao.getPendingReports()
+        }catch (ex:Exception){
+            loadListener?.onLoadDataError(ex)
+            return MutableLiveData<List<Report>>()
+        }
+    }
+
+    fun getCompleteds():LiveData<List<Report>>{
+        return try {
+            dao.getCompletedReports()
         }catch (ex:Exception){
             loadListener?.onLoadDataError(ex)
             return MutableLiveData<List<Report>>()
@@ -113,6 +122,14 @@ class ReportRepository(private val dao: ReportDao) {
             dao.deleteAssigned(el.technicalAdviceId,el.reportId)
         }catch (ex:Exception){
             saveAssignedTechnicalAdviceListener?.onSaveError(el,ex)
+        }
+    }
+
+    suspend fun saveCode(code:String,report: Report){
+        try {
+            dao.saveCode(code,report.id)
+        }catch (ex:Exception){
+            saveListener?.onSaveError(report,ex)
         }
     }
 }

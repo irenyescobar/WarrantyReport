@@ -15,14 +15,6 @@ import kotlinx.coroutines.launch
 class ReportViewModel(application: Application,
                       repository: ReportRepository) : ReportViewModelBase(application,repository)  {
 
-
-    private val saveErrorListener = object :
-        SaveErrorListener<Report> {
-        override fun onSaveError(entity: Report, error: Exception) {
-            errors.add(error)
-        }
-    }
-
     private val saveAssignedTechnicalAdviceErrorListener = object :
         SaveErrorListener<AssignedTechnicalAdvice> {
         override fun onSaveError(entity: AssignedTechnicalAdvice, error: Exception) {
@@ -31,13 +23,11 @@ class ReportViewModel(application: Application,
     }
 
     init {
-        repository.setSaveListener(saveErrorListener)
         repository.setSaveAssignedTechnicalAdviceListener(saveAssignedTechnicalAdviceErrorListener)
     }
 
     fun loadModel(id: Long){
         loadingVisibility.postValue(true)
-        message.postValue("")
         errors = mutableListOf()
         viewModelScope.launch {
             model.postValue(repository.getById(id))
@@ -60,6 +50,11 @@ class ReportViewModel(application: Application,
                 } else {
                     repository.unassign(item.id, it.id)
                 }
+
+                if(errors.count() > 0) {
+                    message.postValue("Foram registrados ${errors.count()} erros durante a execução da operação.")
+                }
+
                 loadModel(it.id)
             }
         }

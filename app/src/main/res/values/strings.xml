@@ -1,11 +1,8 @@
 <resources>
-    <string name="app_name">LAUDOS</string>
-    <string name="tab_text_1">GARANTIA</string>
-    <string name="tab_text_2">DIVERGENCIA</string>
-    <string name="title_activity_main">MainActivity</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="app_name">Laudos</string>
+    <string name="title_home">Em andamento</string>
+    <string name="title_reports_completed">Finalizados</string>
+    <string name="title_settings">Configurações</string>
     <string name="label_distributor">Distribuidor</string>
     <string name="label_client">Cliente</string>
     <string name="label_partReference">Referência da peça</string>
@@ -42,8 +39,17 @@
     <string name="document_technicalConsultant">Consultor Técnico:</string>
     <string name="document_analisysDate">Data:</string>
     <string name="document_technicalConsultantContact">Telefone:</string>
-    <string name="preview_title">Pré visualização</string>
+    <string name="preview_title">Visualização</string>
     <string name="warranty_title">Laudo</string>
     <string name="comments">Observações</string>
     <string name="reason_unfounded">Motivo da improcedência</string>
+    <string name="action_text_import_data">Importar dados</string>
+    <string name="confirm_save_report_message">Deseja salvar o laudo?</string>
+    <string name="dialog_button_confirm_text">Sim</string>
+    <string name="dialog_button_cancel_text">Cancelar</string>
+    <string name="dialog_message_no_save_file">Não foi possível salvar o arquivo.</string>
+    <string name="dialog_no_found_file_message">Arquivo não encontrado! Deseja gerar o arquivo novamente?</string>
+    <string name="select_file_message">Selecione o arquivo</string>
+    <string name="no_data_to_import">Sem dados para importar.</string>
+    <string name="import_data_error_message">Ocorreram erros na importação dos dados</string>
 </resources>
