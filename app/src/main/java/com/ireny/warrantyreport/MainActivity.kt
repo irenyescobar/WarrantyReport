@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -29,6 +28,7 @@ import com.ireny.warrantyreport.utils.customApp
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.BufferedReader
 import java.io.InputStream
+
 
 
 class MainActivity: AppCompatActivity(),
@@ -58,6 +58,11 @@ class MainActivity: AppCompatActivity(),
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        checkIsFirstRun()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main, menu)
         return true
@@ -81,7 +86,7 @@ class MainActivity: AppCompatActivity(),
                 if(inputStream != null){
                     importData(inputStream)
                 }else {
-                    Toast.makeText(this,"Sem dados para importar.",Toast.LENGTH_LONG).show()
+                   showMessage(getString(R.string.no_data_to_import))
                 }
             }
         }
@@ -102,8 +107,31 @@ class MainActivity: AppCompatActivity(),
             type = "*/*"
         }
 
-        startActivityForResult(Intent.createChooser(intent,"Selecione o arquivo"), READ_REQUEST_CODE)
+        startActivityForResult(Intent.createChooser(intent,getString(R.string.select_file_message)), READ_REQUEST_CODE)
     }
+
+    private fun checkIsFirstRun(){
+        showProgress(true)
+        var mboolean = false
+        var settings = getSharedPreferences(SETTINGS_INSTALLATION, 0)
+        mboolean = settings.getBoolean(FIRST_RUN, false)
+
+        if (!mboolean) {
+            importRawData()
+
+            settings = getSharedPreferences(SETTINGS_INSTALLATION, 0)
+            val editor = settings.edit()
+            editor.putBoolean(FIRST_RUN, true)
+            editor.commit()
+        }
+        showProgress(false)
+    }
+
+    private fun importRawData(){
+        val databaseInputStream = resources.openRawResource(R.raw.data)
+        importData(databaseInputStream)
+    }
+
 
     private fun importData(inputStream: InputStream){
         val bufferedReader: BufferedReader = inputStream.bufferedReader()
@@ -113,7 +141,9 @@ class MainActivity: AppCompatActivity(),
     }
 
     override fun onImportDataCompleted(errors: List<LogError>) {
-        showMessage("Importação finalizada com ${errors.count()} erros")
+        if(errors.count() > 0) {
+            showMessage(getString(R.string.import_data_error_message))
+        }
     }
 
     override fun showProgress(show: Boolean) {
@@ -141,6 +171,8 @@ class MainActivity: AppCompatActivity(),
     }
 
     companion object {
+        const val SETTINGS_INSTALLATION ="SETTINGS_INSTALLATION"
+        const val FIRST_RUN ="FIRST_RUN"
         const val READ_REQUEST_CODE: Int = 42
     }
 }
