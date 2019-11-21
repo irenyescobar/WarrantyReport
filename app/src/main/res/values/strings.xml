@@ -3,9 +3,9 @@
     <string name="tab_text_1">GARANTIA</string>
     <string name="tab_text_2">DIVERGENCIA</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_home">Em andamento</string>
+    <string name="title_reports_completed">Finalizados</string>
+    <string name="title_settings">Configurações</string>
     <string name="label_distributor">Distribuidor</string>
     <string name="label_client">Cliente</string>
     <string name="label_partReference">Referência da peça</string>
