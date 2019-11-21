@@ -71,9 +71,18 @@ class ReportRepository(private val dao: ReportDao) {
         }
     }
 
-    fun getAll():LiveData<List<Report>>{
+    fun getPendings():LiveData<List<Report>>{
         return try {
-            dao.getReports()
+            dao.getPendingReports()
+        }catch (ex:Exception){
+            loadListener?.onLoadDataError(ex)
+            return MutableLiveData<List<Report>>()
+        }
+    }
+
+    fun getCompleteds():LiveData<List<Report>>{
+        return try {
+            dao.getCompletedReports()
         }catch (ex:Exception){
             loadListener?.onLoadDataError(ex)
             return MutableLiveData<List<Report>>()

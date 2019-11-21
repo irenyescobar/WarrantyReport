@@ -46,8 +46,11 @@ abstract class ReportDao{
     @Query("SELECT * FROM AssignedTechnicalAdvice WHERE reportId = :reportId")
     abstract suspend fun getAssignedTechnicalAdvices(reportId: Long):List<AssignedTechnicalAdvice>
 
-    @Query("SELECT * FROM Report")
-    abstract fun getReports(): LiveData<List<Report>>
+    @Query("SELECT * FROM Report WHERE code IS NULL")
+    abstract fun getPendingReports(): LiveData<List<Report>>
+
+    @Query("SELECT * FROM Report WHERE code IS NOT NULL")
+    abstract fun getCompletedReports(): LiveData<List<Report>>
 
     @Query("SELECT * FROM Report WHERE id = :id LIMIT 1")
     abstract fun getReport(id: Long):LiveData<Report>
