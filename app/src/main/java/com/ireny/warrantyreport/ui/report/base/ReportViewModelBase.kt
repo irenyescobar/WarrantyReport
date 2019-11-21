@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.ireny.warrantyreport.entities.Report
 import com.ireny.warrantyreport.repositories.ReportRepository
 import com.ireny.warrantyreport.repositories.listeners.GetErrorListener
+import com.ireny.warrantyreport.repositories.listeners.SaveErrorListener
 
 abstract class ReportViewModelBase(
     application: Application,
@@ -22,7 +23,15 @@ abstract class ReportViewModelBase(
         }
     }
 
+    private val saveErrorListener = object :
+        SaveErrorListener<Report> {
+        override fun onSaveError(entity: Report, error: Exception) {
+            errors.add(error)
+        }
+    }
+
     init {
         repository.setGetErrorListener(getErrorListener)
+        repository.setSaveListener(saveErrorListener)
     }
 }

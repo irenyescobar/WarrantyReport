@@ -34,14 +34,21 @@ class DocumentViewModel(application: Application,
         errors = mutableListOf()
         viewModelScope.launch {
             model.value?.let {
-                val code = localCodeGenerator.generateNewCode()
-                repository.saveCode(code,it)
 
-                if(errors.count() > 0) {
-                    message.postValue("Foram registrados ${errors.count()} erros durante a execução da operação.")
+                if(it.code == null) {
+
+                    val code = localCodeGenerator.generateNewCode()
+                    repository.saveCode(code, it)
+
+                    if (errors.count() > 0) {
+                        message.postValue("Foram registrados ${errors.count()} erros durante a execução da operação.")
+                    }
+
+                    loadModel()
+                }else{
+                    loadingVisibility.postValue(false)
+                    message.postValue("Este documento já foi salvo.")
                 }
-
-                loadModel()
             }
         }
     }
