@@ -1,4 +1,4 @@
-package com.ireny.warrantyreport.ui.notifications
+package com.ireny.warrantyreport.ui.settings
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

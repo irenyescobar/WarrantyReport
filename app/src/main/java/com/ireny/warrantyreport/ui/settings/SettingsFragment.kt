@@ -1,4 +1,4 @@
-package com.ireny.warrantyreport.ui.notifications
+package com.ireny.warrantyreport.ui.settings
 
 import android.os.Bundle
 import android.view.LayoutInflater
