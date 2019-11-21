@@ -106,7 +106,7 @@ class DocumentActivity : AppCompatActivity(),
     }
 
     private fun saveReport(){
-
+        viewModel.saveCodeReport()
     }
 
     private fun showFragment(){
