@@ -22,6 +22,8 @@ fun Report.copy():Report{
         this.technicalConsultantContact,
         this.analysisDate,
         this.created_at,
+        this.code,
+        this.code_generated_at,
         this.tecnicalAdvices,
         this.reportType,
         this.company)

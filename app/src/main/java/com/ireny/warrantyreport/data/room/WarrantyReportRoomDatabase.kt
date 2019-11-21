@@ -11,7 +11,7 @@ import com.ireny.warrantyreport.data.room.dao.TechnicalAdviceDao
 import com.ireny.warrantyreport.entities.*
 
 @Database(entities = [ ReportType::class, TechnicalAdvice::class, Company::class, Report::class, AssignedTechnicalAdvice::class],
-          version = 1,
+          version = 2,
           exportSchema = false)
 @TypeConverters(DateConverter::class)
 abstract class WarrantyReportRoomDatabase: RoomDatabase() {
