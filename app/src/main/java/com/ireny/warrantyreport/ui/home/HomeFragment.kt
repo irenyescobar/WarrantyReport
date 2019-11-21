@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ireny.warrantyreport.R
 import com.ireny.warrantyreport.entities.Report
 import com.ireny.warrantyreport.repositories.listeners.GetErrorListener
+import com.ireny.warrantyreport.ui.adapters.ReportListAdapter
 import com.ireny.warrantyreport.ui.listeners.SelectedListener
 import com.ireny.warrantyreport.utils.customApp
 import com.ireny.warrantyreport.utils.mainActivity
@@ -44,7 +45,7 @@ class HomeFragment : Fragment(),
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        adapter = ReportListAdapter(context!!,this)
+        adapter = ReportListAdapter(context!!, this)
         recyclerView.adapter = adapter
         linearLayoutManager = LinearLayoutManager(context!!)
         dividerItemDecoration = DividerItemDecoration(

@@ -1,4 +1,4 @@
-package com.ireny.warrantyreport.ui.home
+package com.ireny.warrantyreport.ui.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
