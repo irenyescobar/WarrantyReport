@@ -115,4 +115,12 @@ class ReportRepository(private val dao: ReportDao) {
             saveAssignedTechnicalAdviceListener?.onSaveError(el,ex)
         }
     }
+
+    suspend fun saveCode(code:String,report: Report){
+        try {
+            dao.saveCode(code,report.id)
+        }catch (ex:Exception){
+            saveListener?.onSaveError(report,ex)
+        }
+    }
 }

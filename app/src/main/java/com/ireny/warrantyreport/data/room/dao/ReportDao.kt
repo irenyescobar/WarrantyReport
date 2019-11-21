@@ -7,6 +7,9 @@ import com.ireny.warrantyreport.entities.*
 @Dao
 abstract class ReportDao{
 
+    @Query("UPDATE Report SET code =:code, code_generated_at = datetime('now')  WHERE id = :reportId")
+    abstract suspend fun saveCode(code:String, reportId: Long)
+
     @Transaction
     open suspend fun save(entity: Report){
         entity.id = add(entity)
