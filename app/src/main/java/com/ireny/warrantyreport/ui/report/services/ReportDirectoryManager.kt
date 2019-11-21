@@ -3,8 +3,11 @@ package com.ireny.warrantyreport.ui.report.services
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.graphics.pdf.PdfDocument
 import android.media.MediaScannerConnection
 import android.os.Environment
+import android.util.Log
+import android.widget.Toast
 import com.ireny.warrantyreport.ui.report.photos.PhotosFragment
 import com.ireny.warrantyreport.utils.Constants
 import java.io.ByteArrayOutputStream
@@ -24,7 +27,7 @@ class ReportDirectoryManager(private val context: Context): IReportDirectoryMana
     private val dir = File("${Environment.getExternalStorageDirectory()}${Constants.REPORTS_DIRECTORY}")
 
     private fun getImage(reportId: Long,photoId: Int): Drawable?{
-        val path = "$dir/${reportId}/photo_${photoId}.jpg"
+        val path = "${getPath(reportId)}photo_${photoId}.jpg"
         return Drawable.createFromPath(path)
     }
 
@@ -44,7 +47,7 @@ class ReportDirectoryManager(private val context: Context): IReportDirectoryMana
         val bytes = ByteArrayOutputStream()
         myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes)
 
-        val reportPath = "$dir/${reportId}"
+        val reportPath = getPath(reportId)
         val reportDir = File(reportPath)
         if (!reportDir.exists()) {
             reportDir.mkdirs()
@@ -65,16 +68,71 @@ class ReportDirectoryManager(private val context: Context): IReportDirectoryMana
     }
 
     override fun removeImage(photoId: Int, reportId: Long) {
-        val reportPath = "$dir/${reportId}"
+        val reportPath = getPath(reportId)
         val reportDir = File(reportPath)
         val f = File(reportDir,  "photo_${photoId}.jpg")
         f.delete()
     }
 
+    override fun getReportFile(reportId: Long): File? {
+
+        val targetPdf = "${getPath(reportId)}document.pdf"
+        val file = File(targetPdf)
+        if(file.exists()){
+            return file
+        }
+        return null
+    }
+
+    override fun getReportDirectory(reportId: Long):String?{
+
+        val path = getPath(reportId)
+        val dir = File(path)
+
+        if(dir.exists()){
+            return path
+        }
+
+        return null
+    }
+
+    private fun getPath(reportId: Long):String {
+        return "$dir/${reportId}/"
+    }
+
+
+    override fun saveFile(document: PdfDocument, reportId: Long): File? {
+        val directoryPath = getPath(reportId)
+        val file = File(directoryPath)
+        if (!file.exists()) {
+            file.mkdirs()
+        }
+
+        val targetPdf = directoryPath + "document.pdf"
+        val filePath = File(targetPdf)
+        try {
+            document.writeTo(FileOutputStream(filePath))
+        } catch (e: IOException) {
+            Log.e("main", "error $e")
+            Toast.makeText(context, "Something wrong: $e", Toast.LENGTH_LONG).show()
+        }
+
+        return getReportFile(reportId)
+    }
+
+    private fun removeImages(reportId: Long){
+        data.forEach {
+            removeImage(it.id,reportId)
+        }
+    }
 }
 
 interface IReportDirectoryManager{
     fun getData(reportId: Long):Array<PhotosFragment.Photo>
     fun saveImage(myBitmap: Bitmap, photoId:Int, reportId:Long)
     fun removeImage(photoId:Int, reportId:Long)
+    fun getReportDirectory(reportId: Long):String?
+    fun getReportFile(reportId: Long):File?
+    fun saveFile(document: PdfDocument, reportId: Long):File?
+
 }

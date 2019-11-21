@@ -7,14 +7,12 @@ import android.graphics.Canvas
 import android.graphics.pdf.PdfDocument
 import android.graphics.pdf.PdfRenderer
 import android.os.Bundle
-import android.os.Environment
 import android.os.ParcelFileDescriptor
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.ireny.warrantyreport.R
@@ -25,12 +23,9 @@ import com.ireny.warrantyreport.entities.Report
 import com.ireny.warrantyreport.ui.report.interfaces.IBindView
 import com.ireny.warrantyreport.ui.report.interfaces.ICreateDocument
 import com.ireny.warrantyreport.ui.report.services.IReportDirectoryManager
-import com.ireny.warrantyreport.utils.Constants
 import com.ireny.warrantyreport.utils.toDateTextFormatted
 import kotlinx.android.synthetic.main.report_preview_document_fragment.*
 import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
 
 
 class PreviewDocumentFragment : Fragment(), ICreateDocument<Report> ,IBindView<Report>{
@@ -48,7 +43,7 @@ class PreviewDocumentFragment : Fragment(), ICreateDocument<Report> ,IBindView<R
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(com.ireny.warrantyreport.R.layout.report_preview_document_fragment, container, false)
+        return inflater.inflate(R.layout.report_preview_document_fragment, container, false)
     }
 
     override fun bindView(model: Report) {
@@ -67,13 +62,51 @@ class PreviewDocumentFragment : Fragment(), ICreateDocument<Report> ,IBindView<R
             )
 
         }else{
-            showReportScreen(model)
+
+            if(model.code != null) {
+                val file = directoryManager.getReportFile(model.id)
+                if(file != null){
+                    showDocument(file)
+                }else{
+                    showReportScreen(model)
+                    confirmReGenerate(model)
+                }
+            }else{
+                showReportScreen(model)
+            }
         }
     }
 
     override fun createDocument(model: Report) {
-        createPdf(model.id)
-        showDocument(model.id)
+        val file = createPdf(model.id)
+        if(file != null) {
+            showDocument(file)
+        }else{
+            AlertDialog.Builder(requireContext())
+                .setTitle(R.string.app_name)
+                .setMessage(getString(R.string.dialog_message_no_save_file))
+                .setNeutralButton(getString(R.string.dialog_button_cancel_text)){ dialog, _ ->
+                    dialog.dismiss()
+                }
+                .create()
+                .show()
+        }
+    }
+
+    private fun confirmReGenerate(model: Report){
+
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.app_name)
+            .setMessage(getString(R.string.dialog_no_found_file_message))
+            .setPositiveButton(getString(R.string.dialog_button_confirm_text)) { dialog, _ ->
+                dialog.dismiss()
+                createDocument(model)
+            }
+            .setNeutralButton(getString(R.string.dialog_button_cancel_text)){ dialog, _ ->
+                dialog.dismiss()
+            }
+            .create()
+            .show()
     }
 
     private fun initComponent() {
@@ -87,10 +120,13 @@ class PreviewDocumentFragment : Fragment(), ICreateDocument<Report> ,IBindView<R
 
     private fun showReportScreen(entity: Report){
 
+        container.visibility = View.VISIBLE
+
         entity.company?.run {
             text_company_value.text = description
         }
 
+        text_cod_value.text = if(entity.code != null) entity.code else "SEM CÓDIGO"
         text_invoiceDate_value.text = if(entity.invoiceDate != null) entity.invoiceDate?.toDateTextFormatted() else ""
         text_applicationDate_value.text = if(entity.applicationDate != null) entity.applicationDate?.toDateTextFormatted() else ""
         text_text_warrantyDate_value.text = if(entity.warrantyDate != null) entity.warrantyDate?.toDateTextFormatted() else ""
@@ -119,11 +155,12 @@ class PreviewDocumentFragment : Fragment(), ICreateDocument<Report> ,IBindView<R
             text_TechnicalAdvice_value.text = aux
         }
 
-        val data = photoManager.getData(entity.id)
+        val data = directoryManager.getData(entity.id)
         photo1.setImageDrawable(data[0].image)
         photo2.setImageDrawable(data[1].image)
         photo3.setImageDrawable(data[2].image)
         photo4.setImageDrawable(data[3].image)
+
     }
 
     private fun createBitmapFromView(view: View, width: Int, height: Int): Bitmap {
@@ -133,20 +170,16 @@ class PreviewDocumentFragment : Fragment(), ICreateDocument<Report> ,IBindView<R
         return bitmap
     }
 
-    private fun showDocument(reportId: Long) {
+    private fun showDocument(file: File) {
 
-        val directoryPath = getDirectory(reportId)
-
-        val targetPdf = directoryPath + "document.pdf"
-        val file = File(targetPdf)
-
-        val parcelFileDescriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
+        val parcelFileDescriptor =
+            ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
 
         if (parcelFileDescriptor != null) {
 
             val pdfRenderer = PdfRenderer(parcelFileDescriptor)
             val page = pdfRenderer.openPage(0)
-            val bitmap = Bitmap.createBitmap(page.width,page.height,Bitmap.Config.ARGB_8888)
+            val bitmap = Bitmap.createBitmap(page.width, page.height, Bitmap.Config.ARGB_8888)
             page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
 
             container.visibility = View.GONE
@@ -158,7 +191,7 @@ class PreviewDocumentFragment : Fragment(), ICreateDocument<Report> ,IBindView<R
         }
     }
 
-    private fun createPdf(reportId: Long) {
+    private fun createPdf(reportId: Long) :File?{
 
         val displaymetrics = DisplayMetrics()
         requireActivity().windowManager.defaultDisplay.getMetrics(displaymetrics)
@@ -179,34 +212,13 @@ class PreviewDocumentFragment : Fragment(), ICreateDocument<Report> ,IBindView<R
 
         document.finishPage(page)
 
-        saveFile(document,reportId)
+        val file = directoryManager.saveFile(document,reportId)
 
         document.close()
+
+        return file
     }
 
-    private fun saveFile(document: PdfDocument, reportId: Long){
-
-        val directoryPath = getDirectory(reportId)
-
-        val file = File(directoryPath)
-        if (!file.exists()) {
-            file.mkdirs()
-        }
-
-        val targetPdf = directoryPath + "document.pdf"
-        val filePath = File(targetPdf)
-        try {
-            document.writeTo(FileOutputStream(filePath))
-            Toast.makeText(requireContext(), "Done", Toast.LENGTH_LONG).show()
-        } catch (e: IOException) {
-            Log.e("main", "error $e")
-            Toast.makeText(requireContext(), "Something wrong: $e", Toast.LENGTH_LONG).show()
-        }
-    }
-
-    private fun getDirectory(reportId: Long):String{
-       return "${Environment.getExternalStorageDirectory()}${Constants.REPORTS_DIRECTORY}/${reportId}/"
-    }
 
     companion object {
         @JvmStatic
