@@ -1,4 +1,4 @@
-package com.ireny.warrantyreport.ui.dashboard
+package com.ireny.warrantyreport.ui.reportscompleted
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,9 +10,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.ireny.warrantyreport.R
 
-class DashboardFragment : Fragment() {
+class ReportsCompletedFragment : Fragment() {
 
-    private lateinit var dashboardViewModel: DashboardViewModel
+    private lateinit var dashboardViewModel: ReportsCompletedViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -20,8 +20,8 @@ class DashboardFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         dashboardViewModel =
-            ViewModelProviders.of(this).get(DashboardViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_dashboard, container, false)
+            ViewModelProviders.of(this).get(ReportsCompletedViewModel::class.java)
+        val root = inflater.inflate(R.layout.fragment_reports_completed, container, false)
         val textView: TextView = root.findViewById(R.id.text_dashboard)
         dashboardViewModel.text.observe(this, Observer {
             textView.text = it

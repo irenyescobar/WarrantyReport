@@ -17,9 +17,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.ireny.warrantyreport.di.components.DaggerPhotosComponent
-import com.ireny.warrantyreport.di.components.PhotosComponent
-import com.ireny.warrantyreport.di.modules.PhotosModule
+import com.ireny.warrantyreport.R
+import com.ireny.warrantyreport.di.components.DaggerReportDirectoryComponent
+import com.ireny.warrantyreport.di.components.ReportDirectoryComponent
+import com.ireny.warrantyreport.di.modules.ReportDirectoryModule
 import com.ireny.warrantyreport.entities.Report
 import com.ireny.warrantyreport.ui.report.interfaces.IBindView
 import com.ireny.warrantyreport.ui.report.interfaces.ICreateDocument
@@ -34,8 +35,8 @@ import java.io.IOException
 
 class PreviewDocumentFragment : Fragment(), ICreateDocument<Report> ,IBindView<Report>{
 
-    private lateinit var component: PhotosComponent
-    private val photoManager: IReportDirectoryManager by lazy { component.photoManager()}
+    private lateinit var component: ReportDirectoryComponent
+    private val directoryManager: IReportDirectoryManager by lazy { component.reportDirectoryManager()}
     private var report: Report? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,9 +77,9 @@ class PreviewDocumentFragment : Fragment(), ICreateDocument<Report> ,IBindView<R
     }
 
     private fun initComponent() {
-        component = DaggerPhotosComponent
+        component = DaggerReportDirectoryComponent
             .builder()
-            .photosModule(PhotosModule(requireContext()))
+            .reportDirectoryModule(ReportDirectoryModule(requireContext()))
             .build()
 
         component.inject(requireContext())

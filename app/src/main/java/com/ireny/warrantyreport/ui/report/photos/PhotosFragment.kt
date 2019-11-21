@@ -14,9 +14,9 @@ import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import com.ireny.warrantyreport.R
-import com.ireny.warrantyreport.di.components.DaggerPhotosComponent
-import com.ireny.warrantyreport.di.components.PhotosComponent
-import com.ireny.warrantyreport.di.modules.PhotosModule
+import com.ireny.warrantyreport.di.components.DaggerReportDirectoryComponent
+import com.ireny.warrantyreport.di.components.ReportDirectoryComponent
+import com.ireny.warrantyreport.di.modules.ReportDirectoryModule
 import com.ireny.warrantyreport.entities.Report
 import com.ireny.warrantyreport.ui.report.base.FragmentBase
 import com.ireny.warrantyreport.ui.report.services.IReportDirectoryManager
@@ -26,8 +26,8 @@ import java.io.IOException
 
 class PhotosFragment(val reportId:Long) : FragmentBase(){
 
-    private lateinit var component: PhotosComponent
-    private val photoManager: IReportDirectoryManager by lazy { component.photoManager()}
+    private lateinit var component: ReportDirectoryComponent
+    private val photoManager: IReportDirectoryManager by lazy { component.reportDirectoryManager()}
     private var currentPhoto: Photo? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,9 +52,9 @@ class PhotosFragment(val reportId:Long) : FragmentBase(){
     }
 
     private fun initComponent() {
-        component = DaggerPhotosComponent
+        component = DaggerReportDirectoryComponent
             .builder()
-            .photosModule(PhotosModule(requireContext()))
+            .reportDirectoryModule(ReportDirectoryModule(requireContext()))
             .build()
 
         component.inject(requireContext())

@@ -12,7 +12,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
-class PhotosManager(private val context: Context): IReportDirectoryManager {
+class ReportDirectoryManager(private val context: Context): IReportDirectoryManager {
 
     private val data: Array<PhotosFragment.Photo> = arrayOf(
         PhotosFragment.Photo(0),
