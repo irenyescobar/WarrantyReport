@@ -1,5 +1,6 @@
 package com.ireny.warrantyreport.ui.home
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +10,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.ireny.warrantyreport.R
 import com.ireny.warrantyreport.entities.Report
 import com.ireny.warrantyreport.repositories.listeners.GetErrorListener
@@ -17,15 +17,16 @@ import com.ireny.warrantyreport.ui.adapters.ReportListAdapter
 import com.ireny.warrantyreport.ui.listeners.SelectedListener
 import com.ireny.warrantyreport.utils.customApp
 import com.ireny.warrantyreport.utils.mainActivity
+import kotlinx.android.synthetic.main.fragment_home.*
 
 class HomeFragment : Fragment(),
     GetErrorListener, SelectedListener<Report> {
 
     private lateinit var viewModel: HomeViewModel
     private lateinit var adapter: ReportListAdapter
-    private lateinit var recyclerView: RecyclerView
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var dividerItemDecoration: DividerItemDecoration
+    private var listener:Listener? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,26 +35,24 @@ class HomeFragment : Fragment(),
     ): View? {
 
         mainActivity.supportActionBar?.apply {
-            title = "Laudos"
+            title = "Laudos em andamento"
         }
 
-        val view = inflater.inflate(R.layout.fragment_home, container, false)
-        recyclerView = view.findViewById(R.id.recyclerview)
-        return view
+        return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
         adapter = ReportListAdapter(context!!, this)
-        recyclerView.adapter = adapter
+        recyclerview.adapter = adapter
         linearLayoutManager = LinearLayoutManager(context!!)
         dividerItemDecoration = DividerItemDecoration(
-            recyclerView.context,
+            recyclerview.context,
             linearLayoutManager.orientation
         )
-        recyclerView.layoutManager = linearLayoutManager
-        recyclerView.addItemDecoration(dividerItemDecoration)
+        recyclerview.layoutManager = linearLayoutManager
+        recyclerview.addItemDecoration(dividerItemDecoration)
 
         viewModel = ViewModelProviders.of(this, HomeViewModel.Companion.Factory(
             mainActivity.customApp,
@@ -65,11 +64,30 @@ class HomeFragment : Fragment(),
         })
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is Listener) {
+            listener = context
+        } else {
+            throw RuntimeException("$context must implement HomeFragment.Listener")
+        }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        listener = null
+    }
+
     override fun onSelected(item: Report) {
-        mainActivity.openReportActivity(item.id)
+       listener?.openReport(item.id)
     }
 
     override fun onGetError(id: Long, error: Exception) {
-        mainActivity.showMessage(error.localizedMessage)
+        listener?.showError(error.localizedMessage)
+    }
+
+    interface Listener{
+        fun showError(error:String)
+        fun openReport(reportId:Long)
     }
 }

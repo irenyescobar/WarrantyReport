@@ -21,7 +21,10 @@ import com.ireny.warrantyreport.services.ImportDataService
 import com.ireny.warrantyreport.services.LogError
 import com.ireny.warrantyreport.ui.base.IProgressLoading
 import com.ireny.warrantyreport.ui.base.IShowMessage
+import com.ireny.warrantyreport.ui.home.HomeFragment
 import com.ireny.warrantyreport.ui.report.ReportActivity
+import com.ireny.warrantyreport.ui.report.document.DocumentActivity
+import com.ireny.warrantyreport.ui.reportscompleted.ReportsCompletedFragment
 import com.ireny.warrantyreport.utils.customApp
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.BufferedReader
@@ -31,7 +34,9 @@ import java.io.InputStream
 class MainActivity: AppCompatActivity(),
     ImportDataCompletedListener ,
     IProgressLoading,
-    IShowMessage{
+    IShowMessage,
+    HomeFragment.Listener,
+    ReportsCompletedFragment.Listener{
 
     private val component by lazy { customApp.component }
     private val importDataService: ImportDataService by lazy { component.importDataService() }
@@ -43,13 +48,8 @@ class MainActivity: AppCompatActivity(),
         setSupportActionBar(toolbar)
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
-
         val navController = findNavController(R.id.nav_host_fragment)
-        val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.navigation_home
-            )
-        )
+        val appBarConfiguration = AppBarConfiguration(setOf(R.id.navigation_home))
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
@@ -59,13 +59,11 @@ class MainActivity: AppCompatActivity(),
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-
         menuInflater.inflate(R.menu.main, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
         return when(item.itemId) {
             R.id.action_import_data -> {
                 performFileSearch()
@@ -89,7 +87,12 @@ class MainActivity: AppCompatActivity(),
         }
     }
 
-    fun openReportActivity(reportId:Long?){
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
+
+    private fun openReportActivity(reportId:Long?){
         startActivity(ReportActivity.newInstance(this,reportId))
     }
 
@@ -123,6 +126,18 @@ class MainActivity: AppCompatActivity(),
 
     override fun showMessage(message: String) {
         Snackbar.make(container,message, Snackbar.LENGTH_LONG).show()
+    }
+
+    override fun showError(error: String) {
+        showMessage(error)
+    }
+
+    override fun openReport(reportId: Long) {
+        openReportActivity(reportId)
+    }
+
+    override fun openCompletedReport(reportId: Long) {
+        startActivity(DocumentActivity.newInstance(this,reportId))
     }
 
     companion object {

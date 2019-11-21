@@ -8,11 +8,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.ireny.warrantyreport.entities.Report
 import com.ireny.warrantyreport.repositories.ReportRepository
 
-class HomeViewModel (application: Application, val repository: ReportRepository):
-    AndroidViewModel(application) {
+class HomeViewModel (application: Application, repository: ReportRepository): AndroidViewModel(application) {
 
 
-    var all: LiveData<List<Report>> = repository.getAll()
+    var all: LiveData<List<Report>> = repository.getPendings()
 
     companion object{
 
