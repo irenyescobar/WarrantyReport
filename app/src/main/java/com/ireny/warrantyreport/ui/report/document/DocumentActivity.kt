@@ -51,7 +51,11 @@ class DocumentActivity : AppCompatActivity(),
 
         viewModel.model.observe(this, Observer { el ->
             el?.let {
-                currentFragment.bindView(el)
+                if(el.code == null) {
+                    currentFragment.bindView(el)
+                }else{
+                    currentFragment.createDocument(el)
+                }
             }
         })
 

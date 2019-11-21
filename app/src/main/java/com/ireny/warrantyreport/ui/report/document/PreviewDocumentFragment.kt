@@ -78,6 +78,7 @@ class PreviewDocumentFragment : Fragment(), ICreateDocument<Report> ,IBindView<R
     }
 
     override fun createDocument(model: Report) {
+        showReportScreen(model)
         val file = createPdf(model.id)
         if(file != null) {
             showDocument(file)
