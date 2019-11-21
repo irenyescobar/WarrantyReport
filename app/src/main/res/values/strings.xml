@@ -50,4 +50,6 @@
     <string name="confirm_save_report_message">Deseja salvar o laudo?</string>
     <string name="dialog_button_confirm_text">Sim</string>
     <string name="dialog_button_cancel_text">Cancelar</string>
+    <string name="dialog_message_no_save_file">Não foi possível salvar o arquivo.</string>
+    <string name="dialog_no_found_file_message">Arquivo não encontrado! Deseja gerar o arquivo novamente?</string>
 </resources>
