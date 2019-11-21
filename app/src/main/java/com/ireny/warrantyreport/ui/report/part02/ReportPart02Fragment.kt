@@ -42,7 +42,7 @@ class ReportPart02Fragment : FragmentUpdateBase() {
         }else{
             textSourceInvoice.setText("")
         }
-        textSourceInvoice.setText( if(model.invoiceDate != null) model.invoiceDate?.toDateTextFormatted() else "")
+        textInvoiceDate.setText( if(model.invoiceDate != null) model.invoiceDate?.toDateTextFormatted() else "")
         textApplicationDate.setText( if(model.applicationDate != null) model.applicationDate?.toDateTextFormatted() else "")
         textWarrantyDate.setText( if(model.warrantyDate != null) model.warrantyDate?.toDateTextFormatted() else "")
     }
