@@ -67,15 +67,16 @@ class PhotosFragment(private var reportId:Long) : FragmentBase(){
 
     private fun removePhoto(item: Photo) {
         photoManager.removeImage(item.id,reportId)
-        refresh(reportId)
+        refresh()
     }
 
     override fun bindView(model: Report) {
-        refresh(model.id)
+        reportId = model.id
+        refresh()
         previewButtonFunction?.showPreviewButton(true)
     }
 
-    private fun refresh(reportId: Long) {
+    private fun refresh() {
         val data = photoManager.getData(reportId)
         photo1.setImage(data[0])
         photo2.setImage(data[1])
@@ -109,7 +110,7 @@ class PhotosFragment(private var reportId:Long) : FragmentBase(){
                 REQUEST_PERMISSION_STORAGE)
 
         }else{
-            refresh(reportId)
+            refresh()
         }
     }
 
@@ -155,7 +156,7 @@ class PhotosFragment(private var reportId:Long) : FragmentBase(){
             bitmap?.let {
                 photoManager.saveImage(it,id,reportId)
             }
-            refresh(reportId)
+            refresh()
         }
     }
 
@@ -181,7 +182,7 @@ class PhotosFragment(private var reportId:Long) : FragmentBase(){
                 }
                 REQUEST_PERMISSION_STORAGE -> {
                     if(allgranted){
-                        refresh(reportId)
+                        refresh()
                     }
                 }
             }
