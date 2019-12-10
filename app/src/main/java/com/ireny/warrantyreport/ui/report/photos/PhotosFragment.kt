@@ -194,7 +194,7 @@ class PhotosFragment(private var reportId:Long) : FragmentBase(){
         if(photo.image != null) {
             this.setImageDrawable(photo.image)
         }else{
-            this.setImageResource(R.drawable.ic_photo_size_select_actual_black_24dp)
+            this.setImageResource(R.drawable.ic_photo)
         }
     }
 
