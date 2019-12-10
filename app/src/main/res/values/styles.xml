@@ -4,79 +4,39 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-
+        <item name="android:fontFamily">@font/patrickhand_regular</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:fontFamily">@font/patrickhand_regular</item>
+    </style>
+
+
+    <style name="AppThemeDocument" parent="Theme.MaterialComponents.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light" />
 
-    <style name="textTitleReport" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
-        <item name="android:textColor">@android:color/white</item>
+
+    <style name="textTitleReport" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/colorWhite</item>
         <item name="android:textAllCaps">true</item>
-    </style>
-
-    <style name="documentTitle" parent="@android:style/TextAppearance">
-        <item name="android:paddingBottom">16dp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/colorPrimary</item>
-    </style>
-
-    <style name="documentCod" parent="@android:style/TextAppearance">
-        <item name="android:paddingBottom">16dp</item>
-        <item name="android:textSize">12sp</item>
-    </style>
-
-    <style name="basetext">
-        <item name="android:paddingTop">1dp</item>
-        <item name="android:paddingBottom">1dp</item>
-        <item name="android:paddingRight">4dp</item>
-        <item name="android:textSize">10sp</item>
-    </style>
-
-    <style name="documentLabelLine" parent="@style/basetext">
-        <item name="android:textStyle">bold</item>
-        <item name="android:layout_marginTop">4dp</item>
-    </style>
-
-    <style name="documentLabelLineValue"  parent="@style/basetext" >
-    </style>
-
-    <style name="documentLabelLeft" parent="@style/basetext">
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="documentLabelLeftValue" parent="@style/basetext">
-        <item name="android:textAllCaps">true</item>
-        <item name="android:textSize">8sp</item>
-    </style>
-
-    <style name="documentLabelRight" parent="@style/basetext" >
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="documentLabelRightValue" parent="@style/basetext" >
-        <item name="android:textAllCaps">true</item>
-        <item name="android:textSize">8sp</item>
+        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="documentLogo" >
         <item name="android:padding">1dp</item>
-        <item name="android:textAlignment">center</item>
-        <item name="android:textAllCaps">true</item>
-        <item name="android:textSize">10sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/colorPrimary</item>
     </style>
 
     <style name="documentPhoto" >
         <item name="android:scaleType">fitXY</item>
-        <item name="android:layout_margin">8dp</item>
     </style>
 
 </resources>
