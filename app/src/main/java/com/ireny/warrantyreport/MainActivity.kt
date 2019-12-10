@@ -181,7 +181,7 @@ class MainActivity: AppCompatActivity(),
     }
 
     override fun openCompletedReport(reportId: Long) {
-        startActivity(DocumentActivity.newInstance(this,reportId))
+        startActivity(DocumentActivity.newInstance(this,reportId,false))
     }
 
     companion object {
