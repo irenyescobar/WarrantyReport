@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.report_photos_fragment.*
 import java.io.IOException
 
 
-class PhotosFragment(val reportId:Long) : FragmentBase(){
+class PhotosFragment(private var reportId:Long) : FragmentBase(){
 
     private lateinit var component: ReportDirectoryComponent
     private val photoManager: IReportDirectoryManager by lazy { component.reportDirectoryManager()}
