@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.report_photos_fragment.*
 import java.io.IOException
 
 
-class PhotosFragment(private var reportId:Long) : FragmentBase(){
+class PhotosFragment(val reportId:Long) : FragmentBase(){
 
     private lateinit var component: ReportDirectoryComponent
     private val photoManager: IReportDirectoryManager by lazy { component.reportDirectoryManager()}
@@ -67,16 +67,15 @@ class PhotosFragment(private var reportId:Long) : FragmentBase(){
 
     private fun removePhoto(item: Photo) {
         photoManager.removeImage(item.id,reportId)
-        refresh()
+        refresh(reportId)
     }
 
     override fun bindView(model: Report) {
-        reportId = model.id
-        refresh()
+        refresh(model.id)
         previewButtonFunction?.showPreviewButton(true)
     }
 
-    private fun refresh() {
+    private fun refresh(reportId: Long) {
         val data = photoManager.getData(reportId)
         photo1.setImage(data[0])
         photo2.setImage(data[1])
@@ -110,7 +109,7 @@ class PhotosFragment(private var reportId:Long) : FragmentBase(){
                 REQUEST_PERMISSION_STORAGE)
 
         }else{
-            refresh()
+            refresh(reportId)
         }
     }
 
@@ -156,7 +155,7 @@ class PhotosFragment(private var reportId:Long) : FragmentBase(){
             bitmap?.let {
                 photoManager.saveImage(it,id,reportId)
             }
-            refresh()
+            refresh(reportId)
         }
     }
 
@@ -182,7 +181,7 @@ class PhotosFragment(private var reportId:Long) : FragmentBase(){
                 }
                 REQUEST_PERMISSION_STORAGE -> {
                     if(allgranted){
-                        refresh()
+                        refresh(reportId)
                     }
                 }
             }
@@ -194,7 +193,7 @@ class PhotosFragment(private var reportId:Long) : FragmentBase(){
         if(photo.image != null) {
             this.setImageDrawable(photo.image)
         }else{
-            this.setImageResource(R.drawable.ic_photo)
+            this.setImageResource(R.drawable.ic_photo_size_select_actual_black_24dp)
         }
     }
 

@@ -176,7 +176,7 @@ class ReportActivity : AppCompatActivity(),
 
     private fun showPreview(){
         viewModel.model.value?.let {
-            startActivity(DocumentActivity.newInstance(this,it.id,true))
+            startActivity(DocumentActivity.newInstance(this,it.id))
         }
     }
 

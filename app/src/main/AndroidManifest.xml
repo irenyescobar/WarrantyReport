@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.ireny.warrantyreport">
 
-    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -17,7 +16,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".SplashActivity"
+        <activity
+            android:label="@string/warranty_title"
+            android:name=".ui.report.ReportActivity" />
+        <activity
+            android:label="@string/preview_title"
+            android:name=".ui.report.document.DocumentActivity" />
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,22 +32,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".LoginActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity
-            android:theme="@style/AppTheme"
-            android:name=".ui.report.ReportActivity"
-            android:label="@string/warranty_title" />
-        <activity
-            android:theme="@style/AppThemeDocument"
-            android:name=".ui.report.document.DocumentActivity"
-            android:label="@string/preview_title" />
-        <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

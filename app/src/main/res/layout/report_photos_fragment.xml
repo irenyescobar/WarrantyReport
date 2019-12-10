@@ -20,14 +20,14 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/ic_photo"/>
+            android:src="@drawable/ic_photo_size_select_actual_black_24dp"/>
         <ImageView
             style="@style/documentPhoto"
             android:id="@+id/photo2"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/ic_photo"/>
+            android:src="@drawable/ic_photo_size_select_actual_black_24dp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -41,14 +41,14 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/ic_photo"/>
+            android:src="@drawable/ic_photo_size_select_actual_black_24dp"/>
         <ImageView
             style="@style/documentPhoto"
             android:id="@+id/photo4"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/ic_photo"/>
+            android:src="@drawable/ic_photo_size_select_actual_black_24dp"/>
     </LinearLayout>
 
 </LinearLayout>

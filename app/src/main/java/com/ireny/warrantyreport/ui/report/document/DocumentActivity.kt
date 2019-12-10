@@ -40,25 +40,21 @@ class DocumentActivity : AppCompatActivity(),
         }
 
         val reportId = intent.getLongExtra(REPORT_ID,0)
-        val isCreateMode = intent.getBooleanExtra(CREATE_MODE,false)
 
         viewModel = ViewModelProviders.of(this, DocumentViewModel.Companion.Factory(
             customApp,
             reportRepository,
-            reportId,
-            component.api(),
-            component.userAccountManager())
+            reportId)
         ).get(DocumentViewModel::class.java)
 
         showFragment()
 
         viewModel.model.observe(this, Observer { el ->
             el?.let {
-                if(isCreateMode && el.code != null){
-                    currentFragment.createDocument(el)
-                }
-                else {
+                if(el.code == null) {
                     currentFragment.bindView(el)
+                }else{
+                    currentFragment.createDocument(el)
                 }
             }
         })
@@ -93,7 +89,6 @@ class DocumentActivity : AppCompatActivity(),
             else -> super.onOptionsItemSelected(item)
         }
     }
-
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
@@ -138,12 +133,10 @@ class DocumentActivity : AppCompatActivity(),
     }
 
     companion object {
-        const val CREATE_MODE = "CREATE_MODE"
         @JvmStatic
-        fun newInstance(context: Context, reportId:Long, createMode:Boolean): Intent {
+        fun newInstance(context: Context, reportId:Long): Intent {
             val intent = Intent(context, DocumentActivity::class.java)
             intent.putExtra(REPORT_ID,reportId)
-            intent.putExtra(CREATE_MODE,createMode)
             return  intent
         }
     }
