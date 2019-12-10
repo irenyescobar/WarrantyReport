@@ -10,6 +10,7 @@ import com.ireny.warrantyreport.repositories.ReportRepository
 import com.ireny.warrantyreport.repositories.ReportTypeRepository
 import com.ireny.warrantyreport.repositories.TechnicalAdviceRepository
 import com.ireny.warrantyreport.services.ImportDataService
+import com.ireny.warrantyreport.services.UserAccountManager
 import com.ireny.warrantyreport.utils.Constants
 import dagger.Module
 import dagger.Provides
@@ -31,6 +32,10 @@ class ApplicationModule(val application: MyWarrantReportApp) {
             Constants.DATABASE_NAME
         ).addMigrations(MIGRATION_1_2).build()
         return build
+    @Provides
+    @Singleton
+    fun provideUserAccountManager(context:Context): UserAccountManager {
+        return UserAccountManager(context)
     }
 
     @Provides

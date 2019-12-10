@@ -7,6 +7,7 @@ import com.ireny.warrantyreport.repositories.ReportRepository
 import com.ireny.warrantyreport.repositories.ReportTypeRepository
 import com.ireny.warrantyreport.repositories.TechnicalAdviceRepository
 import com.ireny.warrantyreport.services.ImportDataService
+import com.ireny.warrantyreport.services.UserAccountManager
 import dagger.Component
 import javax.inject.Singleton
 
@@ -19,4 +20,5 @@ interface ApplicationComponent {
     fun companyRepository(): CompanyRepository
     fun technicalAdviceRepository(): TechnicalAdviceRepository
     fun reportRepository(): ReportRepository
+    fun userAccountManager(): UserAccountManager
 }
