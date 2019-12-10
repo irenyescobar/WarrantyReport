@@ -18,9 +18,6 @@ import java.util.*
 val Activity.customApp: MyWarrantReportApp
     get() = application as MyWarrantReportApp
 
-val Fragment.customApp: MyWarrantReportApp
-    get() = MyWarrantReportApp.applicationContext() as MyWarrantReportApp
-
 val Fragment.reportActivity: ReportActivity
     get() = activity as ReportActivity
 

@@ -1,17 +1,13 @@
 package com.ireny.warrantyreport
 
 import android.app.Application
-import android.content.Context
 import com.facebook.stetho.Stetho
+import com.ireny.warrantyreport.BuildConfig
 import com.ireny.warrantyreport.di.components.ApplicationComponent
 import com.ireny.warrantyreport.di.components.DaggerApplicationComponent
 import com.ireny.warrantyreport.di.modules.ApplicationModule
 
 class MyWarrantReportApp:Application(){
-
-    init {
-        instance = this
-    }
 
     lateinit var component: ApplicationComponent
 
@@ -31,13 +27,6 @@ class MyWarrantReportApp:Application(){
             .builder()
             .applicationModule(ApplicationModule(this))
             .build()
-    }
-
-    companion object {
-        private var instance: MyWarrantReportApp? = null
-        fun applicationContext() : Context {
-            return instance!!.applicationContext
-        }
     }
 
 }

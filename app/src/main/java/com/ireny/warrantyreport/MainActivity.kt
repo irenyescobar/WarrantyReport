@@ -1,6 +1,5 @@
 package com.ireny.warrantyreport
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -43,7 +42,6 @@ class MainActivity: AppCompatActivity(),
     private val importDataService: ImportDataService by lazy { component.importDataService() }
     val reportRepository: ReportRepository by lazy { component.reportRepository() }
 
-    @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -54,18 +52,6 @@ class MainActivity: AppCompatActivity(),
         val appBarConfiguration = AppBarConfiguration(setOf(R.id.navigation_home))
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-        
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            when (destination.id) {
-                R.id.navigation_home -> {
-                    fab.visibility = View.VISIBLE
-                }
-                R.id.navigation_reportscompleted,
-                R.id.navigation_settings -> {
-                    fab.visibility = View.GONE
-                }
-            }
-        }
 
         fab.setOnClickListener {
             openReportActivity(null)
@@ -181,7 +167,7 @@ class MainActivity: AppCompatActivity(),
     }
 
     override fun openCompletedReport(reportId: Long) {
-        startActivity(DocumentActivity.newInstance(this,reportId,false))
+        startActivity(DocumentActivity.newInstance(this,reportId))
     }
 
     companion object {

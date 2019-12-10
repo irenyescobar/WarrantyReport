@@ -1,14 +1,12 @@
 package com.ireny.warrantyreport.di.components
 
 import com.ireny.warrantyreport.MyWarrantReportApp
-import com.ireny.warrantyreport.data.retrofit.Api
 import com.ireny.warrantyreport.di.modules.ApplicationModule
 import com.ireny.warrantyreport.repositories.CompanyRepository
 import com.ireny.warrantyreport.repositories.ReportRepository
 import com.ireny.warrantyreport.repositories.ReportTypeRepository
 import com.ireny.warrantyreport.repositories.TechnicalAdviceRepository
 import com.ireny.warrantyreport.services.ImportDataService
-import com.ireny.warrantyreport.services.UserAccountManager
 import dagger.Component
 import javax.inject.Singleton
 
@@ -21,6 +19,4 @@ interface ApplicationComponent {
     fun companyRepository(): CompanyRepository
     fun technicalAdviceRepository(): TechnicalAdviceRepository
     fun reportRepository(): ReportRepository
-    fun userAccountManager(): UserAccountManager
-    fun api(): Api
 }

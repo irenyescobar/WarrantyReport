@@ -3,22 +3,17 @@ package com.ireny.warrantyreport.ui.report.document
 import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.Paint
-import android.graphics.Rect
-import android.graphics.Typeface
+import android.graphics.Canvas
 import android.graphics.pdf.PdfDocument
 import android.graphics.pdf.PdfRenderer
 import android.os.Bundle
 import android.os.ParcelFileDescriptor
-import android.text.StaticLayout
-import android.text.TextPaint
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.toBitmap
-import androidx.core.graphics.withTranslation
 import androidx.fragment.app.Fragment
 import com.ireny.warrantyreport.R
 import com.ireny.warrantyreport.di.components.DaggerReportDirectoryComponent
@@ -31,7 +26,6 @@ import com.ireny.warrantyreport.ui.report.services.IReportDirectoryManager
 import com.ireny.warrantyreport.utils.toDateTextFormatted
 import kotlinx.android.synthetic.main.report_preview_document_fragment.*
 import java.io.File
-import kotlin.math.roundToInt
 
 
 class PreviewDocumentFragment : Fragment(), ICreateDocument<Report> ,IBindView<Report>{
@@ -39,9 +33,6 @@ class PreviewDocumentFragment : Fragment(), ICreateDocument<Report> ,IBindView<R
     private lateinit var component: ReportDirectoryComponent
     private val directoryManager: IReportDirectoryManager by lazy { component.reportDirectoryManager()}
     private var report: Report? = null
-
-    private val a4Wpt = 595
-    private val a4Hpt = 842
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +43,6 @@ class PreviewDocumentFragment : Fragment(), ICreateDocument<Report> ,IBindView<R
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         return inflater.inflate(R.layout.report_preview_document_fragment, container, false)
     }
 
@@ -78,17 +68,18 @@ class PreviewDocumentFragment : Fragment(), ICreateDocument<Report> ,IBindView<R
                 if(file != null){
                     showDocument(file)
                 }else{
-                    showDocument(generatePdfDocument(model))
+                    showReportScreen(model)
                     confirmReGenerate(model)
                 }
             }else{
-                showDocument(generatePdfDocument(model))
+                showReportScreen(model)
             }
         }
     }
 
     override fun createDocument(model: Report) {
-        val file = createPdfFile(model.id,model)
+        showReportScreen(model)
+        val file = createPdf(model.id)
         if(file != null) {
             showDocument(file)
         }else{
@@ -128,6 +119,58 @@ class PreviewDocumentFragment : Fragment(), ICreateDocument<Report> ,IBindView<R
         component.inject(requireContext())
     }
 
+    private fun showReportScreen(entity: Report){
+
+        container.visibility = View.VISIBLE
+
+        entity.company?.run {
+            text_company_value.text = description
+        }
+
+        text_cod_value.text = if(entity.code != null) entity.code else "SEM CÓDIGO"
+        text_invoiceDate_value.text = if(entity.invoiceDate != null) entity.invoiceDate?.toDateTextFormatted() else ""
+        text_applicationDate_value.text = if(entity.applicationDate != null) entity.applicationDate?.toDateTextFormatted() else ""
+        text_text_warrantyDate_value.text = if(entity.warrantyDate != null) entity.warrantyDate?.toDateTextFormatted() else ""
+        text_analysisDate_value.text = if(entity.analysisDate != null) entity.analysisDate?.toDateTextFormatted() else ""
+
+        if(entity.sourceInvoice != null){
+            text_sourceInvoice_value.text = entity.sourceInvoice.toString()
+        }else{
+            text_sourceInvoice_value.text = ""
+        }
+
+        var aux = ""
+        entity.tecnicalAdvices.forEach{
+            aux += "${it.description}  "
+        }
+
+        entity.run {
+            text_distributor_value.text = distributor
+            text_cityState_value.text = cityState
+            text_client_value.text = client
+            text_partReference_value.text = partReference
+            text_reasonUnfounded_value.text = reasonUnfounded
+            text_comments_value.text = comments
+            text_technicalConsultant_value.text = technicalConsultant
+            text_technicalConsultantContact_value.text = technicalConsultantContact
+            text_TechnicalAdvice_value.text = aux
+        }
+
+        val data = directoryManager.getData(entity.id)
+        photo1.setImageDrawable(data[0].image)
+        photo2.setImageDrawable(data[1].image)
+        photo3.setImageDrawable(data[2].image)
+        photo4.setImageDrawable(data[3].image)
+
+    }
+
+    private fun createBitmapFromView(view: View, width: Int, height: Int): Bitmap {
+        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888 )
+        val canvas = Canvas(bitmap)
+        view.draw(canvas)
+        return bitmap
+    }
+
     private fun showDocument(file: File) {
 
         val parcelFileDescriptor =
@@ -139,6 +182,9 @@ class PreviewDocumentFragment : Fragment(), ICreateDocument<Report> ,IBindView<R
             val page = pdfRenderer.openPage(0)
             val bitmap = Bitmap.createBitmap(page.width, page.height, Bitmap.Config.ARGB_8888)
             page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
+
+            container.visibility = View.GONE
+            img.visibility = View.VISIBLE
             img.setImageBitmap(bitmap)
 
             page.close()
@@ -146,277 +192,26 @@ class PreviewDocumentFragment : Fragment(), ICreateDocument<Report> ,IBindView<R
         }
     }
 
-    private fun showDocument(document: PdfDocument) {
+    private fun createPdf(reportId: Long) :File?{
 
-        val file = File.createTempFile("temp","document")
+        val displaymetrics = DisplayMetrics()
+        requireActivity().windowManager.defaultDisplay.getMetrics(displaymetrics)
+        val hight = displaymetrics.heightPixels.toFloat()
+        val width = displaymetrics.widthPixels.toFloat()
+        val convertHighet = hight.toInt()
+        val convertWidth = width.toInt()
 
-        document.writeTo(file.outputStream())
-
-        document.close()
-
-        showDocument(file)
-
-        file.delete()
-    }
-
-    private fun generatePdfDocument(entity: Report):PdfDocument{
+        var bitmap = createBitmapFromView(container,container.width,container.height)
+        bitmap = Bitmap.createScaledBitmap(bitmap, convertWidth, convertHighet, true)
 
         val document = PdfDocument()
-
-        val pageInfo: PdfDocument.PageInfo = PdfDocument.PageInfo.Builder(a4Wpt, a4Hpt, 1) .create()
+        val pageInfo: PdfDocument.PageInfo = PdfDocument.PageInfo.Builder(convertWidth, convertHighet, 1).create()
         val page: PdfDocument.Page = document.startPage(pageInfo)
 
         val canvas = page.canvas
-        val margin = 10f
-        val linespace = 10f
-
-        val paintRotulo = Paint()
-        paintRotulo.color = resources.getColor(R.color.colorBlack,null)
-        paintRotulo.textSize = 12f
-        paintRotulo.typeface = Typeface.create(paintRotulo.typeface,Typeface.BOLD)
-
-        val paintValues = Paint()
-        paintValues.color = resources.getColor(R.color.colorBlack,null)
-        paintRotulo.textSize = 12f
-
-        val textPaint = TextPaint()
-
-        val paintTitle = Paint()
-        paintTitle.color = resources.getColor(R.color.colorBlack,null)
-        paintTitle.style = Paint.Style.STROKE
-        paintTitle.strokeWidth = 0.5f
-        canvas.drawRect(Rect(1,1,canvas.width -1,canvas.height-1),paintTitle)
-
-        paintTitle.style = Paint.Style.FILL
-        paintTitle.color = resources.getColor(R.color.colorPrimary,null)
-        paintTitle.textAlign = Paint.Align.CENTER
-        paintTitle.textSize = 20f
-
-        var text = "LAUDO DE GARANTIA"
-        var x = (canvas.width/2 - text.length /2).toFloat()
-        var y = paintTitle.textSize + margin
-        canvas.drawText(text,0,text.length, x,y, paintTitle)
-
-        text = "Suspensys    Fras-le    Controil    LonaFlex    Master    Jost"
-        canvas.drawText(text,0,text.length, (canvas.width/2f),canvas.height - 15f, paintTitle)
-
-
-        paintTitle.textSize = 15f
-        paintTitle.color = resources.getColor(R.color.colorRed,null)
-        paintTitle.textAlign = Paint.Align.LEFT
-
-        text = ""
-        entity.code?.run {
-            text = this
-        }
-
-        x = (canvas.width - (paintTitle.measureText(text) + margin))
-        canvas.drawText(text,0,text.length, x,y, paintTitle)
-
-        paintTitle.color = resources.getColor(R.color.colorBlack,null)
-
-        text = "N°: "
-        x -= paintTitle.measureText(text)
-        canvas.drawText(text,0,text.length, x,y, paintTitle)
-
-
-        text = ""
-        entity.company?.run {
-            text = description
-        }
-        x = (canvas.width - (paintValues.measureText(text) + margin))
-        y += paintValues.textSize + linespace
-        canvas.drawText(text,0,text.length, x,y, paintValues)
-
-        text = "EMPRESA: "
-        x -= paintRotulo.measureText(text)
-        canvas.drawText(text,0,text.length, x,y, paintRotulo)
-
-
-        paintRotulo.textAlign = Paint.Align.RIGHT
-        paintValues.textAlign = Paint.Align.RIGHT
-
-        text = "DISTRIBUIDOR: "
-        x = paintRotulo.measureText(text) + margin
-        y += paintRotulo.textSize + linespace
-        canvas.drawText(text,0,text.length, x,y, paintRotulo)
-
-        text = entity.distributor
-        x += paintValues.measureText(text)
-        canvas.drawText(text,0,text.length, x,y, paintValues)
-
-        text = "CIDADE/ESTADO: "
-        x = canvas.width/2 + paintRotulo.measureText(text) + margin
-        canvas.drawText(text,0,text.length, x,y, paintRotulo)
-
-        text = entity.cityState
-        x += paintValues.measureText(text)
-        canvas.drawText(text,0,text.length, x,y, paintValues)
-
-        text = "CLIENTE: "
-        x = paintRotulo.measureText(text) + margin
-        y += paintRotulo.textSize + linespace
-        canvas.drawText(text,0,text.length, x,y, paintRotulo)
-
-        text = entity.client
-        x += paintValues.measureText(text)
-        canvas.drawText(text,0,text.length, x,y, paintValues)
-
-        text = "REFERÊNCIA DA PEÇA: "
-        x = canvas.width/2 + paintRotulo.measureText(text) + margin
-        canvas.drawText(text,0,text.length, x,y, paintRotulo)
-
-        text = entity.partReference
-        x += paintValues.measureText(text)
-        canvas.drawText(text,0,text.length, x,y, paintValues)
-
-        text = "NOTA FISCAL DE ORIGEM: "
-        x = paintRotulo.measureText(text) + margin
-        y += paintRotulo.textSize + linespace
-        canvas.drawText(text,0,text.length, x,y, paintRotulo)
-
-        text = if(entity.sourceInvoice != null){ entity.sourceInvoice.toString() } else { "" }
-        x += paintValues.measureText(text)
-        canvas.drawText(text,0,text.length, x,y, paintValues)
-
-        text = "DATA DA NOTA: "
-        x = canvas.width/2 + paintRotulo.measureText(text) + margin
-        canvas.drawText(text,0,text.length, x,y, paintRotulo)
-
-        text = if(entity.invoiceDate != null){ entity.invoiceDate.toDateTextFormatted() } else { "" }
-        x += paintValues.measureText(text)
-        canvas.drawText(text,0,text.length, x,y, paintValues)
-
-        text = "DATA DA APLICAÇÃO: "
-        x = paintRotulo.measureText(text) + margin
-        y += paintRotulo.textSize + linespace
-        canvas.drawText(text,0,text.length, x,y, paintRotulo)
-
-        text = if(entity.applicationDate != null){ entity.applicationDate.toDateTextFormatted() } else { "" }
-        x += paintValues.measureText(text)
-        canvas.drawText(text,0,text.length, x,y, paintValues)
-
-        text = "DATA DO RETORNO: "
-        x = canvas.width/2 + paintRotulo.measureText(text) + margin
-        canvas.drawText(text,0,text.length, x,y, paintRotulo)
-
-        text = if(entity.warrantyDate != null){ entity.warrantyDate.toDateTextFormatted() } else { "" }
-        x += paintValues.measureText(text)
-        canvas.drawText(text,0,text.length, x,y, paintValues)
-
-
-        text = "PARECER TÉCNICO: "
-        x = paintRotulo.measureText(text) + margin
-        y += paintRotulo.textSize + linespace
-        canvas.drawText(text,0,text.length, x,y, paintRotulo)
-
-        text = ""
-        entity.tecnicalAdvices.forEach{
-            text += "${it.description}  "
-        }
-        x += paintValues.measureText(text)
-        canvas.drawText(text,0,text.length, x,y, paintValues)
-
-        text = "MOTIVO DA IMPROCEDÊNCIA DA GARANTIA: "
-        x = paintRotulo.measureText(text) + margin
-        y += paintRotulo.textSize + linespace
-        canvas.drawText(text,0,text.length, x,y, paintRotulo)
-
-
-        text = entity.reasonUnfounded
-        var staticLayout =
-            StaticLayout.Builder.obtain (
-                text, 0, text.length, textPaint , (canvas.width - margin*2).roundToInt()
-            ) .build ()
-
-        y += linespace
-        canvas.withTranslation(margin, y) {
-            staticLayout.draw(this)
-        }
-
-        text = "OBSERVAÇÕES: "
-        x = paintRotulo.measureText(text) + margin
-        y +=  staticLayout.height + paintRotulo.textSize + linespace
-        canvas.drawText(text,0,text.length, x,y, paintRotulo)
-
-        text = entity.comments
-        staticLayout =
-            StaticLayout.Builder.obtain (
-                text, 0, text.length, textPaint , (canvas.width - margin*2).roundToInt()
-            ) .build ()
-
-        y += linespace
-        canvas.withTranslation(margin, y) {
-            staticLayout.draw(this)
-        }
-
-        y +=  staticLayout.height
-
-        text = "CONSULTOR TÉCNICO: "
-        x = paintRotulo.measureText(text) + margin
-        y += paintRotulo.textSize + linespace
-        canvas.drawText(text,0,text.length, x,y, paintRotulo)
-
-        text = entity.technicalConsultant
-        x += paintValues.measureText(text)
-        canvas.drawText(text,0,text.length, x,y, paintValues)
-
-        text = "TELEFONE: "
-        x = canvas.width/2 + paintRotulo.measureText(text) + margin
-        canvas.drawText(text,0,text.length, x,y, paintRotulo)
-
-        text = entity.technicalConsultantContact
-        x += paintValues.measureText(text)
-        canvas.drawText(text,0,text.length, x,y, paintValues)
-
-        text = "DATA: "
-        x = paintRotulo.measureText(text) + margin
-        y += paintRotulo.textSize + linespace
-        canvas.drawText(text,0,text.length, x,y, paintRotulo)
-
-        text = if(entity.analysisDate != null) { entity.analysisDate.toDateTextFormatted() } else { "" }
-        x += paintValues.measureText(text)
-        canvas.drawText(text,0,text.length, x,y, paintValues)
-
-        y += paintValues.textSize + linespace
-
-        val hrodape = 30
-        val w = (canvas.width/2 - margin *2).roundToInt()
-        val h = ((canvas.height - y) / 2 - margin * 2 ).roundToInt() - hrodape
-
-        val data = directoryManager.getData(entity.id)
-
-        data[0].image?.run {
-            val b = this.toBitmap(w,h,Bitmap.Config.ARGB_8888 )
-            canvas.drawBitmap(b,margin,y,null)
-        }
-
-        data[1].image?.run {
-            val b = this.toBitmap(w,h,Bitmap.Config.ARGB_8888 )
-            canvas.drawBitmap(b,(canvas.width/2 + margin),y,null)
-        }
-
-        y += h + margin
-
-        data[2].image?.run {
-            val b = this.toBitmap(w,h,Bitmap.Config.ARGB_8888 )
-            canvas.drawBitmap(b,(margin),y,null)
-        }
-
-        data[3].image?.run {
-            val b = this.toBitmap(w,h,Bitmap.Config.ARGB_8888 )
-            canvas.drawBitmap(b,(canvas.width/2 + margin),y,null)
-        }
+        canvas.drawBitmap(bitmap, 0f, 0f , null)
 
         document.finishPage(page)
-
-        return document
-
-    }
-
-    private fun createPdfFile(reportId: Long, entity: Report) :File?{
-
-        val document = generatePdfDocument(entity)
 
         val file = directoryManager.saveFile(document,reportId)
 
@@ -424,6 +219,7 @@ class PreviewDocumentFragment : Fragment(), ICreateDocument<Report> ,IBindView<R
 
         return file
     }
+
 
     companion object {
         @JvmStatic
