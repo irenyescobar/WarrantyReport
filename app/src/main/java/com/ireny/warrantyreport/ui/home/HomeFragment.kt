@@ -33,11 +33,6 @@ class HomeFragment : Fragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        mainActivity.supportActionBar?.apply {
-            title = "Laudos em andamento"
-        }
-
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
