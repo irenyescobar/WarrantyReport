@@ -32,10 +32,6 @@ class ReportsCompletedFragment : Fragment() , GetErrorListener, SelectedListener
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        mainActivity.supportActionBar?.apply {
-            title = "Laudos finalizados"
-        }
         return inflater.inflate(R.layout.fragment_reports_completed, container, false)
     }
 
