@@ -2,7 +2,11 @@ package com.ireny.warrantyreport.di.modules
 
 import android.content.Context
 import androidx.room.Room
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.ireny.warrantyreport.BuildConfig
 import com.ireny.warrantyreport.MyWarrantReportApp
+import com.ireny.warrantyreport.data.retrofit.Api
 import com.ireny.warrantyreport.data.room.WarrantyReportRoomDatabase
 import com.ireny.warrantyreport.data.room.migrations.MIGRATION_1_2
 import com.ireny.warrantyreport.repositories.CompanyRepository
@@ -14,6 +18,8 @@ import com.ireny.warrantyreport.services.UserAccountManager
 import com.ireny.warrantyreport.utils.Constants
 import dagger.Module
 import dagger.Provides
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
@@ -26,12 +32,28 @@ class ApplicationModule(val application: MyWarrantReportApp) {
     @Provides
     @Singleton
     fun provideRoomDatabase(context:Context): WarrantyReportRoomDatabase {
-        val build = Room.databaseBuilder(
+        return Room.databaseBuilder(
             context,
             WarrantyReportRoomDatabase::class.java,
             Constants.DATABASE_NAME
         ).addMigrations(MIGRATION_1_2).build()
-        return build
+    }
+
+    val gson: Gson = GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create()
+
+    @Provides
+    @Singleton
+    fun provideRetrofit(): Retrofit = Retrofit.Builder()
+        .addConverterFactory(GsonConverterFactory.create(gson))
+        .baseUrl(BuildConfig.API_BASE_URL)
+        .build()
+
+    @Provides
+    @Singleton
+    fun provideApi(): Api{
+        return provideRetrofit().create(Api::class.java)
+    }
+
     @Provides
     @Singleton
     fun provideUserAccountManager(context:Context): UserAccountManager {

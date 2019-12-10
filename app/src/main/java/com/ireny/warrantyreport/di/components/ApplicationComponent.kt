@@ -1,6 +1,7 @@
 package com.ireny.warrantyreport.di.components
 
 import com.ireny.warrantyreport.MyWarrantReportApp
+import com.ireny.warrantyreport.data.retrofit.Api
 import com.ireny.warrantyreport.di.modules.ApplicationModule
 import com.ireny.warrantyreport.repositories.CompanyRepository
 import com.ireny.warrantyreport.repositories.ReportRepository
@@ -21,4 +22,5 @@ interface ApplicationComponent {
     fun technicalAdviceRepository(): TechnicalAdviceRepository
     fun reportRepository(): ReportRepository
     fun userAccountManager(): UserAccountManager
+    fun api(): Api
 }
