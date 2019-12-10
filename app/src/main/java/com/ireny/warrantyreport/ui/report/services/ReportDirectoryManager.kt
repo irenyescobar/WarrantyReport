@@ -8,6 +8,8 @@ import android.media.MediaScannerConnection
 import android.os.Environment
 import android.util.Log
 import android.widget.Toast
+import com.ireny.warrantyreport.MyWarrantReportApp
+import com.ireny.warrantyreport.services.UserAccountManager
 import com.ireny.warrantyreport.ui.report.photos.PhotosFragment
 import com.ireny.warrantyreport.utils.Constants
 import java.io.ByteArrayOutputStream
@@ -17,6 +19,16 @@ import java.io.IOException
 
 class ReportDirectoryManager(private val context: Context): IReportDirectoryManager {
 
+    private val component by lazy { (MyWarrantReportApp.applicationContext() as MyWarrantReportApp).component }
+    private val accountMannager: UserAccountManager by lazy { component.userAccountManager() }
+
+    private var userId:String
+
+    init {
+        val account = accountMannager.getUserAccount() ?: throw Exception("Usuário não conectado!")
+        userId = account.id?: throw Exception("Usuário não identificado!")
+    }
+
     private val data: Array<PhotosFragment.Photo> = arrayOf(
         PhotosFragment.Photo(0),
         PhotosFragment.Photo(1),
@@ -24,7 +36,7 @@ class ReportDirectoryManager(private val context: Context): IReportDirectoryMana
         PhotosFragment.Photo(3)
     )
 
-    private val dir = File("${Environment.getExternalStorageDirectory()}${Constants.REPORTS_DIRECTORY}")
+    private val dir = File("${Environment.getExternalStorageDirectory()}${Constants.REPORTS_DIRECTORY}/$userId")
 
     private fun getImage(reportId: Long,photoId: Int): Drawable?{
         val path = "${getPath(reportId)}photo_${photoId}.jpg"
@@ -43,6 +55,10 @@ class ReportDirectoryManager(private val context: Context): IReportDirectoryMana
     }
 
     override fun saveImage(myBitmap: Bitmap, photoId:Int, reportId:Long) {
+
+        if(reportId == 0L) {
+            throw Exception("Laudo não identificado: reportId = $reportId")
+        }
 
         val bytes = ByteArrayOutputStream()
         myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes)
