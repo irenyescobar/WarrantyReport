@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Laudos</string>
+    <string name="app_name">techlauto</string>
     <string name="title_home">Em andamento</string>
     <string name="title_reports_completed">Finalizados</string>
     <string name="title_settings">Configurações</string>
@@ -52,4 +52,5 @@
     <string name="select_file_message">Selecione o arquivo</string>
     <string name="no_data_to_import">Sem dados para importar.</string>
     <string name="import_data_error_message">Ocorreram erros na importação dos dados</string>
+    <string name="desconnected_profile_name">Desconectado</string>
 </resources>
