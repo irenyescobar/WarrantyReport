@@ -12,15 +12,17 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ireny.warrantyreport.R
 import com.ireny.warrantyreport.entities.Report
+import com.ireny.warrantyreport.repositories.ReportRepository
 import com.ireny.warrantyreport.repositories.listeners.GetErrorListener
 import com.ireny.warrantyreport.ui.adapters.ReportListAdapter
 import com.ireny.warrantyreport.ui.listeners.SelectedListener
 import com.ireny.warrantyreport.utils.customApp
-import com.ireny.warrantyreport.utils.mainActivity
 import kotlinx.android.synthetic.main.fragment_reports_completed.*
 
 class ReportsCompletedFragment : Fragment() , GetErrorListener, SelectedListener<Report> {
 
+    private val component by lazy { customApp.component }
+    private val reportRepository: ReportRepository by lazy { component.reportRepository() }
     private lateinit var viewModel: ReportsCompletedViewModel
     private lateinit var adapter: ReportListAdapter
     private lateinit var linearLayoutManager: LinearLayoutManager
@@ -49,8 +51,8 @@ class ReportsCompletedFragment : Fragment() , GetErrorListener, SelectedListener
         recyclerview.addItemDecoration(dividerItemDecoration)
 
         viewModel = ViewModelProviders.of(this, ReportsCompletedViewModel.Companion.Factory(
-            mainActivity.customApp,
-            mainActivity.reportRepository)
+            customApp,
+            reportRepository)
         ).get(ReportsCompletedViewModel::class.java)
 
         viewModel.all.observe(this, Observer { data ->
