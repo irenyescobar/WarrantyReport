@@ -6,4 +6,5 @@
     <color name="colorBlack">#000</color>
     <color name="colorRed">#FF1200</color>
     <color name="colorWhite">#FFF</color>
+    <color name="colorProgressBackground">#791A1818</color>
 </resources>
