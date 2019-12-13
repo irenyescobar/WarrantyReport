@@ -78,7 +78,7 @@ class HomeFragment : Fragment(),
     }
 
     override fun onGetError(id: Long, error: Exception) {
-        listener?.showError(error.localizedMessage)
+        listener?.showError(error.localizedMessage?:"")
     }
 
     interface Listener{
