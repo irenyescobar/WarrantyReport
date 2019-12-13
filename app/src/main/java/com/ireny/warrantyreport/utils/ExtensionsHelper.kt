@@ -9,8 +9,11 @@ import android.widget.EditText
 import androidx.fragment.app.Fragment
 import com.ireny.warrantyreport.MainActivity
 import com.ireny.warrantyreport.MyWarrantReportApp
+import com.ireny.warrantyreport.entities.WarrantReportData
 import com.ireny.warrantyreport.ui.report.ReportActivity
 import com.ireny.warrantyreport.utils.Constants.Companion.LOCALE_BRAZIL
+import java.io.BufferedReader
+import java.io.InputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -69,5 +72,24 @@ fun EditText.setOnClickDatePicker(context:Context,
                 this.setText(date)
             }, year, month, day)
         datePicker.show()
+    }
+}
+
+fun String.toWarrantReportData():WarrantReportData?{
+    return try {
+        val data: WarrantReportData = gson.fromJson(this, WarrantReportData::class.java)
+        data
+    }catch (err: Exception){
+        null
+    }
+}
+
+fun InputStream.toWarrantReportData():WarrantReportData?{
+    return try {
+        val bufferedReader: BufferedReader = this.bufferedReader()
+        val inputString = bufferedReader.use { it.readText() }
+        return inputString.toWarrantReportData()
+    }catch (err: Exception){
+        null
     }
 }
