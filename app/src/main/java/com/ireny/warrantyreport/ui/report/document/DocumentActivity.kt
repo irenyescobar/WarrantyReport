@@ -19,6 +19,7 @@ import com.ireny.warrantyreport.ui.base.IShowMessage
 import com.ireny.warrantyreport.ui.report.ReportActivity.Companion.REPORT_ID
 import com.ireny.warrantyreport.utils.customApp
 import kotlinx.android.synthetic.main.activity_document.*
+import kotlinx.android.synthetic.main.custom_progress.*
 
 class DocumentActivity : AppCompatActivity(),
     IProgressLoading,
@@ -64,7 +65,7 @@ class DocumentActivity : AppCompatActivity(),
         })
 
         viewModel.loadingVisibility.observe(this, Observer { el->
-            showProgress(el)
+            showProgress(el,null)
         })
 
         viewModel.message.observe(this, Observer { el ->
@@ -125,11 +126,15 @@ class DocumentActivity : AppCompatActivity(),
         transaction.commit()
     }
 
-    override fun showProgress(show: Boolean) {
+    override fun showProgress(show: Boolean, message: String?) {
         if(show){
-            progressBar.visibility = View.VISIBLE
+            contentProgress.visibility = View.VISIBLE
+            message?.let {
+                textViewProgressMessage.text = it
+            }
         }else{
-            progressBar.visibility = View.GONE
+            contentProgress.visibility = View.GONE
+            textViewProgressMessage.text = getString(R.string.default_message_progress)
         }
     }
 

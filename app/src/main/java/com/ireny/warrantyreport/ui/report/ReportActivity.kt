@@ -38,6 +38,7 @@ import com.ireny.warrantyreport.ui.report.technicalconsultant.TechnicalConsultan
 import com.ireny.warrantyreport.utils.copy
 import com.ireny.warrantyreport.utils.customApp
 import com.ireny.warrantyreport.utils.toDateTextFormatted
+import kotlinx.android.synthetic.main.custom_progress.*
 import kotlinx.android.synthetic.main.report_activity.*
 
 class ReportActivity : AppCompatActivity(),
@@ -48,7 +49,6 @@ class ReportActivity : AppCompatActivity(),
     ValuesViewChangedListener,
     IShowPreviewButton
 {
-
 
     private val component by lazy { customApp.component }
     val companyRepository: CompanyRepository by lazy { component.companyRepository() }
@@ -93,7 +93,7 @@ class ReportActivity : AppCompatActivity(),
         })
 
         viewModel.loadingVisibility.observe(this, Observer { el->
-            showProgress(el)
+            showProgress(el,null)
         })
 
         viewModel.message.observe(this, Observer { el ->
@@ -124,11 +124,15 @@ class ReportActivity : AppCompatActivity(),
         sectionsPagerAdapter.childFragments[viewpager.currentItem].bindView(model)
     }
 
-    override fun showProgress(show:Boolean){
+    override fun showProgress(show: Boolean, message: String?) {
         if(show){
-            progressBar.visibility = View.VISIBLE
+            contentProgress.visibility = View.VISIBLE
+            message?.let {
+                textViewProgressMessage.text = it
+            }
         }else{
-            progressBar.visibility = View.GONE
+            contentProgress.visibility = View.GONE
+            textViewProgressMessage.text = getString(R.string.default_message_progress)
         }
     }
 
@@ -143,7 +147,7 @@ class ReportActivity : AppCompatActivity(),
     }
 
     override fun onItemChangedSelection(item: ReportTechnicalAdvice) {
-        progressBar.visibility = View.VISIBLE
+        showProgress(true,null)
         viewModel.save(item)
     }
 
