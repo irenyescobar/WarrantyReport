@@ -7,7 +7,7 @@ import com.ireny.warrantyreport.repositories.CompanyRepository
 import com.ireny.warrantyreport.repositories.ReportRepository
 import com.ireny.warrantyreport.repositories.ReportTypeRepository
 import com.ireny.warrantyreport.repositories.TechnicalAdviceRepository
-import com.ireny.warrantyreport.services.ImportDataService
+import com.ireny.warrantyreport.services.DataHelperService
 import com.ireny.warrantyreport.services.UserAccountManager
 import dagger.Component
 import javax.inject.Singleton
@@ -16,7 +16,7 @@ import javax.inject.Singleton
 @Component(modules = arrayOf(ApplicationModule::class))
 interface ApplicationComponent {
     fun inject(application: MyWarrantReportApp)
-    fun importDataService(): ImportDataService
+    fun dataHelperService(): DataHelperService
     fun reportTypeRepository(): ReportTypeRepository
     fun companyRepository(): CompanyRepository
     fun technicalAdviceRepository(): TechnicalAdviceRepository
