@@ -24,9 +24,6 @@ val Fragment.customApp: MyWarrantReportApp
 val Fragment.reportActivity: ReportActivity
     get() = activity as ReportActivity
 
-val Fragment.mainActivity: MainActivity
-    get() = activity as MainActivity
-
 fun Date?.toDateTimeTextFormatted():String{
     this?.run {
         val formatter = SimpleDateFormat("dd/MM/yyyy HH:mm:ss",LOCALE_BRAZIL)
