@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">techlauto</string>
+    <string name="app_name">Techlauto</string>
     <string name="title_home">Em andamento</string>
     <string name="title_reports_completed">Finalizados</string>
     <string name="title_settings">Configurações</string>
@@ -51,6 +51,24 @@
     <string name="dialog_no_found_file_message">Arquivo não encontrado! Deseja gerar o arquivo novamente?</string>
     <string name="select_file_message">Selecione o arquivo</string>
     <string name="no_data_to_import">Sem dados para importar.</string>
-    <string name="import_data_error_message">Ocorreram erros na importação dos dados</string>
     <string name="desconnected_profile_name">Desconectado</string>
+    <string name="action_backap_data">Salvar backap da base</string>
+    <string name="default_message_progress">Processando operação. Por favor aguarde...</string>
+    <string name="drive_access_error">Não foi possível obter acesso ao google drive.</string>
+    <string name="export_data_error">Não foi possível exportar os dados para o arquivo.</string>
+    <string name="export_data_success">Arquivo para exportação de dados criado com sucesso.</string>
+    <string name="upload_backap_start">Salvando backap...</string>
+    <string name="upload_backap_success">Backap salvo com sucesso.</string>
+    <string name="upload_backap_error">Não foi possível salvar o backap no drive.</string>
+    <string name="download_backap_error">Não foi possível fazer o download do backap.</string>
+    <string name="download_backap_success">Download do backap completado sem erros.</string>
+    <string name="download_backap_success_no_data">Sem backap para restaurar.</string>
+    <string name="search_backap_data_message">Procurando backap de dados</string>
+    <string name="import_data_success">Dados importados com sucesso!</string>
+    <string name="import_data_error">Não foi possível importar o arquivo.</string>
+    <string name="import_data_format_file_error">Erro ao converter o arquivo para o formato esperado.</string>
+    <string name="logout_with_save_backap_message">Deseja salvar backap dos dados antes de desconectar?</string>
+    <string name="logout_save_and_desconect_action">Salvar backap e desconectar</string>
+    <string name="logout_desconect_action">Desconectar</string>
+    <string name="cancel_action">Cancelar</string>
 </resources>
