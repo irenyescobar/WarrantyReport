@@ -77,7 +77,7 @@ class PhotosFragment(private var reportId:Long) : FragmentBase(){
     }
 
     private fun refresh() {
-        val data = photoManager.getData(reportId)
+        val data = photoManager.getImages(reportId)
         photo1.setImage(data[0])
         photo2.setImage(data[1])
         photo3.setImage(data[2])

@@ -384,7 +384,7 @@ class PreviewDocumentFragment : Fragment(), ICreateDocument<Report> ,IBindView<R
         val w = (canvas.width/2 - margin *2).roundToInt()
         val h = ((canvas.height - y) / 2 - margin * 2 ).roundToInt() - hrodape
 
-        val data = directoryManager.getData(entity.id)
+        val data = directoryManager.getImages(entity.id)
 
         data[0].image?.run {
             val b = this.toBitmap(w,h,Bitmap.Config.ARGB_8888 )
