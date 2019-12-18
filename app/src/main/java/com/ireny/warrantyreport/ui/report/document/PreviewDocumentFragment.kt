@@ -1,7 +1,5 @@
 package com.ireny.warrantyreport.ui.report.document
 
-import android.Manifest
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Paint
 import android.graphics.Rect
@@ -16,7 +14,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.graphics.withTranslation
 import androidx.fragment.app.Fragment
@@ -58,32 +55,16 @@ class PreviewDocumentFragment : Fragment(), ICreateDocument<Report> ,IBindView<R
 
     override fun bindView(model: Report) {
         report = model
-
-        val read = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
-        val write = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-
-        if (read != PackageManager.PERMISSION_GRANTED || write != PackageManager.PERMISSION_GRANTED) {
-
-            requestPermissions(
-                arrayOf(
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                REQUEST_PERMISSION_STORAGE
-            )
-
-        }else{
-
-            if(model.code != null) {
-                val file = directoryManager.getReportFile(model.id)
-                if(file != null){
-                    showDocument(file)
-                }else{
-                    showDocument(generatePdfDocument(model))
-                    confirmReGenerate(model)
-                }
+        if(model.code != null) {
+            val file = directoryManager.getReportFile(model.id)
+            if(file != null){
+                showDocument(file)
             }else{
                 showDocument(generatePdfDocument(model))
+                confirmReGenerate(model)
             }
+        }else{
+            showDocument(generatePdfDocument(model))
         }
     }
 
