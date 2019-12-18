@@ -32,6 +32,8 @@ class DocumentActivity : AppCompatActivity(),
     private lateinit var transaction: FragmentTransaction
     private lateinit var viewModel: DocumentViewModel
 
+    private var menuSave: MenuItem? = null
+    private var menuShare: MenuItem? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_document)
@@ -82,6 +84,10 @@ class DocumentActivity : AppCompatActivity(),
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.document_menu, menu)
+        menuSave = menu.findItem(R.id.action_save_report)
+        menuShare = menu.findItem(R.id.action_share_files)
+        menuSave?.isVisible = false
+        menuShare?.isVisible = false
         return true
     }
 
