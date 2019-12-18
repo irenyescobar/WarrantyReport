@@ -24,6 +24,7 @@ import com.ireny.warrantyreport.di.modules.ReportDirectoryModule
 import com.ireny.warrantyreport.entities.Report
 import com.ireny.warrantyreport.ui.report.interfaces.IBindView
 import com.ireny.warrantyreport.ui.report.interfaces.ICreateDocument
+import com.ireny.warrantyreport.ui.report.interfaces.IShareFiles
 import com.ireny.warrantyreport.ui.report.services.IReportDirectoryManager
 import com.ireny.warrantyreport.utils.toDateTextFormatted
 import kotlinx.android.synthetic.main.report_preview_document_fragment.*
@@ -31,7 +32,7 @@ import java.io.File
 import kotlin.math.roundToInt
 
 
-class PreviewDocumentFragment : Fragment(), ICreateDocument<Report> ,IBindView<Report>{
+class PreviewDocumentFragment : Fragment(), ICreateDocument<Report> ,IBindView<Report>, IShareFiles<Report> {
 
     private lateinit var component: ReportDirectoryComponent
     private val directoryManager: IReportDirectoryManager by lazy { component.reportDirectoryManager()}
@@ -41,6 +42,7 @@ class PreviewDocumentFragment : Fragment(), ICreateDocument<Report> ,IBindView<R
     private val a4Hpt = 842
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setHasOptionsMenu(true)
         super.onCreate(savedInstanceState)
         initComponent()
     }
@@ -82,6 +84,30 @@ class PreviewDocumentFragment : Fragment(), ICreateDocument<Report> ,IBindView<R
                 .create()
                 .show()
         }
+    }
+
+    override fun files(model: Report): ArrayList<File> {
+
+
+        val file = directoryManager.getReportFile(model.id)
+
+        file?.let {
+
+            val list :ArrayList<File> = arrayListOf()
+
+            list.add(it)
+
+            for(i in 0 until 4) {
+                val f = directoryManager.getFile(model.id, i)
+                f?.let {
+                    list.add(f)
+                }
+            }
+
+            return list
+        }
+
+        return arrayListOf()
     }
 
     private fun confirmReGenerate(model: Report){
