@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Techlauto</string>
+    <string name="document_name">LAUDO</string>
     <string name="title_home">Em andamento</string>
     <string name="title_reports_completed">Finalizados</string>
     <string name="title_settings">Configurações</string>
@@ -11,9 +12,6 @@
     <string name="label_invoiceDate">Data da nota</string>
     <string name="label_applicationDate">Data da aplicação/montagem</string>
     <string name="label_warrantyDate">Data de retorno/garantia</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="label_technicalConsultant">Consultor técnico</string>
     <string name="label_analysisDate">Data da análise</string>
     <string name="label_technicalConsultantContact">Contato do consultor</string>
@@ -71,4 +69,6 @@
     <string name="logout_save_and_desconect_action">Salvar backap e desconectar</string>
     <string name="logout_desconect_action">Desconectar</string>
     <string name="cancel_action">Cancelar</string>
+    <string name="permission_storage_rationale_message">O app precisa acessar o armazenamento para continuar.</string>
+    <string name="permission_camera_rationale_message">O app precisa acessar a câmera para continuar.</string>
 </resources>
