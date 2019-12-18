@@ -8,6 +8,7 @@ import com.ireny.warrantyreport.entities.Report
 import com.ireny.warrantyreport.repositories.listeners.GetErrorListener
 import com.ireny.warrantyreport.repositories.listeners.LoadDataErrorListener
 import com.ireny.warrantyreport.repositories.listeners.SaveErrorListener
+import java.util.*
 
 class ReportRepository(private val dao: ReportDao) {
 
@@ -127,7 +128,9 @@ class ReportRepository(private val dao: ReportDao) {
 
     suspend fun saveCode(code:String,report: Report){
         try {
-            dao.saveCode(code,report.id)
+            val generatedAt = Calendar.getInstance().time
+            dao.saveCode(code,generatedAt,report.id)
+
         }catch (ex:Exception){
             saveListener?.onSaveError(report,ex)
         }
