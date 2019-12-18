@@ -144,6 +144,7 @@ class DocumentActivity : AppCompatActivity(),
 
     companion object {
         const val CREATE_MODE = "CREATE_MODE"
+        const val FILE_PROVIDER = "com.ireny.warrantyreport.fileprovider"
         @JvmStatic
         fun newInstance(context: Context, reportId:Long, createMode:Boolean): Intent {
             val intent = Intent(context, DocumentActivity::class.java)
