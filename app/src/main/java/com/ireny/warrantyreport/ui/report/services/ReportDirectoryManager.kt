@@ -43,7 +43,16 @@ class ReportDirectoryManager(private val context: Context): IReportDirectoryMana
         return Drawable.createFromPath(path)
     }
 
-    override fun getData(reportId: Long): Array<PhotosFragment.Photo> {
+    override fun getFile(reportId: Long,photoId: Int): File?{
+        val path = "${getPath(reportId)}photo_${photoId}.jpg"
+        val f =  File(path)
+        if(f.exists()){
+            return f
+        }
+        return null
+    }
+
+    override fun getImages(reportId: Long): Array<PhotosFragment.Photo> {
         refreshData(reportId)
         return data
     }
@@ -144,11 +153,11 @@ class ReportDirectoryManager(private val context: Context): IReportDirectoryMana
 }
 
 interface IReportDirectoryManager{
-    fun getData(reportId: Long):Array<PhotosFragment.Photo>
+    fun getImages(reportId: Long):Array<PhotosFragment.Photo>
     fun saveImage(myBitmap: Bitmap, photoId:Int, reportId:Long)
     fun removeImage(photoId:Int, reportId:Long)
     fun getReportDirectory(reportId: Long):String?
     fun getReportFile(reportId: Long):File?
     fun saveFile(document: PdfDocument, reportId: Long):File?
-
+    fun getFile(reportId: Long,photoId: Int): File?
 }
