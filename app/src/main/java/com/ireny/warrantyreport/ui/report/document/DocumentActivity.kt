@@ -34,6 +34,8 @@ class DocumentActivity : AppCompatActivity(),
 
     private var menuSave: MenuItem? = null
     private var menuShare: MenuItem? = null
+    private var isCreateMode = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_document)
@@ -43,7 +45,7 @@ class DocumentActivity : AppCompatActivity(),
         }
 
         val reportId = intent.getLongExtra(REPORT_ID,0)
-        val isCreateMode = intent.getBooleanExtra(CREATE_MODE,false)
+        isCreateMode = intent.getBooleanExtra(CREATE_MODE,false)
 
         viewModel = ViewModelProviders.of(this, DocumentViewModel.Companion.Factory(
             customApp,
