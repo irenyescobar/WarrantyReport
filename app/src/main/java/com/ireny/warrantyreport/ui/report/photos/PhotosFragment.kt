@@ -120,14 +120,14 @@ class PhotosFragment(private var reportId:Long) : FragmentBase(){
         pictureDialog.setItems(pictureDialogItems
         ) { _, which ->
             when (which) {
-                0 -> choosePhotoFromGallary()
+                0 -> choosePhotoFromGallery()
                 1 -> checkPermissionFromCameraAndTakePhoto()
             }
         }
         pictureDialog.show()
     }
 
-    private fun choosePhotoFromGallary() {
+    private fun choosePhotoFromGallery() {
         val galleryIntent = Intent(Intent.ACTION_PICK,
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         startActivityForResult(galleryIntent, GALLERY)
