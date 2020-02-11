@@ -18,15 +18,15 @@ import com.ireny.warrantyreport.services.interfaces.IUserAccountManager
 
 class UserAccountManager(val context: Context): IUserAccountManager {
 
-    private val driveScope = Scope(DriveScopes.DRIVE)
-    private val driveFileScope = Scope(DriveScopes.DRIVE_FILE)
-    private val scopes = listOf(driveScope.scopeUri, driveFileScope.scopeUri)
+    private val driveScope = Scope(DriveScopes.DRIVE_FILE)
+    //private val driveFileScope = Scope(DriveScopes.DRIVE_FILE)
+    private val scopes = listOf(driveScope.scopeUri)
 
     private val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
         .requestId()
         .requestProfile()
         .requestEmail()
-        .requestScopes(driveScope,driveFileScope)
+        .requestScopes(driveScope)
         .build()
 
     private val  googleSignInClient: GoogleSignInClient = GoogleSignIn.getClient(context, gso)
