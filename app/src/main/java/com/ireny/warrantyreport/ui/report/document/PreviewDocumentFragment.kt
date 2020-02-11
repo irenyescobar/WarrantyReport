@@ -25,7 +25,7 @@ import com.ireny.warrantyreport.entities.Report
 import com.ireny.warrantyreport.ui.report.interfaces.IBindView
 import com.ireny.warrantyreport.ui.report.interfaces.ICreateDocument
 import com.ireny.warrantyreport.ui.report.interfaces.IShareFiles
-import com.ireny.warrantyreport.ui.report.services.IReportDirectoryManager
+import com.ireny.warrantyreport.services.IReportDirectoryManager
 import com.ireny.warrantyreport.utils.toDateTextFormatted
 import kotlinx.android.synthetic.main.report_preview_document_fragment.*
 import java.io.File
