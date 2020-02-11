@@ -4,23 +4,22 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
 import com.google.android.material.snackbar.Snackbar
-import com.ireny.warrantyreport.entities.WarrantReportData
 import com.ireny.warrantyreport.services.DataHelperService
+import com.ireny.warrantyreport.services.IReportDirectoryManager
 import com.ireny.warrantyreport.services.UserAccountManager
-import com.ireny.warrantyreport.services.interfaces.DownloadBackapDataCompletedListener
-import com.ireny.warrantyreport.services.interfaces.ImportDataCompletedListener
+import com.ireny.warrantyreport.services.interfaces.DriveAccessAuthDeniedListener
 import com.ireny.warrantyreport.ui.base.IProgressLoading
 import com.ireny.warrantyreport.ui.base.IShowMessage
+import com.ireny.warrantyreport.ui.settings.SettingsFragment
 import com.ireny.warrantyreport.ui.settings.SettingsViewModel
 import com.ireny.warrantyreport.utils.customApp
-import com.ireny.warrantyreport.utils.toWarrantReportData
 import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.android.synthetic.main.activity_login.container
 import kotlinx.android.synthetic.main.custom_progress.*
 
 class LoginActivity : AppCompatActivity(),
@@ -32,6 +31,7 @@ class LoginActivity : AppCompatActivity(),
     private val component by lazy { customApp.component }
     private val accountManager: UserAccountManager by lazy { component.userAccountManager() }
     private val dataHelperService: DataHelperService by lazy { component.dataHelperService() }
+    private val directoryManager: IReportDirectoryManager by lazy { component.reportDirectoryManager()}
     private var isRestoreBackap = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,7 +39,7 @@ class LoginActivity : AppCompatActivity(),
         setContentView(R.layout.activity_login)
 
         viewModel = ViewModelProviders.of(this,
-                SettingsViewModel.Companion.Factory(customApp,this,accountManager,dataHelperService,this)
+                SettingsViewModel.Companion.Factory(customApp,this,accountManager,dataHelperService,directoryManager,this)
         ).get(SettingsViewModel::class.java)
 
         sign_in_button.setOnClickListener{
@@ -58,7 +58,10 @@ class LoginActivity : AppCompatActivity(),
             if(success){
                 onLoggedIn()
             }else{
-                viewModel.importRawData()
+                val accessDenied = viewModel.accessDriveIsDenied()?:false
+                if(!accessDenied) {
+                    viewModel.importRawData()
+                }
             }
         }else{
             onLoggedIn()
@@ -70,28 +73,37 @@ class LoginActivity : AppCompatActivity(),
         val account = accountManager.getUserAccount()
         if (account != null) {
             onLoggedIn()
-        }else {
-            viewModel.clearDatabase()
         }
     }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK)
+
             when (requestCode) {
-                GOOGLE_SIGNIN_REQUEST_CODE -> try {
+                GOOGLE_SIGNIN_REQUEST_CODE ->
+                    if (resultCode == Activity.RESULT_OK) {
+                        try {
+                            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+                            val account = task.getResult(ApiException::class.java)
+                            account?.run {
+                                isRestoreBackap = true
+                                showProgress(true, null)
+                                viewModel.restoreBackap()
+                            }
 
-                    val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-                    val account = task.getResult(ApiException::class.java)
-                    account?.run {
-                        isRestoreBackap = true
-                        showProgress(true,null)
-                        viewModel.restoreBackap()
+                        } catch (e: ApiException) {
+                            Snackbar.make(container, "Falha de login: ${e.localizedMessage}", Snackbar.LENGTH_LONG).show()
+                        }
+                    } else {
+                        AlertDialog.Builder(this)
+                                .setCancelable(false)
+                                .setTitle(getString(R.string.app_name))
+                                .setMessage(getString(R.string.drive_access_denied))
+                                .setPositiveButton("Ok") { dialog, _ ->
+                                    dialog.cancel()
+                                }
+                                .show()
                     }
-
-                } catch (e: ApiException) {
-                    Snackbar.make(container,"Falha de login: ${e.localizedMessage}", Snackbar.LENGTH_LONG).show()
-                }
             }
     }
 
@@ -109,6 +121,18 @@ class LoginActivity : AppCompatActivity(),
 
     override fun showMessage(message: String) {
         Snackbar.make(container,message, Snackbar.LENGTH_LONG).show()
+    }
+
+    override fun onShowMessageDriveAccessDenied() {
+        AlertDialog.Builder(this)
+                .setCancelable(false)
+                .setTitle(getString(R.string.app_name))
+                .setMessage(getString(R.string.drive_access_denied))
+                .setPositiveButton("Ok") { dialog, _ ->
+                    dialog.cancel()
+                    viewModel.logout(null)
+                }
+                .show()
     }
 
     private fun onLoggedIn() {
