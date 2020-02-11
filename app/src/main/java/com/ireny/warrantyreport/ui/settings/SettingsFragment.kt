@@ -1,11 +1,13 @@
 package com.ireny.warrantyreport.ui.settings
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.Nullable
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -13,13 +15,18 @@ import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.common.api.ApiException
+import com.google.android.material.snackbar.Snackbar
 import com.ireny.warrantyreport.LoginActivity
 import com.ireny.warrantyreport.R
 import com.ireny.warrantyreport.services.DataHelperService
+import com.ireny.warrantyreport.services.IReportDirectoryManager
 import com.ireny.warrantyreport.services.UserAccountManager
 import com.ireny.warrantyreport.ui.base.IProgressLoading
 import com.ireny.warrantyreport.ui.base.IShowMessage
 import com.ireny.warrantyreport.utils.customApp
+import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.fragment_settings.*
 
 
@@ -29,6 +36,7 @@ class SettingsFragment : Fragment(), SettingsViewModel.Listener , SettingsViewMo
     private val component by lazy { customApp.component }
     private val accountManager: UserAccountManager by lazy { component.userAccountManager() }
     private val dataHelperService: DataHelperService by lazy { component.dataHelperService() }
+    private val directoryManager: IReportDirectoryManager by lazy { component.reportDirectoryManager()}
     private var progress: IProgressLoading? = null
     private var showMessage: IShowMessage? = null
     private var isLogoutWithSaveBackap = false
@@ -40,7 +48,7 @@ class SettingsFragment : Fragment(), SettingsViewModel.Listener , SettingsViewMo
     ): View? {
 
         viewModel = ViewModelProviders.of(this,
-            SettingsViewModel.Companion.Factory(customApp,requireContext(),accountManager,dataHelperService,this)
+            SettingsViewModel.Companion.Factory(customApp,requireContext(),accountManager,dataHelperService, directoryManager,this)
         ).get(SettingsViewModel::class.java)
 
         return inflater.inflate(R.layout.fragment_settings, container, false)
@@ -53,11 +61,10 @@ class SettingsFragment : Fragment(), SettingsViewModel.Listener , SettingsViewMo
             AlertDialog.Builder(requireContext())
                     .setTitle(getString(R.string.app_name))
                     .setMessage(getString(R.string.logout_with_save_backap_message))
-                    .setPositiveButton(getString(R.string.logout_save_and_desconect_action)) { dialog, which ->
+                    .setPositiveButton(getString(R.string.logout_save_and_desconect_action)) { dialog, _ ->
                         dialog.cancel()
                         isLogoutWithSaveBackap = true
                         saveBackap()
-
                     }
                     .setNegativeButton(getString(R.string.logout_desconect_action)) { dialog, _ ->
                         dialog.cancel()
@@ -126,17 +133,32 @@ class SettingsFragment : Fragment(), SettingsViewModel.Listener , SettingsViewMo
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
         super.onActivityResult(requestCode, resultCode, resultData)
-        if (requestCode == READ_REQUEST_CODE && resultCode == AppCompatActivity.RESULT_OK) {
-            resultData?.data?.also { uri ->
-                val inputStream = requireContext().contentResolver.openInputStream(uri)
-                if(inputStream != null){
-                    progress?.showProgress(true,null)
-                    viewModel.importData(inputStream)
-                }else {
-                    showMessage?.showMessage(getString(R.string.no_data_to_import))
+
+        if (resultCode == Activity.RESULT_OK)
+            when (requestCode) {
+                READ_REQUEST_CODE -> {
+                    resultData?.data?.also { uri ->
+                        val inputStream = requireContext().contentResolver.openInputStream(uri)
+                        if(inputStream != null){
+                            progress?.showProgress(true,null)
+                            viewModel.importData(inputStream)
+                        }else {
+                            showMessage?.showMessage(getString(R.string.no_data_to_import))
+                        }
+                    }
+                }
+                GOOGLE_SIGNIN_REQUEST_CODE -> try {
+
+                    val task = GoogleSignIn.getSignedInAccountFromIntent(resultData)
+                    val account = task.getResult(ApiException::class.java)
+                    account?.run {
+                       saveBackap()
+                    }
+
+                } catch (e: ApiException) {
+                    Snackbar.make(container,"Falha de login: ${e.localizedMessage}", Snackbar.LENGTH_LONG).show()
                 }
             }
-        }
     }
 
     override fun onLogout(){
@@ -150,6 +172,21 @@ class SettingsFragment : Fragment(), SettingsViewModel.Listener , SettingsViewMo
         }
         startActivity(intent)
         requireActivity().finish()
+    }
+
+    override fun onShowMessageDriveAccessDenied() {
+        AlertDialog.Builder(requireContext())
+                .setCancelable(false)
+                .setTitle(getString(R.string.app_name))
+                .setMessage(getString(R.string.drive_access_denied))
+                .setNeutralButton("Não autorizar") { dialog, _ ->
+                    dialog.cancel()
+                }
+                .setPositiveButton("Autorizar") { dialog, which ->
+                    dialog.cancel()
+                    startActivityForResult(accountManager.signIntent(), GOOGLE_SIGNIN_REQUEST_CODE)
+                }
+                .show()
     }
 
     override fun onUpdateMessage(message: String) {
@@ -192,5 +229,6 @@ class SettingsFragment : Fragment(), SettingsViewModel.Listener , SettingsViewMo
 
     companion object {
         const val READ_REQUEST_CODE: Int = 42
+        const val GOOGLE_SIGNIN_REQUEST_CODE: Int = 101
     }
 }
