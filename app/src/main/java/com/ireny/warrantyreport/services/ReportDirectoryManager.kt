@@ -1,4 +1,4 @@
-package com.ireny.warrantyreport.ui.report.services
+package com.ireny.warrantyreport.services
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -7,8 +7,8 @@ import android.graphics.pdf.PdfDocument
 import android.media.MediaScannerConnection
 import android.util.Log
 import android.widget.Toast
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.ireny.warrantyreport.MyWarrantReportApp
-import com.ireny.warrantyreport.services.UserAccountManager
 import com.ireny.warrantyreport.ui.report.photos.PhotosFragment
 import com.ireny.warrantyreport.utils.Constants
 import java.io.ByteArrayOutputStream
@@ -16,17 +16,13 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
-class ReportDirectoryManager(private val context: Context): IReportDirectoryManager {
+class ReportDirectoryManager(private val context: Context):
+    IReportDirectoryManager {
+
 
     private val component by lazy { (MyWarrantReportApp.applicationContext() as MyWarrantReportApp).component }
     private val accountMannager: UserAccountManager by lazy { component.userAccountManager() }
-
-    private var userId:String
-
-    init {
-        val account = accountMannager.getUserAccount() ?: throw Exception("Usuário não conectado!")
-        userId = account.id?: throw Exception("Usuário não identificado!")
-    }
+    private val account: GoogleSignInAccount by lazy { accountMannager.getUserAccount() ?: throw Exception("Usuário não conectado!") }
 
     private val data: Array<PhotosFragment.Photo> = arrayOf(
         PhotosFragment.Photo(0),
@@ -34,9 +30,6 @@ class ReportDirectoryManager(private val context: Context): IReportDirectoryMana
         PhotosFragment.Photo(2),
         PhotosFragment.Photo(3)
     )
-
-    //private val dir = File("${Environment.getExternalStorageDirectory()}${Constants.REPORTS_DIRECTORY}/$userId")
-    private val dir = File("${context.getExternalFilesDir(null)}${Constants.REPORTS_DIRECTORY}/$userId")
 
     private fun getImage(reportId: Long,photoId: Int): Drawable?{
         val path = "${getPath(reportId)}photo_${photoId}.jpg"
@@ -121,8 +114,14 @@ class ReportDirectoryManager(private val context: Context): IReportDirectoryMana
         return null
     }
 
+    override fun getRootDiretory(): String {
+        val dir = File("${context.getExternalFilesDir(null)}/${Constants.REPORTS_DIRECTORY}/${account.id}/${Constants.REPORTS_FILES}")
+        return dir.path
+    }
+
     private fun getPath(reportId: Long):String {
-        return "$dir/${reportId}/"
+        val rootDir = getRootDiretory()
+        return "$rootDir/${reportId}/"
     }
 
 
@@ -160,4 +159,5 @@ interface IReportDirectoryManager{
     fun getReportFile(reportId: Long):File?
     fun saveFile(document: PdfDocument, reportId: Long):File?
     fun getFile(reportId: Long,photoId: Int): File?
+    fun getRootDiretory(): String
 }
