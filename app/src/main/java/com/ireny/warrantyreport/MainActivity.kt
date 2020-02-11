@@ -97,4 +97,9 @@ class MainActivity: AppCompatActivity(),
     private fun openReportActivity(reportId:Long?){
         startActivity(ReportActivity.newInstance(this,reportId))
     }
+
+    companion object {
+        val sDataLock = Any()
+    }
+
 }

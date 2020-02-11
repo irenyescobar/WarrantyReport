@@ -14,6 +14,7 @@ import com.ireny.warrantyreport.repositories.ReportRepository
 import com.ireny.warrantyreport.repositories.ReportTypeRepository
 import com.ireny.warrantyreport.repositories.TechnicalAdviceRepository
 import com.ireny.warrantyreport.services.DataHelperService
+import com.ireny.warrantyreport.services.ReportDirectoryManager
 import com.ireny.warrantyreport.services.UserAccountManager
 import com.ireny.warrantyreport.utils.Constants
 import dagger.Module
@@ -81,8 +82,13 @@ class ApplicationModule(val application: MyWarrantReportApp) {
     }
 
     @Provides
-    fun provideImportDataService(database: WarrantyReportRoomDatabase): DataHelperService{
-        return DataHelperService(database)
+    fun provideImportDataService(context: Context, database: WarrantyReportRoomDatabase): DataHelperService{
+        return DataHelperService(context, database)
+    }
+
+    @Provides
+    fun provideReportDirectoryManager(context: Context): ReportDirectoryManager {
+        return ReportDirectoryManager(context)
     }
 
 }

@@ -2,7 +2,7 @@ package com.ireny.warrantyreport.di.components
 
 import android.content.Context
 import com.ireny.warrantyreport.di.modules.ReportDirectoryModule
-import com.ireny.warrantyreport.ui.report.services.ReportDirectoryManager
+import com.ireny.warrantyreport.services.ReportDirectoryManager
 import dagger.Component
 
 @Component(modules = [ReportDirectoryModule::class])

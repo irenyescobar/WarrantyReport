@@ -1,7 +1,7 @@
 package com.ireny.warrantyreport.di.modules
 
 import android.content.Context
-import com.ireny.warrantyreport.ui.report.services.ReportDirectoryManager
+import com.ireny.warrantyreport.services.ReportDirectoryManager
 import dagger.Module
 import dagger.Provides
 
@@ -12,7 +12,7 @@ class ReportDirectoryModule(val context: Context) {
     fun provideContext(): Context = context
 
     @Provides
-    fun providePhotosManager(context: Context): ReportDirectoryManager {
+    fun provideReportDirectoryManager(context: Context): ReportDirectoryManager {
         return ReportDirectoryManager(context)
     }
 }
