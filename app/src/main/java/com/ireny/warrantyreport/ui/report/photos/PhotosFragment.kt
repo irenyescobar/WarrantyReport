@@ -16,8 +16,8 @@ import com.ireny.warrantyreport.di.components.DaggerReportDirectoryComponent
 import com.ireny.warrantyreport.di.components.ReportDirectoryComponent
 import com.ireny.warrantyreport.di.modules.ReportDirectoryModule
 import com.ireny.warrantyreport.entities.Report
+import com.ireny.warrantyreport.services.IReportDirectoryManager
 import com.ireny.warrantyreport.ui.report.base.FragmentBase
-import com.ireny.warrantyreport.ui.report.services.IReportDirectoryManager
 import kotlinx.android.synthetic.main.report_photos_fragment.*
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
@@ -49,7 +49,6 @@ class PhotosFragment(private var reportId:Long) : FragmentBase(){
         photo2.setup()
         photo3.setup()
         photo4.setup()
-        checkPermissionFromStorage()
     }
 
     private fun initComponent() {
@@ -77,8 +76,6 @@ class PhotosFragment(private var reportId:Long) : FragmentBase(){
         previewButtonFunction?.showPreviewButton(true)
     }
 
-
-    @AfterPermissionGranted(REQUEST_PERMISSION_STORAGE)
     private fun refresh() {
         val data = photoManager.getImages(reportId)
         photo1.setImage(data[0])
@@ -100,19 +97,6 @@ class PhotosFragment(private var reportId:Long) : FragmentBase(){
                         REQUEST_PERMISSION_CAMERA,
                         Manifest.permission.CAMERA)
                         .setRationale(R.string.permission_camera_rationale_message)
-                        .build()
-
-        )
-    }
-
-    private fun checkPermissionFromStorage() {
-        EasyPermissions.requestPermissions(
-                PermissionRequest.Builder(
-                        this,
-                        REQUEST_PERMISSION_STORAGE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        .setRationale(R.string.permission_storage_rationale_message)
                         .build()
 
         )
@@ -212,7 +196,6 @@ class PhotosFragment(private var reportId:Long) : FragmentBase(){
     companion object {
 
         private const val REQUEST_PERMISSION_CAMERA= 202
-        private const val REQUEST_PERMISSION_STORAGE= 203
         private const val GALLERY = 1
         private const val CAMERA = 2
 
