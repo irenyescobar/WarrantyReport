@@ -5,7 +5,6 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.graphics.pdf.PdfDocument
 import android.media.MediaScannerConnection
-import android.os.Environment
 import android.util.Log
 import android.widget.Toast
 import com.ireny.warrantyreport.MyWarrantReportApp
@@ -36,7 +35,8 @@ class ReportDirectoryManager(private val context: Context): IReportDirectoryMana
         PhotosFragment.Photo(3)
     )
 
-    private val dir = File("${Environment.getExternalStorageDirectory()}${Constants.REPORTS_DIRECTORY}/$userId")
+    //private val dir = File("${Environment.getExternalStorageDirectory()}${Constants.REPORTS_DIRECTORY}/$userId")
+    private val dir = File("${context.getExternalFilesDir(null)}${Constants.REPORTS_DIRECTORY}/$userId")
 
     private fun getImage(reportId: Long,photoId: Int): Drawable?{
         val path = "${getPath(reportId)}photo_${photoId}.jpg"
