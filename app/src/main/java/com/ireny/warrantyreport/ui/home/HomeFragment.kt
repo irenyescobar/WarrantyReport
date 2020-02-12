@@ -12,16 +12,18 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ireny.warrantyreport.R
 import com.ireny.warrantyreport.entities.Report
+import com.ireny.warrantyreport.repositories.ReportRepository
 import com.ireny.warrantyreport.repositories.listeners.GetErrorListener
 import com.ireny.warrantyreport.ui.adapters.ReportListAdapter
 import com.ireny.warrantyreport.ui.listeners.SelectedListener
 import com.ireny.warrantyreport.utils.customApp
-import com.ireny.warrantyreport.utils.mainActivity
 import kotlinx.android.synthetic.main.fragment_home.*
 
 class HomeFragment : Fragment(),
     GetErrorListener, SelectedListener<Report> {
 
+    private val component by lazy { customApp.component }
+    private val reportRepository: ReportRepository by lazy { component.reportRepository() }
     private lateinit var viewModel: HomeViewModel
     private lateinit var adapter: ReportListAdapter
     private lateinit var linearLayoutManager: LinearLayoutManager
@@ -50,8 +52,8 @@ class HomeFragment : Fragment(),
         recyclerview.addItemDecoration(dividerItemDecoration)
 
         viewModel = ViewModelProviders.of(this, HomeViewModel.Companion.Factory(
-            mainActivity.customApp,
-            mainActivity.reportRepository)
+            customApp,
+            reportRepository)
         ).get(HomeViewModel::class.java)
 
         viewModel.all.observe(this, Observer { data ->
@@ -78,7 +80,7 @@ class HomeFragment : Fragment(),
     }
 
     override fun onGetError(id: Long, error: Exception) {
-        listener?.showError(error.localizedMessage)
+        listener?.showError(error.localizedMessage?:"")
     }
 
     interface Listener{

@@ -2,27 +2,30 @@ package com.ireny.warrantyreport.ui.report.document
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
 import com.ireny.warrantyreport.R
+import com.ireny.warrantyreport.entities.Report
 import com.ireny.warrantyreport.repositories.ReportRepository
 import com.ireny.warrantyreport.ui.base.IProgressLoading
 import com.ireny.warrantyreport.ui.base.IShowMessage
 import com.ireny.warrantyreport.ui.report.ReportActivity.Companion.REPORT_ID
 import com.ireny.warrantyreport.utils.customApp
+import com.ireny.warrantyreport.utils.toDateTextFormatted
 import kotlinx.android.synthetic.main.activity_document.*
+import kotlinx.android.synthetic.main.custom_progress.*
 
-class DocumentActivity : AppCompatActivity(),
-    IProgressLoading,
-    IShowMessage {
+class DocumentActivity : AppCompatActivity(), IProgressLoading, IShowMessage {
 
     private val component by lazy { customApp.component }
     private val reportRepository: ReportRepository by lazy { component.reportRepository() }
@@ -30,6 +33,10 @@ class DocumentActivity : AppCompatActivity(),
     private lateinit var currentFragment: PreviewDocumentFragment
     private lateinit var transaction: FragmentTransaction
     private lateinit var viewModel: DocumentViewModel
+
+    private var menuSave: MenuItem? = null
+    private var menuShare: MenuItem? = null
+    private var isCreateMode = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +47,7 @@ class DocumentActivity : AppCompatActivity(),
         }
 
         val reportId = intent.getLongExtra(REPORT_ID,0)
-        val isCreateMode = intent.getBooleanExtra(CREATE_MODE,false)
+        isCreateMode = intent.getBooleanExtra(CREATE_MODE,false)
 
         viewModel = ViewModelProviders.of(this, DocumentViewModel.Companion.Factory(
             customApp,
@@ -54,17 +61,12 @@ class DocumentActivity : AppCompatActivity(),
 
         viewModel.model.observe(this, Observer { el ->
             el?.let {
-                if(isCreateMode && el.code != null){
-                    currentFragment.createDocument(el)
-                }
-                else {
-                    currentFragment.bindView(el)
-                }
+                showReportInFragment(el, isCreateMode)
             }
         })
 
         viewModel.loadingVisibility.observe(this, Observer { el->
-            showProgress(el)
+            showProgress(el,null)
         })
 
         viewModel.message.observe(this, Observer { el ->
@@ -74,6 +76,7 @@ class DocumentActivity : AppCompatActivity(),
         })
     }
 
+
     override fun onResume() {
         super.onResume()
         viewModel.loadModel()
@@ -81,6 +84,10 @@ class DocumentActivity : AppCompatActivity(),
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.document_menu, menu)
+        menuSave = menu.findItem(R.id.action_save_report)
+        menuShare = menu.findItem(R.id.action_share_files)
+        menuSave?.isVisible = false
+        menuShare?.isVisible = false
         return true
     }
 
@@ -90,6 +97,10 @@ class DocumentActivity : AppCompatActivity(),
                 confirmSaveReport()
                 return true
             }
+            R.id.action_share_files -> {
+                share()
+                return true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -97,6 +108,53 @@ class DocumentActivity : AppCompatActivity(),
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
+    }
+
+    private fun showReportInFragment(model: Report, isCreateMode:Boolean){
+        val codeIsNull = model.code == null
+
+        menuSave?.isVisible = codeIsNull
+        menuShare?.isVisible = !codeIsNull
+
+        if(isCreateMode && !codeIsNull){
+            currentFragment.createDocument(model)
+        }
+        else {
+            currentFragment.bindView(model)
+        }
+    }
+
+    private fun share() {
+
+        viewModel.model.value?.let { model ->
+
+            val files = currentFragment.files(model)
+
+            val listOfUri:ArrayList<Uri> = arrayListOf()
+            files.forEach {
+                val uri = FileProvider.getUriForFile(
+                        this,
+                        FILE_PROVIDER,
+                        it
+                )
+                listOfUri.add(uri)
+            }
+
+
+            val intent = Intent()
+
+            intent.action = Intent.ACTION_SEND_MULTIPLE
+            intent.type = "*/*"
+            intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+
+            intent.putExtra( Intent.EXTRA_STREAM, listOfUri )
+            intent.putExtra( Intent.EXTRA_SUBJECT,"${getString(R.string.document_name)} ${model.code} - ${(model.code_generated_at?:model.created_at).toDateTextFormatted()}")
+
+            if( intent.resolveActivity( packageManager ) != null ) {
+                val intentChooser = Intent.createChooser( intent, "Compartilhar com:" )
+                startActivity(intentChooser)
+            }
+        }
     }
 
     private fun confirmSaveReport(){
@@ -125,11 +183,15 @@ class DocumentActivity : AppCompatActivity(),
         transaction.commit()
     }
 
-    override fun showProgress(show: Boolean) {
+    override fun showProgress(show: Boolean, message: String?) {
         if(show){
-            progressBar.visibility = View.VISIBLE
+            contentProgress.visibility = View.VISIBLE
+            message?.let {
+                textViewProgressMessage.text = it
+            }
         }else{
-            progressBar.visibility = View.GONE
+            contentProgress.visibility = View.GONE
+            textViewProgressMessage.text = getString(R.string.default_message_progress)
         }
     }
 
@@ -139,6 +201,7 @@ class DocumentActivity : AppCompatActivity(),
 
     companion object {
         const val CREATE_MODE = "CREATE_MODE"
+        const val FILE_PROVIDER = "com.ireny.warrantyreport.fileprovider"
         @JvmStatic
         fun newInstance(context: Context, reportId:Long, createMode:Boolean): Intent {
             val intent = Intent(context, DocumentActivity::class.java)

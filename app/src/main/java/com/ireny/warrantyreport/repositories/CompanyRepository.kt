@@ -4,8 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.ireny.warrantyreport.data.room.dao.CompanyDao
 import com.ireny.warrantyreport.entities.Company
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 class CompanyRepository(private val dao: CompanyDao) {
 
@@ -17,16 +15,6 @@ class CompanyRepository(private val dao: CompanyDao) {
 
     fun setListener(errorListener:ErrorListener){
         listener = errorListener
-    }
-
-    suspend fun save(entity:Company) {
-        try {
-            dao.insert(entity)
-        }catch (ex:Exception){
-            withContext(Dispatchers.Main){
-                listener?.onCompanyError(ex)
-            }
-        }
     }
 
     fun getAll():LiveData<List<Company>>{

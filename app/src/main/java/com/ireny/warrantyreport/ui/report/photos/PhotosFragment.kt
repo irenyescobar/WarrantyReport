@@ -2,7 +2,6 @@ package com.ireny.warrantyreport.ui.report.photos
 
 import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -12,15 +11,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
 import com.ireny.warrantyreport.R
 import com.ireny.warrantyreport.di.components.DaggerReportDirectoryComponent
 import com.ireny.warrantyreport.di.components.ReportDirectoryComponent
 import com.ireny.warrantyreport.di.modules.ReportDirectoryModule
 import com.ireny.warrantyreport.entities.Report
+import com.ireny.warrantyreport.services.IReportDirectoryManager
 import com.ireny.warrantyreport.ui.report.base.FragmentBase
-import com.ireny.warrantyreport.ui.report.services.IReportDirectoryManager
 import kotlinx.android.synthetic.main.report_photos_fragment.*
+import pub.devrel.easypermissions.AfterPermissionGranted
+import pub.devrel.easypermissions.EasyPermissions
+import pub.devrel.easypermissions.PermissionRequest
 import java.io.IOException
 
 
@@ -48,7 +49,6 @@ class PhotosFragment(private var reportId:Long) : FragmentBase(){
         photo2.setup()
         photo3.setup()
         photo4.setup()
-        checkPermissionFromStorage()
     }
 
     private fun initComponent() {
@@ -77,41 +77,29 @@ class PhotosFragment(private var reportId:Long) : FragmentBase(){
     }
 
     private fun refresh() {
-        val data = photoManager.getData(reportId)
+        val data = photoManager.getImages(reportId)
         photo1.setImage(data[0])
         photo2.setImage(data[1])
         photo3.setImage(data[2])
         photo4.setImage(data[3])
     }
 
+    @AfterPermissionGranted(REQUEST_PERMISSION_CAMERA)
     private fun proceedTakePhotoAfterPermission() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         startActivityForResult(intent, CAMERA)
     }
 
     private fun checkPermissionFromCameraAndTakePhoto() {
-        val permissionCamera = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
-        if (permissionCamera != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(arrayOf(Manifest.permission.CAMERA), REQUEST_PERMISSION_CAMERA)
-        }else{
-            proceedTakePhotoAfterPermission()
-        }
-    }
+        EasyPermissions.requestPermissions(
+                PermissionRequest.Builder(
+                        this,
+                        REQUEST_PERMISSION_CAMERA,
+                        Manifest.permission.CAMERA)
+                        .setRationale(R.string.permission_camera_rationale_message)
+                        .build()
 
-    private fun checkPermissionFromStorage() {
-        val read = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
-        val write = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-
-        if (read != PackageManager.PERMISSION_GRANTED || write != PackageManager.PERMISSION_GRANTED) {
-
-             requestPermissions(
-                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
-                       Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                REQUEST_PERMISSION_STORAGE)
-
-        }else{
-            refresh()
-        }
+        )
     }
 
     private fun showPictureDialog() {
@@ -120,14 +108,14 @@ class PhotosFragment(private var reportId:Long) : FragmentBase(){
         pictureDialog.setItems(pictureDialogItems
         ) { _, which ->
             when (which) {
-                0 -> choosePhotoFromGallary()
+                0 -> choosePhotoFromGallery()
                 1 -> checkPermissionFromCameraAndTakePhoto()
             }
         }
         pictureDialog.show()
     }
 
-    private fun choosePhotoFromGallary() {
+    private fun choosePhotoFromGallery() {
         val galleryIntent = Intent(Intent.ACTION_PICK,
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         startActivityForResult(galleryIntent, GALLERY)
@@ -160,33 +148,21 @@ class PhotosFragment(private var reportId:Long) : FragmentBase(){
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (grantResults.isNotEmpty()) {
+    override fun onRequestPermissionsResult(
+            requestCode: Int,
+            permissions: Array<out String>,
+            grantResults: IntArray ) {
 
-            var allgranted = false
-            for (i in grantResults.indices) {
-                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                    allgranted = true
-                } else {
-                    allgranted = false
-                    break
-                }
-            }
+        super.onRequestPermissionsResult(
+                requestCode,
+                permissions,
+                grantResults )
 
-            when (requestCode) {
-                REQUEST_PERMISSION_CAMERA -> {
-                    if(allgranted){
-                        proceedTakePhotoAfterPermission()
-                    }
-                }
-                REQUEST_PERMISSION_STORAGE -> {
-                    if(allgranted){
-                        refresh()
-                    }
-                }
-            }
-        }
+        EasyPermissions.onRequestPermissionsResult(
+                requestCode,
+                permissions,
+                grantResults,
+                this )
     }
 
     private fun ImageView.setImage(photo: Photo){
@@ -220,7 +196,6 @@ class PhotosFragment(private var reportId:Long) : FragmentBase(){
     companion object {
 
         private const val REQUEST_PERMISSION_CAMERA= 202
-        private const val REQUEST_PERMISSION_STORAGE= 203
         private const val GALLERY = 1
         private const val CAMERA = 2
 

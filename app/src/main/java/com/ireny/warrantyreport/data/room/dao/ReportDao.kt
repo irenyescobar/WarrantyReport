@@ -3,12 +3,13 @@ package com.ireny.warrantyreport.data.room.dao
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.ireny.warrantyreport.entities.*
+import java.util.*
 
 @Dao
 abstract class ReportDao{
 
-    @Query("UPDATE Report SET code =:code, code_generated_at = datetime('now')  WHERE id = :reportId")
-    abstract suspend fun saveCode(code:String, reportId: Long)
+    @Query("UPDATE Report SET code =:code, code_generated_at =:generated_at  WHERE id = :reportId")
+    abstract suspend fun saveCode(code:String, generated_at: Date, reportId: Long)
 
     @Transaction
     open suspend fun save(entity: Report){

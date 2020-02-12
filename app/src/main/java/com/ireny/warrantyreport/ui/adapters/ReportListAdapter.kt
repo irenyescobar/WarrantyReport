@@ -11,7 +11,7 @@ import com.ireny.warrantyreport.entities.Report
 import com.ireny.warrantyreport.ui.listeners.SelectedListener
 import com.ireny.warrantyreport.utils.toDateTextFormatted
 
-class ReportListAdapter internal constructor( context: Context,
+class ReportListAdapter internal constructor(val context: Context,
     private val listener: SelectedListener<Report>
 ) : RecyclerView.Adapter<ReportListAdapter.ReportViewHolder>() {
 
@@ -37,7 +37,7 @@ class ReportListAdapter internal constructor( context: Context,
             listener.onSelected(current)
         }
 
-        holder.textView.text =  "LAUDO ${current.id} - ${current.created_at.toDateTextFormatted()}"
+        holder.textView.text =  "${context.getString(R.string.document_name)} ${current.code?:current.id} - ${(current.code_generated_at?:current.created_at).toDateTextFormatted()}"
 
     }
 

@@ -1,7 +1,5 @@
 package com.ireny.warrantyreport.ui.report.document
 
-import android.Manifest
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Paint
 import android.graphics.Rect
@@ -16,7 +14,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.graphics.withTranslation
 import androidx.fragment.app.Fragment
@@ -27,14 +24,15 @@ import com.ireny.warrantyreport.di.modules.ReportDirectoryModule
 import com.ireny.warrantyreport.entities.Report
 import com.ireny.warrantyreport.ui.report.interfaces.IBindView
 import com.ireny.warrantyreport.ui.report.interfaces.ICreateDocument
-import com.ireny.warrantyreport.ui.report.services.IReportDirectoryManager
+import com.ireny.warrantyreport.ui.report.interfaces.IShareFiles
+import com.ireny.warrantyreport.services.IReportDirectoryManager
 import com.ireny.warrantyreport.utils.toDateTextFormatted
 import kotlinx.android.synthetic.main.report_preview_document_fragment.*
 import java.io.File
 import kotlin.math.roundToInt
 
 
-class PreviewDocumentFragment : Fragment(), ICreateDocument<Report> ,IBindView<Report>{
+class PreviewDocumentFragment : Fragment(), ICreateDocument<Report> ,IBindView<Report>, IShareFiles<Report> {
 
     private lateinit var component: ReportDirectoryComponent
     private val directoryManager: IReportDirectoryManager by lazy { component.reportDirectoryManager()}
@@ -44,6 +42,7 @@ class PreviewDocumentFragment : Fragment(), ICreateDocument<Report> ,IBindView<R
     private val a4Hpt = 842
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setHasOptionsMenu(true)
         super.onCreate(savedInstanceState)
         initComponent()
     }
@@ -58,32 +57,16 @@ class PreviewDocumentFragment : Fragment(), ICreateDocument<Report> ,IBindView<R
 
     override fun bindView(model: Report) {
         report = model
-
-        val read = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
-        val write = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-
-        if (read != PackageManager.PERMISSION_GRANTED || write != PackageManager.PERMISSION_GRANTED) {
-
-            requestPermissions(
-                arrayOf(
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                REQUEST_PERMISSION_STORAGE
-            )
-
-        }else{
-
-            if(model.code != null) {
-                val file = directoryManager.getReportFile(model.id)
-                if(file != null){
-                    showDocument(file)
-                }else{
-                    showDocument(generatePdfDocument(model))
-                    confirmReGenerate(model)
-                }
+        if(model.code != null) {
+            val file = directoryManager.getReportFile(model.id)
+            if(file != null){
+                showDocument(file)
             }else{
                 showDocument(generatePdfDocument(model))
+                confirmReGenerate(model)
             }
+        }else{
+            showDocument(generatePdfDocument(model))
         }
     }
 
@@ -101,6 +84,30 @@ class PreviewDocumentFragment : Fragment(), ICreateDocument<Report> ,IBindView<R
                 .create()
                 .show()
         }
+    }
+
+    override fun files(model: Report): ArrayList<File> {
+
+
+        val file = directoryManager.getReportFile(model.id)
+
+        file?.let {
+
+            val list :ArrayList<File> = arrayListOf()
+
+            list.add(it)
+
+            for(i in 0 until 4) {
+                val f = directoryManager.getFile(model.id, i)
+                f?.let {
+                    list.add(f)
+                }
+            }
+
+            return list
+        }
+
+        return arrayListOf()
     }
 
     private fun confirmReGenerate(model: Report){
@@ -384,7 +391,7 @@ class PreviewDocumentFragment : Fragment(), ICreateDocument<Report> ,IBindView<R
         val w = (canvas.width/2 - margin *2).roundToInt()
         val h = ((canvas.height - y) / 2 - margin * 2 ).roundToInt() - hrodape
 
-        val data = directoryManager.getData(entity.id)
+        val data = directoryManager.getImages(entity.id)
 
         data[0].image?.run {
             val b = this.toBitmap(w,h,Bitmap.Config.ARGB_8888 )

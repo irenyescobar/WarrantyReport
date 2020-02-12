@@ -17,7 +17,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-
     <ImageView
         android:id="@+id/imageView1"
         android:layout_marginTop="135dp"
@@ -72,6 +71,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/techlautov2" />
+
+    <include layout="@layout/custom_progress"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

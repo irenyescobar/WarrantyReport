@@ -8,6 +8,7 @@ import com.ireny.warrantyreport.data.room.dao.CompanyDao
 import com.ireny.warrantyreport.data.room.dao.ReportDao
 import com.ireny.warrantyreport.data.room.dao.ReportTypeDao
 import com.ireny.warrantyreport.data.room.dao.TechnicalAdviceDao
+import com.ireny.warrantyreport.data.room.dao.ImportDataDao
 import com.ireny.warrantyreport.entities.*
 
 @Database(entities = [ ReportType::class, TechnicalAdvice::class, Company::class, Report::class, AssignedTechnicalAdvice::class],
@@ -19,4 +20,6 @@ abstract class WarrantyReportRoomDatabase: RoomDatabase() {
     abstract fun technicalAdviceDao(): TechnicalAdviceDao
     abstract fun companyDao(): CompanyDao
     abstract fun reportDao(): ReportDao
+    abstract fun importDataDao():ImportDataDao
 }
+

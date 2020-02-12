@@ -4,10 +4,22 @@
       "id": 1,
       "description": "Garantia",
       "enabled": true
+    } 
+  ],
+  "technicalAdvices": [
+    {
+      "id": 1,
+      "description": "Improcedente",
+      "enabled": true
     },
     {
       "id": 2,
-      "description": "Divergência",
+      "description": "Análise",
+      "enabled": true
+    },
+    {
+      "id": 3,
+      "description": "Cortesia",
       "enabled": true
     }
   ],
@@ -42,22 +54,9 @@
       "description": "Master",
       "enabled": true
     }
+  ],  
+  "reports": [ 
   ],
-  "technicalAdvices": [
-    {
-      "id": 1,
-      "description": "Improcedente",
-      "enabled": true
-    },
-    {
-      "id": 2,
-      "description": "Análise",
-      "enabled": true
-    },
-    {
-      "id": 3,
-      "description": "Cortesia",
-      "enabled": true
-    }
-  ]
+  "assignedTechnicalAdvices": [ 
+  ]	
 }
