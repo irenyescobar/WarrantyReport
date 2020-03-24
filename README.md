@@ -1,4 +1,5 @@
 É um app para gerar laudo técnico.
+O objetivo principal é gerar o laudo como um arquivo em pdf;
 
 segue link na playstore:
 
