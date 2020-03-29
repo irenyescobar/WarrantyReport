@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <array name="indicator_colors">
+        <item>@color/navStepIndicatorProcessed</item>
+        <!--Default-->
+        <item>@color/navStepIndicatorProcessed</item>
+        <!--Wrong-->
+        <item>@color/navStepIndicatorProcessed</item>
+        <!--Right-->
+        <item>@color/navStepIndicatorProcessed</item>
+        <!--Skipped-->
+        <item>@color/navStepIndicatorProcessed</item>
+        <!--Current-->
+        <item>@color/navStepIndicatorProcessed</item>
+        <!--Processed-->
+    </array>
+    <array name="border_state_colors">
+        <item>@color/navStepIndicatorBorderProcessed</item>
+        <!--Default-->
+        <item>@color/navStepIndicatorBorderProcessed</item>
+        <!--Wrong-->
+        <item>@color/navStepIndicatorBorderProcessed</item>
+        <!--Right-->
+        <item>@color/navStepIndicatorBorderProcessed</item>
+        <!--Skipped-->
+        <item>@color/navStepIndicatorBorderProcessed</item>
+        <!--Current-->
+        <item>@color/navStepIndicatorBorderProcessed</item>
+        <!--Processed-->
+    </array>
+
+    <array name="text_state_colors">
+        <item>@color/navStepTextLight</item>
+        <!--Default-->
+        <item>@color/navStepTextLight</item>
+        <!--Wrong-->
+        <item>@color/navStepTextLight</item>
+        <!--Right-->
+        <item>@color/navStepTextLight</item>
+        <!--Skipped-->
+        <item>@color/navStepTextDark</item>
+        <!--Current-->
+        <item>@color/navStepTextLight</item>
+        <!--Processed-->
+    </array>
+
+</resources>
