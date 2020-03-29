@@ -1,10 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#16347A</color>
-    <color name="colorPrimaryDark">#132166</color>
-    <color name="colorAccent">#ED3237</color>
+    <color name="colorPrimary">#DC2E1C</color>
+    <color name="colorPrimaryDark">#11357A</color>
+    <color name="colorAccent">#11357A</color>
+    <color name="colorSecondary">#9D9D9D</color>
+    <color name="colorMainBackground">#419D9D9D</color>
     <color name="colorBlack">#000</color>
-    <color name="colorRed">#FF1200</color>
+    <color name="colorRed">#A50F04</color>
     <color name="colorWhite">#FFF</color>
-    <color name="colorProgressBackground">#791A1818</color>
+    <color name="colorProgressBackground">#794A4A4A</color>
+    <color name="borderBg">#794A4A4A</color>
+
+    <color name="navStepTabIndicator">#11357A</color>
+    <color name="navStepIndicatorBorderProcessed">#9D9D9D</color>
+    <color name="navStepIndicatorDefault">#9D9D9D</color>
+    <color name="navStepIndicatorProcessed">#9D9D9D</color>
+    <color name="navStepTextLight">#FFFFFF</color>
+    <color name="navStepTextDark">#DC2E1C</color>
+
 </resources>
