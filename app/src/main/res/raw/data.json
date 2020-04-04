@@ -21,6 +21,11 @@
       "id": 3,
       "description": "Cortesia",
       "enabled": true
+    },
+    {
+      "id": 4,
+      "description": "Outros",
+      "enabled": true
     }
   ],
   "companys": [
@@ -52,6 +57,16 @@
     {
       "id": 6,
       "description": "Master",
+      "enabled": true
+    },
+    {
+      "id": 7,
+      "description": "Lonaflex",
+      "enabled": true
+    },
+    {
+      "id": 8,
+      "description": "Castertech",
       "enabled": true
     }
   ],  
