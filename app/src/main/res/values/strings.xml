@@ -12,9 +12,9 @@
     <string name="label_invoiceDate">Data da nota</string>
     <string name="label_applicationDate">Data da aplicação/montagem</string>
     <string name="label_warrantyDate">Data de retorno/garantia</string>
-    <string name="label_technicalConsultant">Consultor técnico</string>
+    <string name="label_technicalConsultant">Nome do consultor </string>
     <string name="label_analysisDate">Data da análise</string>
-    <string name="label_technicalConsultantContact">Contato do consultor</string>
+    <string name="label_technicalConsultantContact">Telefone do consultor</string>
     <string name="snackbar_option_camera_text">CÂMERA</string>
     <string name="snackbar_option_gallery_text">GALERIA</string>
     <string name="permisson_camera_message1">Você precisa permitir o acesso à câmera para continuar.</string>
@@ -81,4 +81,10 @@
     <string name="download_files_success">Download dos arquivos finalizado</string>
     <string name="download_files_error">Erro ao fazer download dos arquivos</string>
     <string name="drive_access_denied">Para usar o recurso de backap e restauração dos dados, é precisso autorizar o acesso do aplicativo aos recursos da sua conta google.</string>
+    <string name="title_page_01">Selecione a marca</string>
+    <string name="title_page_02">Preencha os campos do distribuidor</string>
+    <string name="title_page_03">Preencha os campos da nota fiscal</string>
+    <string name="title_page_04">Preencha os campos do parecer técnico</string>
+    <string name="title_page_05">Preencha os campos do consultor pós vendas</string>
+    <string name="title_page_06">Selecione as fotos</string>
 </resources>
