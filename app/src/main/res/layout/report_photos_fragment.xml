@@ -1,54 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/content_photos"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:layout_height="wrap_content"
+    android:background="@drawable/container_back"
     android:padding="8dp"
-    android:gravity="center"
-    android:background="@drawable/container_back">
-
+    android:gravity="center" >
     <LinearLayout
+        android:id="@+id/content_photos"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal">
-        <ImageView
-            style="@style/documentPhoto"
-            android:id="@+id/photo1"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
+        android:layout_height="380dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_gravity="center">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            android:src="@drawable/ic_photo"/>
-        <ImageView
-            style="@style/documentPhoto"
-            android:id="@+id/photo2"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:orientation="horizontal">
+            <ImageView
+                style="@style/documentPhoto"
+                android:id="@+id/photo1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:src="@drawable/ic_quadro"/>
+            <ImageView
+                style="@style/documentPhoto"
+                android:id="@+id/photo2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:src="@drawable/ic_quadro"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            android:src="@drawable/ic_photo"/>
+            android:orientation="horizontal" >
+            <ImageView
+                style="@style/documentPhoto"
+                android:id="@+id/photo3"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:src="@drawable/ic_quadro"/>
+            <ImageView
+                style="@style/documentPhoto"
+                android:id="@+id/photo4"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:src="@drawable/ic_quadro"/>
+        </LinearLayout>
+
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal" >
-        <ImageView
-            style="@style/documentPhoto"
-            android:id="@+id/photo3"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:src="@drawable/ic_photo"/>
-        <ImageView
-            style="@style/documentPhoto"
-            android:id="@+id/photo4"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:src="@drawable/ic_photo"/>
-    </LinearLayout>
+</FrameLayout>
 
-</LinearLayout>

@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.ireny.warrantyreport.R
@@ -40,18 +41,13 @@ class TechnicalAdviceListAdapter internal constructor(
         }
 
         holder.description.text = current.description
-
-        if(current.selectioned) {
-            holder.itemView.background = context.getDrawable(R.drawable.item_back_selected)
-        }else{
-            holder.itemView.background = context.getDrawable(R.drawable.item_back)
-        }
-
+        holder.checkbox.isChecked = current.selectioned
     }
 
     override fun getItemCount() = data.size
 
     inner class TechnicalAdviceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val description: TextView = itemView.findViewById(R.id.text_description)
+        val checkbox: CheckBox = itemView.findViewById(R.id.checkBox)
     }
 }

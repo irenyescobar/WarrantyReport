@@ -1,17 +1,22 @@
 package com.ireny.warrantyreport.ui.home
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import com.ireny.warrantyreport.entities.Report
+import androidx.lifecycle.*
+import com.ireny.warrantyreport.entities.Report01
 import com.ireny.warrantyreport.repositories.ReportRepository
+import kotlinx.coroutines.launch
 
-class HomeViewModel (application: Application, repository: ReportRepository): AndroidViewModel(application) {
+class HomeViewModel (application: Application,
+                     val repository: ReportRepository): AndroidViewModel(application) {
 
+    var all: LiveData<List<Report01>> = repository.getPendings()
 
-    var all: LiveData<List<Report>> = repository.getPendings()
+    fun remove(reportId:Long){
+
+        viewModelScope.launch {
+            repository.remove(reportId)
+        }
+    }
 
     companion object{
 

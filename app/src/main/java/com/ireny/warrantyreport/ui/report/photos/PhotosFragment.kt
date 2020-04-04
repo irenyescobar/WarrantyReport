@@ -170,7 +170,7 @@ class PhotosFragment(private var reportId:Long) : FragmentBase(){
         if(photo.image != null) {
             this.setImageDrawable(photo.image)
         }else{
-            this.setImageResource(R.drawable.ic_photo)
+            this.setImageResource(R.drawable.ic_quadro)
         }
     }
 

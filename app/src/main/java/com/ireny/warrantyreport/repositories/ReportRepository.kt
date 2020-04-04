@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import com.ireny.warrantyreport.data.room.dao.ReportDao
 import com.ireny.warrantyreport.entities.AssignedTechnicalAdvice
 import com.ireny.warrantyreport.entities.Report
+import com.ireny.warrantyreport.entities.Report01
+import com.ireny.warrantyreport.repositories.listeners.DeleteErrorListener
 import com.ireny.warrantyreport.repositories.listeners.GetErrorListener
 import com.ireny.warrantyreport.repositories.listeners.LoadDataErrorListener
 import com.ireny.warrantyreport.repositories.listeners.SaveErrorListener
@@ -28,6 +30,12 @@ class ReportRepository(private val dao: ReportDao) {
 
     fun setSaveListener(listener: SaveErrorListener<Report>){
         saveListener = listener
+    }
+
+    private var deleteErrorListener: DeleteErrorListener? = null
+
+    fun setDeleteErrorListener(listener: DeleteErrorListener){
+        deleteErrorListener = listener
     }
 
     private var saveAssignedTechnicalAdviceListener: SaveErrorListener<AssignedTechnicalAdvice>? = null
@@ -72,21 +80,21 @@ class ReportRepository(private val dao: ReportDao) {
         }
     }
 
-    fun getPendings():LiveData<List<Report>>{
+    fun getPendings():LiveData<List<Report01>>{
         return try {
             dao.getPendingReports()
         }catch (ex:Exception){
             loadListener?.onLoadDataError(ex)
-            return MutableLiveData<List<Report>>()
+            return MutableLiveData<List<Report01>>()
         }
     }
 
-    fun getCompleteds():LiveData<List<Report>>{
+    fun getCompleteds():LiveData<List<Report01>>{
         return try {
             dao.getCompletedReports()
         }catch (ex:Exception){
             loadListener?.onLoadDataError(ex)
-            return MutableLiveData<List<Report>>()
+            return MutableLiveData<List<Report01>>()
         }
     }
 
@@ -133,6 +141,14 @@ class ReportRepository(private val dao: ReportDao) {
 
         }catch (ex:Exception){
             saveListener?.onSaveError(report,ex)
+        }
+    }
+
+    suspend fun remove(reportId: Long) {
+        try {
+            dao.delete(reportId)
+        }catch (ex:Exception){
+            deleteErrorListener?.onDeleteError(ex)
         }
     }
 }

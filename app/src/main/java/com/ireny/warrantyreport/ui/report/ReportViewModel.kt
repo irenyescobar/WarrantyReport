@@ -26,11 +26,11 @@ class ReportViewModel(application: Application,
         repository.setSaveAssignedTechnicalAdviceListener(saveAssignedTechnicalAdviceErrorListener)
     }
 
-    fun loadModel(id: Long){
+    fun loadModel(reportId: Long){
         loadingVisibility.postValue(true)
         errors = mutableListOf()
         viewModelScope.launch {
-            model.postValue(repository.getById(id))
+            model.postValue(repository.getById(reportId))
 
             if(errors.count() > 0) {
                 message.postValue("Foram registrados ${errors.count()} erros durante a execução da operação.")
@@ -54,11 +54,11 @@ class ReportViewModel(application: Application,
                 if(errors.count() > 0) {
                     message.postValue("Foram registrados ${errors.count()} erros durante a execução da operação.")
                 }
-
                 loadModel(it.id)
             }
         }
     }
+
 
     fun save(model:Report){
         loadingVisibility.postValue(true)

@@ -1,9 +1,11 @@
 package com.ireny.warrantyreport.ui.report.document
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings.Secure
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -38,6 +40,7 @@ class DocumentActivity : AppCompatActivity(), IProgressLoading, IShowMessage {
     private var menuShare: MenuItem? = null
     private var isCreateMode = false
 
+    @SuppressLint("HardwareIds")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_document)
@@ -54,7 +57,8 @@ class DocumentActivity : AppCompatActivity(), IProgressLoading, IShowMessage {
             reportRepository,
             reportId,
             component.api(),
-            component.userAccountManager())
+            component.userAccountManager(),
+            Secure.getString(contentResolver, Secure.ANDROID_ID))
         ).get(DocumentViewModel::class.java)
 
         showFragment()

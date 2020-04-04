@@ -18,7 +18,8 @@ class DocumentViewModel(application: Application,
                         repository: ReportRepository,
                         api: Api,
                         accountManager: IUserAccountManager,
-                        private val reportId:Long) :ReportViewModelBase(application,repository)  {
+                        private val reportId:Long,
+                        private val keyApp: String) :ReportViewModelBase(application,repository)  {
 
     private val subject = Subject()
 
@@ -81,7 +82,7 @@ class DocumentViewModel(application: Application,
             model.value?.let {
                 if(it.code == null) {
                     subject.add(observer)
-                    codeGenerator.generateNewCode()
+                    codeGenerator.generateNewCode(keyApp)
                 }else{
                     loadingVisibility.postValue(false)
                     message.postValue("Este documento já foi salvo.")
@@ -96,12 +97,13 @@ class DocumentViewModel(application: Application,
                       private val repository: ReportRepository,
                       private val reportId:Long,
                       private val api: Api,
-                      private val accountManager: IUserAccountManager
+                      private val accountManager: IUserAccountManager,
+                      private val keyApp: String
         )
             : ViewModelProvider.NewInstanceFactory(){
 
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                return DocumentViewModel(application, repository,api, accountManager,reportId) as T
+                return DocumentViewModel(application, repository,api, accountManager,reportId, keyApp) as T
             }
         }
     }

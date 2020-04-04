@@ -7,17 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import com.ireny.warrantyreport.R
 import com.ireny.warrantyreport.entities.Report
 import com.ireny.warrantyreport.entities.ReportTechnicalAdvice
 import com.ireny.warrantyreport.ui.listeners.CheckedChangedListener
-import com.ireny.warrantyreport.ui.report.base.FragmentBase
+import com.ireny.warrantyreport.ui.report.base.FragmentUpdateBase
+import com.ireny.warrantyreport.utils.copy
 import com.ireny.warrantyreport.utils.customApp
 import com.ireny.warrantyreport.utils.reportActivity
-import kotlinx.android.synthetic.main.recyclerview_fragment.*
+import kotlinx.android.synthetic.main.report_technical_advice_fragment.*
 
-class TechnicalAdviceFragment(private val reportId:Long) : FragmentBase(),
+class TechnicalAdviceFragment(private val reportId:Long) : FragmentUpdateBase(),
     CheckedChangedListener<ReportTechnicalAdvice> {
 
     private lateinit var viewModel: TechnicalAdviceViewModel
@@ -28,7 +29,7 @@ class TechnicalAdviceFragment(private val reportId:Long) : FragmentBase(),
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.recyclerview_fragment, container, false)
+        return inflater.inflate(R.layout.report_technical_advice_fragment, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -36,7 +37,7 @@ class TechnicalAdviceFragment(private val reportId:Long) : FragmentBase(),
 
         adapter = TechnicalAdviceListAdapter(context!!,this)
         recyclerview.adapter = adapter
-        recyclerview.layoutManager = LinearLayoutManager(context!!)
+        recyclerview.layoutManager = GridLayoutManager(context!!,2)
 
         viewModel = ViewModelProviders.of(this,TechnicalAdviceViewModel.Companion.Factory(
             reportActivity.customApp,
@@ -51,6 +52,15 @@ class TechnicalAdviceFragment(private val reportId:Long) : FragmentBase(),
         })
 
         viewModel.assignedTechnicalAdvices.observe(this, Observer {
+
+            val isImprocedent = it.any{ item -> item.technicalAdviceId == 1}
+            textReasonUnfounded.setText("")
+            if(isImprocedent){
+                textLayout_ReasonUnfounded.visibility = View.VISIBLE
+            }else{
+                textLayout_ReasonUnfounded.visibility = View.GONE
+            }
+
             it?.let { viewModel.loadData() }
         })
 
@@ -74,7 +84,16 @@ class TechnicalAdviceFragment(private val reportId:Long) : FragmentBase(),
     }
 
     override fun bindView(model: Report) {
+        viewModel.loadData()
+        textReasonUnfounded.setText(model.reasonUnfounded)
+        textComments.setText(model.comments)
+    }
 
+    override fun buildModel(model: Report): Report {
+        val copy = model.copy()
+        copy.comments = textComments.text.toString()
+        copy.reasonUnfounded = textReasonUnfounded.text.toString()
+        return copy
     }
 
     override fun onCheckedChanged(item: ReportTechnicalAdvice) {

@@ -4,7 +4,8 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.ireny.warrantyreport.R
 import com.ireny.warrantyreport.entities.Company
@@ -40,11 +41,38 @@ class CompanyListAdapter internal constructor(
         holder.itemView.setOnClickListener{
             listener.onSelected(current)
         }
-        holder.description.text = current.description
-        holder.itemView.background = context.getDrawable(R.drawable.item_back)
+
+        when (current.id) {
+            1 -> {
+                holder.image.setImageDrawable(context.getDrawable(R.drawable.frasle))
+            }
+            2 -> {
+                holder.image.setImageDrawable(context.getDrawable(R.drawable.fremax))
+            }
+            3 -> {
+                holder.image.setImageDrawable(context.getDrawable(R.drawable.controil))
+            }
+            4 -> {
+                holder.image.setImageDrawable(context.getDrawable(R.drawable.jost))
+            }
+            5 -> {
+                holder.image.setImageDrawable(context.getDrawable(R.drawable.suspensys))
+            }
+            6 -> {
+                holder.image.setImageDrawable(context.getDrawable(R.drawable.master))
+            }
+            7 -> {
+                holder.image.setImageDrawable(context.getDrawable(R.drawable.lonaflex))
+            }
+            8 -> {
+                holder.image.setImageDrawable(context.getDrawable(R.drawable.castertech))
+            }
+        }
+
+        holder.root.background = context.getDrawable(R.drawable.item_back)
         selectioned?.let {
             if(current.id == it){
-                holder.itemView.background = context.getDrawable(R.drawable.item_back_selected)
+                holder.root.background = context.getDrawable(R.drawable.item_back_selected)
             }
         }
     }
@@ -52,6 +80,7 @@ class CompanyListAdapter internal constructor(
     override fun getItemCount() = data.size
 
     inner class CompanyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val description: TextView = itemView.findViewById(R.id.text_description)
+        val image: ImageView = itemView.findViewById(R.id.company_image)
+        val root: LinearLayout = itemView.findViewById(R.id.root)
     }
 }

@@ -11,6 +11,7 @@ import com.ireny.warrantyreport.utils.copy
 import com.ireny.warrantyreport.utils.setOnClickDatePicker
 import com.ireny.warrantyreport.utils.toDate
 import com.ireny.warrantyreport.utils.toDateTextFormatted
+import com.redmadrobot.inputmask.MaskedTextChangedListener
 import kotlinx.android.synthetic.main.report_technical_consultant_fragment.*
 import java.util.*
 
@@ -31,6 +32,10 @@ class TechnicalConsultantFragment : FragmentUpdateBase() {
         val day = c.get(Calendar.DAY_OF_MONTH)
 
         textAnalysisDate.setOnClickDatePicker(requireContext(),year,month,day)
+
+        val maskListener = MaskedTextChangedListener("([00]) [000000000]", textTechnicalConsultantContact)
+        textTechnicalConsultantContact.addTextChangedListener(maskListener)
+        textTechnicalConsultantContact.onFocusChangeListener = maskListener
     }
 
     override fun buildModel(model: Report):Report {

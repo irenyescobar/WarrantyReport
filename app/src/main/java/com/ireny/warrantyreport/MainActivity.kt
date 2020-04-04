@@ -37,6 +37,8 @@ class MainActivity: AppCompatActivity(),
         val appBarConfiguration = AppBarConfiguration(setOf(R.id.navigation_home))
         setupActionBarWithNavController(navController, appBarConfiguration)
         setup(navView,navController)
+
+        fab.performClick()
     }
 
     override fun onSupportNavigateUp(): Boolean {
