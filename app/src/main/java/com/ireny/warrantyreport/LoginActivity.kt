@@ -13,10 +13,8 @@ import com.google.android.material.snackbar.Snackbar
 import com.ireny.warrantyreport.services.DataHelperService
 import com.ireny.warrantyreport.services.IReportDirectoryManager
 import com.ireny.warrantyreport.services.UserAccountManager
-import com.ireny.warrantyreport.services.interfaces.DriveAccessAuthDeniedListener
 import com.ireny.warrantyreport.ui.base.IProgressLoading
 import com.ireny.warrantyreport.ui.base.IShowMessage
-import com.ireny.warrantyreport.ui.settings.SettingsFragment
 import com.ireny.warrantyreport.ui.settings.SettingsViewModel
 import com.ireny.warrantyreport.utils.customApp
 import kotlinx.android.synthetic.main.activity_login.*
@@ -39,7 +37,7 @@ class LoginActivity : AppCompatActivity(),
         setContentView(R.layout.activity_login)
 
         viewModel = ViewModelProviders.of(this,
-                SettingsViewModel.Companion.Factory(customApp,this,accountManager,dataHelperService,directoryManager,this)
+                SettingsViewModel.Companion.Factory(customApp,this,accountManager,dataHelperService,directoryManager,this,null, null)
         ).get(SettingsViewModel::class.java)
 
         sign_in_button.setOnClickListener{

@@ -144,7 +144,7 @@ class ReportDirectoryManager(private val context: Context):
         return getReportFile(reportId)
     }
 
-    private fun removeImages(reportId: Long){
+    override fun removeImages(reportId: Long){
         data.forEach {
             removeImage(it.id,reportId)
         }
@@ -155,6 +155,7 @@ interface IReportDirectoryManager{
     fun getImages(reportId: Long):Array<PhotosFragment.Photo>
     fun saveImage(myBitmap: Bitmap, photoId:Int, reportId:Long)
     fun removeImage(photoId:Int, reportId:Long)
+    fun removeImages(reportId:Long)
     fun getReportDirectory(reportId: Long):String?
     fun getReportFile(reportId: Long):File?
     fun saveFile(document: PdfDocument, reportId: Long):File?

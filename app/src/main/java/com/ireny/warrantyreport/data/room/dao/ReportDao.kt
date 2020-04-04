@@ -20,6 +20,12 @@ abstract class ReportDao{
         }
     }
 
+    @Transaction
+    open suspend fun delete(reportId: Long){
+        deleteAssigneds(reportId)
+        deleteReport(reportId)
+    }
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract suspend fun add(entity: Report): Long
 
@@ -31,6 +37,9 @@ abstract class ReportDao{
 
     @Query("DELETE FROM AssignedTechnicalAdvice WHERE reportId = :reportId")
     abstract suspend fun deleteAssigneds(reportId:Long)
+
+    @Query("DELETE FROM Report WHERE id = :reportId")
+    abstract suspend fun deleteReport(reportId:Long)
 
     @Query("SELECT * FROM Report WHERE id = :id LIMIT 1")
     abstract suspend fun getReportById(id: Long):Report
@@ -47,11 +56,11 @@ abstract class ReportDao{
     @Query("SELECT * FROM AssignedTechnicalAdvice WHERE reportId = :reportId")
     abstract suspend fun getAssignedTechnicalAdvices(reportId: Long):List<AssignedTechnicalAdvice>
 
-    @Query("SELECT * FROM Report WHERE code IS NULL")
-    abstract fun getPendingReports(): LiveData<List<Report>>
+    @Query("SELECT R.id, R.distributor, R.client, R.created_at, R.code, R.companyId, IFNULL(C.description, '') as company FROM Report R left join Company C on C.id = R.companyId WHERE code IS NULL order by R.id desc")
+    abstract fun getPendingReports(): LiveData<List<Report01>>
 
-    @Query("SELECT * FROM Report WHERE code IS NOT NULL")
-    abstract fun getCompletedReports(): LiveData<List<Report>>
+    @Query("SELECT R.id, R.distributor, R.client, R.created_at, R.code, R.companyId, IFNULL(C.description, '') as company FROM Report R left join Company C on C.id = R.companyId WHERE code IS NOT NULL order by R.id desc")
+    abstract fun getCompletedReports(): LiveData<List<Report01>>
 
     @Query("SELECT * FROM Report WHERE id = :id LIMIT 1")
     abstract fun getReport(id: Long):LiveData<Report>

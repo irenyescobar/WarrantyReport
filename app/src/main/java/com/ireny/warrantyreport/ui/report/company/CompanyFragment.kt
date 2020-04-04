@@ -7,8 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ireny.warrantyreport.R
 import com.ireny.warrantyreport.entities.Company
@@ -25,8 +24,6 @@ class CompanyFragment: FragmentBase(), CompanyRepository.ErrorListener, Selected
     private  var adapter: CompanyListAdapter? = null
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewModel: CompanyViewModel
-    private lateinit var linearLayoutManager: LinearLayoutManager
-    private lateinit var dividerItemDecoration: DividerItemDecoration
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,13 +38,7 @@ class CompanyFragment: FragmentBase(), CompanyRepository.ErrorListener, Selected
         super.onActivityCreated(savedInstanceState)
         adapter = CompanyListAdapter(context!!,this)
         recyclerView.adapter = adapter
-        linearLayoutManager = LinearLayoutManager(context!!)
-        dividerItemDecoration = DividerItemDecoration(
-            recyclerView.context,
-            linearLayoutManager.orientation
-        )
-        recyclerView.layoutManager = linearLayoutManager
-        recyclerView.addItemDecoration(dividerItemDecoration)
+        recyclerView.layoutManager = GridLayoutManager(context,2)
 
         reportActivity.companyRepository.setListener(this)
 

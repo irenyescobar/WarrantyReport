@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ireny.warrantyreport.R
-import com.ireny.warrantyreport.entities.Report
+import com.ireny.warrantyreport.entities.Report01
 import com.ireny.warrantyreport.repositories.ReportRepository
 import com.ireny.warrantyreport.repositories.listeners.GetErrorListener
 import com.ireny.warrantyreport.ui.adapters.ReportListAdapter
@@ -19,7 +19,7 @@ import com.ireny.warrantyreport.ui.listeners.SelectedListener
 import com.ireny.warrantyreport.utils.customApp
 import kotlinx.android.synthetic.main.fragment_reports_completed.*
 
-class ReportsCompletedFragment : Fragment() , GetErrorListener, SelectedListener<Report> {
+class ReportsCompletedFragment : Fragment() , GetErrorListener, SelectedListener<Report01> {
 
     private val component by lazy { customApp.component }
     private val reportRepository: ReportRepository by lazy { component.reportRepository() }
@@ -40,7 +40,7 @@ class ReportsCompletedFragment : Fragment() , GetErrorListener, SelectedListener
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        adapter = ReportListAdapter(context!!, this)
+        adapter = ReportListAdapter(context!!, this, null)
         recyclerview.adapter = adapter
         linearLayoutManager = LinearLayoutManager(context!!)
         dividerItemDecoration = DividerItemDecoration(
@@ -74,7 +74,7 @@ class ReportsCompletedFragment : Fragment() , GetErrorListener, SelectedListener
         listener = null
     }
 
-    override fun onSelected(item: Report) {
+    override fun onSelected(item: Report01) {
         listener?.openCompletedReport(item.id)
     }
 

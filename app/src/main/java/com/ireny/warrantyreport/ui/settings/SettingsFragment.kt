@@ -7,9 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.Nullable
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
@@ -20,6 +18,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.material.snackbar.Snackbar
 import com.ireny.warrantyreport.LoginActivity
 import com.ireny.warrantyreport.R
+import com.ireny.warrantyreport.data.retrofit.Api
 import com.ireny.warrantyreport.services.DataHelperService
 import com.ireny.warrantyreport.services.IReportDirectoryManager
 import com.ireny.warrantyreport.services.UserAccountManager
@@ -29,14 +28,17 @@ import com.ireny.warrantyreport.utils.customApp
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.fragment_settings.*
 
-
-class SettingsFragment : Fragment(), SettingsViewModel.Listener , SettingsViewModel.LogoutListener{
+class SettingsFragment : Fragment(),
+    SettingsViewModel.Listener,
+    SettingsViewModel.LogoutListener,
+    SettingsViewModel.RequestAuthorizationListener{
 
     private lateinit var viewModel: SettingsViewModel
     private val component by lazy { customApp.component }
     private val accountManager: UserAccountManager by lazy { component.userAccountManager() }
     private val dataHelperService: DataHelperService by lazy { component.dataHelperService() }
     private val directoryManager: IReportDirectoryManager by lazy { component.reportDirectoryManager()}
+    private val api: Api by lazy { component.api() }
     private var progress: IProgressLoading? = null
     private var showMessage: IShowMessage? = null
     private var isLogoutWithSaveBackap = false
@@ -48,7 +50,15 @@ class SettingsFragment : Fragment(), SettingsViewModel.Listener , SettingsViewMo
     ): View? {
 
         viewModel = ViewModelProviders.of(this,
-            SettingsViewModel.Companion.Factory(customApp,requireContext(),accountManager,dataHelperService, directoryManager,this)
+            SettingsViewModel.Companion.Factory(
+                customApp,
+                requireContext(),
+                accountManager,
+                dataHelperService,
+                directoryManager,
+                this,
+                api,
+                this)
         ).get(SettingsViewModel::class.java)
 
         return inflater.inflate(R.layout.fragment_settings, container, false)
@@ -84,6 +94,15 @@ class SettingsFragment : Fragment(), SettingsViewModel.Listener , SettingsViewMo
         importData.setOnClickListener{
             fileSearch()
         }
+
+        requestActivation.setOnClickListener {
+            activation()
+        }
+    }
+
+    private fun activation() {
+        progress?.showProgress(true, "Solicitando autorização")
+        viewModel.requestAuthorization()
     }
 
     override fun onStart() {
@@ -206,6 +225,17 @@ class SettingsFragment : Fragment(), SettingsViewModel.Listener , SettingsViewMo
             isLogoutWithSaveBackap = false
             continueLogout()
         }
+    }
+
+    override fun onRequestAuthorizationComplete(message: String) {
+        progress?.showProgress(false,null)
+        AlertDialog.Builder(requireContext())
+            .setTitle(getString(R.string.app_name))
+            .setMessage(message) 
+            .setNeutralButton("Ok") { dialog, _ ->
+                dialog.cancel()
+            }
+            .show()
     }
 
     private fun fileSearch() {

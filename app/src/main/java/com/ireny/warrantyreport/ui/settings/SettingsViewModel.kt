@@ -1,13 +1,21 @@
 package com.ireny.warrantyreport.ui.settings
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
+import android.provider.Settings
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.ireny.warrantyreport.R
+import com.ireny.warrantyreport.data.retrofit.Api
+import com.ireny.warrantyreport.data.retrofit.RequestAuthResult
 import com.ireny.warrantyreport.entities.WarrantReportData
+import com.ireny.warrantyreport.observers.IObserver
+import com.ireny.warrantyreport.observers.IResult
+import com.ireny.warrantyreport.observers.Subject
+import com.ireny.warrantyreport.services.AuthorizationService
 import com.ireny.warrantyreport.services.IReportDirectoryManager
 import com.ireny.warrantyreport.services.interfaces.*
 import com.ireny.warrantyreport.utils.toWarrantReportData
@@ -15,20 +23,57 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.InputStream
-import java.lang.Exception
 
 class SettingsViewModel(application: Application,
                         private val context: Context,
                         private val accountManager: IUserAccountManager,
                         private val dataHelper: IDataHelper,
                         private val directoryManager: IReportDirectoryManager,
-                        private val listener:Listener?): AndroidViewModel(application),
+                        private val listener:Listener?,
+                        api: Api?,
+                        private val requestAuthorizationListener: RequestAuthorizationListener?): AndroidViewModel(application),
         ImportDataCompletedListener,
         ExportDataCompletedListener,
         UploadBackapListener,
         DownloadBackapListener,
         DriveAccessAuthDeniedListener {
 
+
+    @SuppressLint("HardwareIds")
+    private val keyApp: String = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+    private val subject = Subject()
+    private var authService: AuthorizationService? = null
+    private val observer = object : IObserver {
+        override fun completed(result: IResult) {
+            subject.remove(this)
+            if(result.success){
+                val data: RequestAuthResult = result.data as RequestAuthResult
+                if(!data.active && data.code != "") {
+                    requestAuthorizationListener?.onRequestAuthorizationComplete("${data.message}. Código da solicitação: ${data.code}")
+                }else{
+                    requestAuthorizationListener?.onRequestAuthorizationComplete(data.message)
+                }
+            }else{
+                requestAuthorizationListener?.onRequestAuthorizationComplete(if(result.message != null) result.message!! else "Ocorreu um problema.")
+            }
+        }
+    }
+
+    init {
+        api?.run {
+            authService = AuthorizationService(this,accountManager)
+            authService?.addSubject(subject)
+        }
+    }
+
+    fun requestAuthorization(){
+        authService?.run {
+            viewModelScope.launch {
+                subject.add(observer)
+                request(keyApp)
+            }
+        }
+    }
 
     override fun onDriveAccessAuthDenied() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -242,6 +287,10 @@ class SettingsViewModel(application: Application,
         fun onLogout()
     }
 
+    interface RequestAuthorizationListener {
+        fun onRequestAuthorizationComplete(message: String)
+    }
+
     companion object{
 
         class Factory(private val application: Application,
@@ -249,12 +298,14 @@ class SettingsViewModel(application: Application,
                       private val accountManager: IUserAccountManager,
                       private val dataHelper: IDataHelper,
                       private val directoryManager: IReportDirectoryManager,
-                      private val listener:Listener?
+                      private val listener:Listener?,
+                      private val api: Api?,
+                      private val requestAuthorizationListener: RequestAuthorizationListener?
         )
             : ViewModelProvider.NewInstanceFactory(){
 
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                return SettingsViewModel(application, context, accountManager,dataHelper,directoryManager,listener) as T
+                return SettingsViewModel(application, context, accountManager,dataHelper,directoryManager,listener, api, requestAuthorizationListener) as T
             }
         }
     }

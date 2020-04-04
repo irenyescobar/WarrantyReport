@@ -7,9 +7,10 @@ import com.ireny.warrantyreport.observers.Result
 import com.ireny.warrantyreport.services.interfaces.ICodeGenerator
 import com.ireny.warrantyreport.services.interfaces.IUserAccountManager
 
-class CodeGenerator(private val api: Api, private val accountManager: IUserAccountManager): ICodeGenerator {
+class CodeGenerator(private val api: Api,
+                    private val accountManager: IUserAccountManager): ICodeGenerator {
 
-    override suspend fun generateNewCode(): String {
+    override suspend fun generateNewCode(key_app: String): String {
 
         var success = false
         var message = ""
@@ -19,15 +20,15 @@ class CodeGenerator(private val api: Api, private val accountManager: IUserAccou
         if (account != null && account.email != null) {
 
             try {
-                val result =  api.getCode(GetCodeParams(account.email!!))
-                when {
-                    result.status == -1 -> {
+                val result  =  api.getCode(GetCodeParams(account.email!!, key_app))
+                when (result.status) {
+                    -1 -> {
                         message = "Ocorreu um problema. Tente mais tarde"
                     }
-                    result.status == 0 -> {
+                    0 -> {
                         message = "Você não tem permissão para essa função"
                     }
-                    result.status == 1 -> {
+                    1 -> {
                         success = true
                         code = result.code
                         message = result.message

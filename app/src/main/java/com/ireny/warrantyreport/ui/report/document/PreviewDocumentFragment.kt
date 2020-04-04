@@ -16,16 +16,17 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.graphics.withTranslation
+import androidx.core.view.drawToBitmap
 import androidx.fragment.app.Fragment
 import com.ireny.warrantyreport.R
 import com.ireny.warrantyreport.di.components.DaggerReportDirectoryComponent
 import com.ireny.warrantyreport.di.components.ReportDirectoryComponent
 import com.ireny.warrantyreport.di.modules.ReportDirectoryModule
 import com.ireny.warrantyreport.entities.Report
+import com.ireny.warrantyreport.services.IReportDirectoryManager
 import com.ireny.warrantyreport.ui.report.interfaces.IBindView
 import com.ireny.warrantyreport.ui.report.interfaces.ICreateDocument
 import com.ireny.warrantyreport.ui.report.interfaces.IShareFiles
-import com.ireny.warrantyreport.services.IReportDirectoryManager
 import com.ireny.warrantyreport.utils.toDateTextFormatted
 import kotlinx.android.synthetic.main.report_preview_document_fragment.*
 import java.io.File
@@ -40,6 +41,7 @@ class PreviewDocumentFragment : Fragment(), ICreateDocument<Report> ,IBindView<R
 
     private val a4Wpt = 595
     private val a4Hpt = 842
+    private var bt:Bitmap? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setHasOptionsMenu(true)
@@ -53,6 +55,11 @@ class PreviewDocumentFragment : Fragment(), ICreateDocument<Report> ,IBindView<R
     ): View {
 
         return inflater.inflate(R.layout.report_preview_document_fragment, container, false)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        bt = imgLogos.drawToBitmap()
     }
 
     override fun bindView(model: Report) {
@@ -204,9 +211,52 @@ class PreviewDocumentFragment : Fragment(), ICreateDocument<Report> ,IBindView<R
         var y = paintTitle.textSize + margin
         canvas.drawText(text,0,text.length, x,y, paintTitle)
 
-        text = "Suspensys    Fras-le    Controil    LonaFlex    Master    Jost"
-        canvas.drawText(text,0,text.length, (canvas.width/2f),canvas.height - 15f, paintTitle)
+        //text = "Suspensys    Fras-le    Controil    LonaFlex    Master    Jost"
+        //canvas.drawText(text,0,text.length, (canvas.width/2f),canvas.height - 15f, paintTitle)
 
+       /* var logos: Drawable? = null
+        entity.run {
+
+            when (companyId) {
+                1 -> {
+                    logos = resources.getDrawable(R.drawable.frasle,null)
+                }
+                2 -> {
+                    logos = resources.getDrawable(R.drawable.fremax,null)
+                }
+                3 -> {
+                    logos = resources.getDrawable(R.drawable.controil,null)
+                }
+                4 -> {
+                    logos = resources.getDrawable(R.drawable.jost,null)
+                }
+                5 -> {
+                    logos = resources.getDrawable(R.drawable.suspensys,null)
+                }
+                6 -> {
+                    logos = resources.getDrawable(R.drawable.master,null)
+                }
+                7 -> {
+                    logos = resources.getDrawable(R.drawable.lonaflex,null)
+                }
+                8 -> {
+                    logos = resources.getDrawable(R.drawable.castertech,null)
+                }
+            }
+        }
+
+        logos?.let {
+            val bl = it.toBitmap(it.minimumWidth,it.minimumHeight,Bitmap.Config.ARGB_8888 )
+            val lw = (canvas.width/2 - it.minimumWidth/2).toFloat()
+            val lh = (canvas.height -  (it.minimumHeight + 40)).toFloat()
+            canvas.drawBitmap(bl,lw,lh,null)
+        }*/
+
+        bt?.let {
+            val lw = 0f
+            val lh = (canvas.height -  (it.height + 40)).toFloat()
+            canvas.drawBitmap(it,lw,lh,null)
+        }
 
         paintTitle.textSize = 15f
         paintTitle.color = resources.getColor(R.color.colorRed,null)

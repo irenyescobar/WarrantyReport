@@ -25,21 +25,19 @@ import com.ireny.warrantyreport.ui.base.IShowMessage
 import com.ireny.warrantyreport.ui.listeners.ValuesViewChangedListener
 import com.ireny.warrantyreport.ui.report.base.FragmentBase
 import com.ireny.warrantyreport.ui.report.base.FragmentUpdateBase
-import com.ireny.warrantyreport.ui.report.comments.CommentsFragment
 import com.ireny.warrantyreport.ui.report.company.CompanyFragment
 import com.ireny.warrantyreport.ui.report.document.DocumentActivity
 import com.ireny.warrantyreport.ui.report.interfaces.IShowPreviewButton
 import com.ireny.warrantyreport.ui.report.part01.ReportPart01Fragment
 import com.ireny.warrantyreport.ui.report.part02.ReportPart02Fragment
 import com.ireny.warrantyreport.ui.report.photos.PhotosFragment
-import com.ireny.warrantyreport.ui.report.reasonunfounded.ReasonUnfoundedFragment
 import com.ireny.warrantyreport.ui.report.technicaladvice.TechnicalAdviceFragment
 import com.ireny.warrantyreport.ui.report.technicalconsultant.TechnicalConsultantFragment
 import com.ireny.warrantyreport.utils.copy
 import com.ireny.warrantyreport.utils.customApp
-import com.ireny.warrantyreport.utils.toDateTextFormatted
-import kotlinx.android.synthetic.main.custom_progress.*
+import com.library.NavigationBar
 import kotlinx.android.synthetic.main.report_activity.*
+
 
 class ReportActivity : AppCompatActivity(),
     IProgressLoading,
@@ -57,29 +55,102 @@ class ReportActivity : AppCompatActivity(),
 
     private lateinit var viewModel: ReportViewModel
     private lateinit var sectionsPagerAdapter: SectionsPagerAdapter
+    private var currentPagePosition = 0
+    private var titlePages: Array<String> = arrayOf()
+    private var childFragments: MutableList<FragmentBase> = mutableListOf()
+    private var companyChanged = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
-            elevation = 0f
         }
 
         setContentView(R.layout.report_activity)
-
         val reportId = intent.getLongExtra(REPORT_ID,0)
 
-        sectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager, reportId)
+        childFragments = mutableListOf(
+            CompanyFragment.newInstance(),
+            ReportPart01Fragment.newInstance(),
+            ReportPart02Fragment.newInstance()
+        )
+
+        setupViewPager()
+        setupSteps()
+        setupNavButtons()
+        setupViewModel()
+        setupTitlePages()
+
+        if(reportId > 0) {
+            viewModel.loadModel(reportId)
+        }
+    }
+
+    private fun completePages(reportId: Long){
+        if(reportId > 0 && childFragments.size < 6){
+            childFragments.addAll( arrayOf(
+                TechnicalAdviceFragment.newInstance(reportId),
+                TechnicalConsultantFragment.newInstance(),
+                PhotosFragment.newInstance(reportId)
+            ))
+            setupViewPager()
+            setupSteps()
+        }
+
+    }
+    private fun setupViewPager(){
+        sectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
         viewpager.setPageTransformer(true,DepthPageTransformer())
         viewpager.adapter = sectionsPagerAdapter
         viewpager.addOnPageChangeListener(PageChangeListener())
-        tablayout.setupWithViewPager(viewpager)
+    }
 
+    private fun setupSteps(){
+        stepsBar.tabCount = sectionsPagerAdapter.count
+        stepsBar.animateView(0)
+        stepsBar.currentPosition = currentPagePosition
+        stepsBar.resetItems()
+
+        stepsBar.onTabClick = NavigationBar.OnTabClick { touchPosition, _, _ ->
+            onValuesViewChanged()
+            currentPagePosition = touchPosition
+            viewpager.currentItem = currentPagePosition
+        }
+    }
+
+    private fun setupTitlePages(){
+        titlePages = arrayOf(
+            getString(R.string.title_page_01),
+            getString(R.string.title_page_02),
+            getString(R.string.title_page_03),
+            getString(R.string.title_page_04),
+            getString(R.string.title_page_05),
+            getString(R.string.title_page_06)
+        )
+        titlePage.text = titlePages[currentPagePosition]
+    }
+    private fun setupNavButtons(){
         previewButton.setOnClickListener{
             showPreview()
         }
 
+        imageViewBack.setOnClickListener {
+            if(currentPagePosition > 0){
+                onValuesViewChanged()
+                currentPagePosition--
+                viewpager.currentItem = currentPagePosition
+            }
+        }
+        imageViewNext.setOnClickListener {
+            if(currentPagePosition < sectionsPagerAdapter.count - 1){
+                onValuesViewChanged()
+                currentPagePosition++
+                viewpager.currentItem = currentPagePosition
+            }
+        }
+    }
+
+    private fun setupViewModel(){
         viewModel = ViewModelProviders.of(this, ReportViewModel.Companion.Factory(
             customApp,
             reportRepository)
@@ -88,6 +159,7 @@ class ReportActivity : AppCompatActivity(),
 
         viewModel.model.observe(this, Observer { el ->
             el?.let {
+                completePages(it.id)
                 bindView(el)
             }
         })
@@ -98,41 +170,58 @@ class ReportActivity : AppCompatActivity(),
 
         viewModel.message.observe(this, Observer { el ->
             if(el.isNotBlank()){
-               showMessage(el)
+                showMessage(el)
             }
         })
-
-        if(reportId > 0) {
-            viewModel.loadModel(reportId)
-        }
     }
 
     private fun bindView(model:Report){
         supportActionBar?.run {
-            title =  "LAUDO ${model.id} - ${model.created_at.toDateTextFormatted()}"
+            var identify = "Item"
+            if(model.company == null) {
+                if(model.distributor != ""){
+                    identify = model.distributor
+                }else if(model.client != ""){
+                    identify = model.client
+                }
+            }else {
+                model.company?.run {
+                    identify = description
+                }
+
+                nextPageAfterCompanySelected()
+            }
+
+            title =  "$identify - ${model.id}"
         }
         bind(model)
     }
 
-    internal fun refresh(){
+    private fun nextPageAfterCompanySelected(){
+        if(companyChanged){
+            imageViewNext.performClick()
+            companyChanged = false
+        }
+    }
+
+    internal fun refresh(position: Int){
+        currentPagePosition = position
+        stepsBar.currentPosition = currentPagePosition
+        titlePage.text = titlePages[currentPagePosition]
         viewModel.model.value?.run {
            bind(this)
         }
     }
 
     private fun bind(model:Report){
-        sectionsPagerAdapter.childFragments[viewpager.currentItem].bindView(model)
+        childFragments[viewpager.currentItem].bindView(model)
     }
 
     override fun showProgress(show: Boolean, message: String?) {
         if(show){
             contentProgress.visibility = View.VISIBLE
-            message?.let {
-                textViewProgressMessage.text = it
-            }
         }else{
             contentProgress.visibility = View.GONE
-            textViewProgressMessage.text = getString(R.string.default_message_progress)
         }
     }
 
@@ -157,11 +246,13 @@ class ReportActivity : AppCompatActivity(),
             copy.companyId = item.id
             copy.company = item
             viewModel.save(copy)
+
+            companyChanged = true
         }
     }
 
     override fun onValuesViewChanged() {
-        val fragment = sectionsPagerAdapter.childFragments[viewpager.currentItem]
+        val fragment = childFragments[viewpager.currentItem]
         if(fragment is FragmentUpdateBase){
             viewModel.model.value?.run {
                 val model = fragment.buildModel(this)
@@ -184,26 +275,14 @@ class ReportActivity : AppCompatActivity(),
         }
     }
 
-    inner class SectionsPagerAdapter(fm: FragmentManager,
-                                     reportId: Long) : FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-
-        val childFragments: Array<FragmentBase> = arrayOf(
-            CompanyFragment.newInstance(),
-            ReportPart01Fragment.newInstance(),
-            ReportPart02Fragment.newInstance(),
-            TechnicalAdviceFragment.newInstance(reportId),
-            ReasonUnfoundedFragment.newInstance(),
-            CommentsFragment.newInstance(),
-            TechnicalConsultantFragment.newInstance(),
-            PhotosFragment.newInstance(reportId)
-        )
+    inner class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
         override fun getItem(position: Int): FragmentBase {
             return childFragments[position]
         }
 
         override fun getCount(): Int {
-            return 8
+            return childFragments.size
         }
     }
 
@@ -220,7 +299,7 @@ class ReportActivity : AppCompatActivity(),
         ) { }
 
         override fun onPageSelected(position: Int) {
-            refresh()
+            refresh(position)
         }
     }
     companion object {
